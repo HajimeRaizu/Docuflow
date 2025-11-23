@@ -178,8 +178,10 @@ const proposalTool: FunctionDeclaration = {
 export class LiveSession {
   private ai: GoogleGenAI;
   private sessionPromise: Promise<any> | null = null;
-  private inputContext: AudioContext | null = null;
-  private outputContext: AudioContext | null = null;
+  public inputContext: AudioContext | null = null;
+  public outputContext: AudioContext | null = null;
+  public inputAnalyser: AnalyserNode | null = null;
+  public outputAnalyser: AnalyserNode | null = null;
   private stream: MediaStream | null = null;
   private processor: ScriptProcessorNode | null = null;
   private source: MediaStreamAudioSourceNode | null = null;
@@ -198,6 +200,13 @@ export class LiveSession {
     this.inputContext = new AudioContextClass({ sampleRate: 16000 });
     this.outputContext = new AudioContextClass({ sampleRate: 24000 });
     
+    // Create Analysers
+    this.inputAnalyser = this.inputContext.createAnalyser();
+    this.inputAnalyser.fftSize = 256;
+    
+    this.outputAnalyser = this.outputContext.createAnalyser();
+    this.outputAnalyser.fftSize = 256;
+
     // CRITICAL: Ensure output context is running (resume if suspended)
     if (this.outputContext.state === 'suspended') {
       await this.outputContext.resume();
@@ -274,6 +283,8 @@ export class LiveSession {
     });
 
     this.source = this.inputContext.createMediaStreamSource(this.stream);
+    this.source.connect(this.inputAnalyser!); // Connect to analyser
+    
     this.processor = this.inputContext.createScriptProcessor(4096, 1, 1);
     
     this.processor.onaudioprocess = (e) => {
@@ -353,7 +364,7 @@ export class LiveSession {
   }
 
   private async playAudio(base64: string) {
-     if (!this.outputContext) return;
+     if (!this.outputContext || !this.outputAnalyser) return;
      
      try {
         // Decode base64
@@ -366,7 +377,6 @@ export class LiveSession {
         
         // IMPORTANT: Ensure bytes.length is even for Int16Array
         if (bytes.length % 2 !== 0) {
-            // Log warning but try to fix padding
             console.warn("Audio buffer length is odd. Padding with zero.");
             const newBytes = new Uint8Array(bytes.length + 1);
             newBytes.set(bytes);
@@ -385,7 +395,10 @@ export class LiveSession {
         this.nextStartTime = Math.max(this.nextStartTime, this.outputContext.currentTime);
         const source = this.outputContext.createBufferSource();
         source.buffer = buffer;
-        source.connect(this.outputContext.destination);
+        
+        // Connect source -> Analyser -> Destination
+        source.connect(this.outputAnalyser);
+        this.outputAnalyser.connect(this.outputContext.destination);
         
         source.onended = () => {
         this.audioSourceNodes.delete(source);
