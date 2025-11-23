@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { DocumentType } from '../types';
 import { generateDocument, LiveSession } from '../services/geminiService';
-import { Bot, ArrowLeft, Sparkles, FormInput, Mic, PhoneOff, MicOff } from 'lucide-react';
+import { Bot, ArrowLeft, Sparkles, FormInput, Mic, PhoneOff, MicOff, GripVertical } from 'lucide-react';
 import { RichTextEditor } from './RichTextEditor';
 import * as THREE from 'three';
 
@@ -195,6 +195,14 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   const [result, setResult] = useState('');
   const [inputMode, setInputMode] = useState<'form' | 'chat'>('form');
 
+  // Sidebar Resizing State
+  const [sidebarWidth, setSidebarWidth] = useState(450);
+  const [isResizing, setIsResizing] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
+  
+  // Use a ref to store start values to avoid dependency loop in effect
+  const resizingState = useRef({ startX: 0, startWidth: 0 });
+
   // Form State
   const [formData, setFormData] = useState({
     orgName: '',
@@ -229,7 +237,13 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   const frameIdRef = useRef<number>(0);
 
   useEffect(() => {
+    const checkDesktop = () => {
+        setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
     return () => {
+      window.removeEventListener('resize', checkDesktop);
       if (liveSessionRef.current) {
         liveSessionRef.current.disconnect();
       }
@@ -245,6 +259,43 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
           stopVisualizer();
       }
   }, [isLiveActive, inputMode]);
+
+  // Resizing Logic
+  const startResizing = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
+    resizingState.current = {
+        startX: e.clientX,
+        startWidth: sidebarWidth
+    };
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+        if (!isResizing) return;
+        const delta = e.clientX - resizingState.current.startX;
+        const newWidth = Math.max(300, Math.min(800, resizingState.current.startWidth + delta));
+        setSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+        setIsResizing(false);
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+    };
+
+    if (isResizing) {
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    return () => {
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing]);
 
   const initVisualizer = () => {
       if (!canvasRef.current) return;
@@ -410,10 +461,13 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   };
 
   return (
-    <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row gap-4 md:gap-6 overflow-hidden">
+    <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row overflow-hidden">
       {/* Left Panel: Controls */}
-      <div className="w-full lg:w-[450px] flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col h-[40vh] lg:h-full transition-all duration-300">
-        <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4">
+      <div 
+        className="flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col h-[40vh] lg:h-full overflow-hidden"
+        style={{ width: isDesktop ? sidebarWidth : '100%' }}
+      >
+        <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4 shrink-0">
           <div className="flex items-center gap-3">
             <button onClick={onBack} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
                 <ArrowLeft className="w-5 h-5" />
@@ -441,7 +495,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
         </div>
         
         {inputMode === 'form' ? (
-            <div className="p-4 md:p-6 overflow-y-auto flex-1 space-y-6">
+            <div className="p-4 md:p-6 overflow-y-auto flex-1 space-y-6 custom-scrollbar">
             <div>
                 <label className="block text-sm font-medium mb-2">Document Type</label>
                 <select 
@@ -551,8 +605,17 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
         )}
       </div>
 
+      {/* Resize Handle (Desktop Only) */}
+      <div
+        className="hidden lg:flex w-6 cursor-col-resize items-center justify-center hover:bg-blue-50/50 transition-colors z-20 flex-shrink-0 -ml-1 -mr-1 relative group"
+        onMouseDown={startResizing}
+        title="Drag to resize"
+      >
+        <div className={`w-1 h-12 rounded-full transition-all duration-200 ${isResizing ? 'bg-blue-600 h-16 w-1.5 shadow-lg' : 'bg-gray-300 dark:bg-gray-600 group-hover:bg-blue-400 group-hover:h-16'}`} />
+      </div>
+
       {/* Right Panel: Editor */}
-      <div className="flex-1 h-[60vh] lg:h-full flex flex-col">
+      <div className="flex-1 h-[60vh] lg:h-full flex flex-col min-w-0">
         {loading && !result ? (
           <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-gray-400">
              <Bot className="w-16 h-16 mb-4 text-blue-500 animate-bounce" />

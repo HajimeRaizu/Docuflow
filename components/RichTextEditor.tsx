@@ -1,8 +1,5 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { 
-  Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, 
-  List, ListOrdered, Undo, Redo, Save, Eye, FileText, Mic, MicOff, Check
-} from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 interface RichTextEditorProps {
   initialContent: string;
@@ -10,152 +7,205 @@ interface RichTextEditorProps {
   isVoiceActive?: boolean;
 }
 
-// A4 Dimensions in Pixels (approx at 96 DPI)
-const PAGE_HEIGHT = 1123; 
-const PAGE_WIDTH = 794; 
-const PAGE_MARGIN = 96; // 1 inch approx
+declare const tinymce: any;
 
-export const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialContent, onToggleVoice, isVoiceActive }) => {
-  const editorRef = useRef<HTMLDivElement>(null);
-  const [isMaximized, setIsMaximized] = useState(false);
-  const [contentHeight, setContentHeight] = useState(PAGE_HEIGHT);
+export const RichTextEditor: React.FC<RichTextEditorProps> = ({ 
+  initialContent, 
+  onToggleVoice, 
+  isVoiceActive 
+}) => {
+  const editorRef = useRef<string>('');
+  const [isEditorReady, setIsEditorReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Update content when initialContent (generated text) changes
-  useEffect(() => {
-    if (editorRef.current && initialContent) {
-      editorRef.current.innerHTML = initialContent;
-      checkHeight();
-    }
-  }, [initialContent]);
-
-  // Monitor Content Height
-  useEffect(() => {
-    if (!editorRef.current) return;
-    const observer = new ResizeObserver(() => checkHeight());
-    observer.observe(editorRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  const totalPages = useMemo(() => {
-    return Math.max(1, Math.ceil((contentHeight + 100) / PAGE_HEIGHT));
-  }, [contentHeight]);
-
-  const execCommand = (command: string, value: string | undefined = undefined) => {
-    document.execCommand(command, false, value);
-    editorRef.current?.focus();
-    checkHeight();
-  };
-
-  const checkHeight = () => {
-    if (editorRef.current) {
-        setContentHeight(editorRef.current.scrollHeight);
-    }
+  // Generate a unique ID for the editor
+  if (!editorRef.current) {
+    editorRef.current = `tinymce-${Math.random().toString(36).substring(2, 9)}`;
   }
+  const editorId = editorRef.current;
 
-  const handleSave = () => {
-    alert("Document saved successfully!");
-  };
+  // Effect to update content if it changes externally (e.g. from AI generation)
+  useEffect(() => {
+    if (isEditorReady && tinymce.get(editorId) && initialContent) {
+      const editor = tinymce.get(editorId);
+      // Only set content if it's significantly different and editor isn't focused/dirty to avoid cursor jumps
+      // However, for initial generation we want to overwrite
+      const currentContent = editor.getContent();
+      if (currentContent !== initialContent && !editor.isDirty()) {
+        editor.setContent(initialContent);
+      }
+    }
+  }, [initialContent, isEditorReady, editorId]);
 
-  const handleExportPDF = () => {
-    const editorContent = editorRef.current?.innerHTML || '';
-    const headerContent = document.getElementById('doc-header-content')?.innerHTML || '';
-    const footerContent = document.getElementById('doc-footer-content')?.innerHTML || '';
-    
+  useEffect(() => {
+    // Check for standards mode
+    if (document.compatMode === 'BackCompat') {
+       console.error("Document is in Quirks Mode. TinyMCE requires Standards Mode.");
+       setError("Browser is in Quirks Mode. Please ensure <!DOCTYPE html> is the first line of index.html.");
+       return;
+    }
+
+    const initEditor = () => {
+      if (typeof tinymce === 'undefined') {
+        setTimeout(initEditor, 100);
+        return;
+      }
+
+      // Safe destroy existing instance
+      if (tinymce.get(editorId)) {
+        tinymce.remove(`#${editorId}`);
+      }
+
+      try {
+        tinymce.init({
+          selector: `#${editorId}`,
+          height: '100%',
+          menubar: true,
+          promotion: false,
+          branding: false,
+          statusbar: true,
+          resize: false, 
+          plugins: [
+            'preview', 'importcss', 'searchreplace', 'autolink', 'autosave', 'save', 
+            'directionality', 'code', 'visualblocks', 'visualchars', 'fullscreen', 
+            'image', 'link', 'media', 'template', 'codesample', 'table', 'charmap', 
+            'pagebreak', 'nonbreaking', 'anchor', 'insertdatetime', 'advlist', 'lists', 
+            'wordcount', 'help', 'quickbars', 'emoticons', 'accordion'
+          ],
+          toolbar: 
+            'undo redo | fontfamily fontsize | bold italic underline strikethrough | ' +
+            'alignleft aligncenter alignright alignjustify | ' +
+            'outdent indent |  numlist bullist | forecolor backcolor | ' +
+            'table pagebreak | ' +
+            'customVoice customExport | fullscreen preview',
+          
+          setup: (editor: any) => {
+            editor.on('init', () => {
+              setIsEditorReady(true);
+              if (initialContent) {
+                editor.setContent(initialContent);
+              }
+            });
+
+            editor.ui.registry.addButton('customVoice', {
+              icon: isVoiceActive ? 'stop' : 'microphone',
+              tooltip: 'Toggle Voice Agent',
+              text: isVoiceActive ? 'Stop Voice' : 'Voice Agent',
+              onAction: () => {
+                 if(onToggleVoice) onToggleVoice();
+              }
+            });
+
+            editor.ui.registry.addButton('customExport', {
+              icon: 'export',
+              tooltip: 'Export to PDF',
+              text: 'Export PDF',
+              onAction: () => {
+                 handleExportPDF(editor.getContent());
+              }
+            });
+          },
+
+          content_style: `
+            html {
+              background-color: #f3f4f6;
+              padding: 20px 0;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+            
+            body {
+              background-color: white;
+              font-family: 'Times New Roman', serif;
+              font-size: 12pt;
+              width: 210mm;
+              min-height: 297mm;
+              margin: 0;
+              padding: 25.4mm;
+              box-sizing: border-box;
+              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+              
+              /* Visual Page Break Gradient */
+              background-image: linear-gradient(to bottom, 
+                  #ffffff 0%, 
+                  #ffffff calc(297mm - 1px), 
+                  #d1d5db calc(297mm - 1px), 
+                  #d1d5db 297mm,
+                  #f3f4f6 297mm, 
+                  #f3f4f6 calc(297mm + 10mm), 
+                  #d1d5db calc(297mm + 10mm), 
+                  #d1d5db calc(297mm + 10mm + 1px),
+                  #ffffff calc(297mm + 10mm + 1px)
+              );
+              background-size: 100% calc(297mm + 10mm); 
+              background-repeat: repeat-y;
+            }
+
+            @media print {
+              html { background: none; padding: 0; }
+              body { 
+                 width: auto; 
+                 margin: 0; 
+                 padding: 0; 
+                 background: none; 
+                 box-shadow: none; 
+              }
+              .page-break { page-break-before: always; }
+            }
+            
+            table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+            td, th { border: 1px solid black; padding: 4px 8px; }
+            p { margin-bottom: 0.5em; line-height: 1.5; }
+          `
+        });
+      } catch (e) {
+        console.error("TinyMCE Init Error:", e);
+        setError("Failed to initialize editor.");
+      }
+    };
+
+    // Small delay to ensure DOM is fully ready
+    const timer = setTimeout(initEditor, 50);
+
+    return () => {
+      clearTimeout(timer);
+      if (tinymce.get(editorId)) {
+        tinymce.remove(`#${editorId}`);
+      }
+    };
+  }, [isVoiceActive, editorId]); 
+
+  const handleExportPDF = (content: string) => {
     const printWindow = window.open('', '', 'width=900,height=1200');
     if (!printWindow) return;
 
     printWindow.document.write(`
+      <!DOCTYPE html>
       <html>
         <head>
-          <title>${document.title || 'Exported Document'}</title>
-          <script src="https://cdn.tailwindcss.com"></script>
+          <title>Export Document</title>
           <style>
             @media print {
-              @page { 
-                size: A4; 
-                margin: 10mm 15mm; 
-              }
-              body { 
-                margin: 0;
-                font-family: 'Times New Roman', Times, serif;
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact;
-                color: black;
-                background: white;
-              }
-              
-              /* Print Layout Structure - Uses Table to repeat Header/Footer */
+              @page { size: A4; margin: 20mm; }
+              body { font-family: 'Times New Roman', serif; font-size: 12pt; margin: 0; }
               table { width: 100%; border-collapse: collapse; }
-              thead { display: table-header-group; }
-              tfoot { display: table-footer-group; }
-              
-              .print-header {
-                width: 100%;
-                text-align: center;
-                margin-bottom: 20px;
-              }
-              
-              .print-footer {
-                width: 100%;
-                margin-top: 20px;
-              }
-
-              .print-content {
-                font-size: 12pt;
-                line-height: 1.5;
-                text-align: justify;
-                padding-top: 10px;
-                padding-bottom: 10px;
-              }
-              
-              /* Ensure tables look right */
-              .print-content table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
-              .print-content th, .print-content td { border: 1px solid black; padding: 4px 8px; vertical-align: top; text-align: left; }
-              
-              /* Signatories / No Border Tables */
-              .print-content table.no-border, .print-content table.no-border td { border: none !important; }
-              
-              /* Prevent breaking inside tables/signatories */
-              table, tr, td, .keep-together { page-break-inside: avoid; }
+              td, th { border: 1px solid black; padding: 4px; }
+              img { max-width: 100%; }
             }
+            body { font-family: 'Times New Roman', serif; padding: 40px; max-width: 210mm; margin: 0 auto; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+            td, th { border: 1px solid black; padding: 4px; }
           </style>
         </head>
         <body>
-          <table>
-            <thead>
-              <tr>
-                <td>
-                  <div class="print-header">
-                     ${headerContent}
-                  </div>
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div class="print-content">
-                    ${editorContent}
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td>
-                  <div class="print-footer">
-                     ${footerContent}
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+          ${content}
           <script>
-            window.onload = () => {
-                setTimeout(() => {
-                    window.print();
-                    window.close();
-                }, 1000);
+            window.onload = () => { 
+                setTimeout(() => { 
+                    window.print(); 
+                    window.close(); 
+                }, 800); 
             };
           </script>
         </body>
@@ -164,195 +214,21 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialContent, 
     printWindow.document.close();
   };
 
-  const ToolbarButton = ({ icon: Icon, cmd, arg, title }: any) => (
-    <button
-      onMouseDown={(e) => {
-        e.preventDefault();
-        execCommand(cmd, arg);
-      }}
-      className="p-1.5 md:p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition"
-      title={title}
-    >
-      <Icon className="w-4 h-4 md:w-5 md:h-5" />
-    </button>
-  );
-
-  const DocumentHeaderContent = () => (
-    <div id="doc-header-content" className="flex flex-col items-center justify-center pt-4 text-center font-serif">
-      <div className="flex items-center justify-center mb-2">
-          <img 
-            src="https://scontent.ftdg1-1.fna.fbcdn.net/v/t39.30808-6/323766341_1815321958848574_2117577963714806811_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeF0pB7omAB0Hs0EpFMi_0gZwAVcbrVbqabABVxutVuppqcF0Aueh0wANR0alAlX-J6jLjEcX8e9d1vbkNISXj3N&_nc_ohc=gMfzxv9KRkcQ7kNvwFcFgqa&_nc_oc=AdlGXE4dig6-cPjQUBih7VKi_-gxfr7zNKSq47IMZGPNpEAOamq7DdbcNwyO6YLSKdg&_nc_zt=23&_nc_ht=scontent.ftdg1-1.fna&_nc_gid=8XXB00fpTHe-ZMnFghur6A&oh=00_AfgpJgyeM22JoPjAt-uOPdKItgI8xeInCzjaYyJT3NGrtA&oe=69285512" 
-            alt="NEMSU Logo" 
-            className="w-12 h-12 md:w-16 md:h-16 object-contain"
-          />
-      </div>
-      <p className="text-[9pt] md:text-[10pt] leading-tight">Republic of the Philippines</p>
-      <h1 className="text-[10pt] md:text-[12pt] font-bold uppercase text-blue-900 tracking-wide leading-tight">
-        North Eastern Mindanao State University
-      </h1>
-      <div className="w-[85%] border-b-2 border-blue-900/80 mt-2 mx-auto"></div>
-    </div>
-  );
-
-  const DocumentFooterContent = () => (
-    <div id="doc-footer-content" className="flex flex-col justify-end pt-4 pb-2 px-8">
-      <div className="border-t border-blue-900/50 w-full mb-2"></div>
-      <div className="flex items-end justify-between text-[8pt] font-sans text-gray-600">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-                <span>📍</span>
-                <span>NEMSU Main Campus, Tandag City</span>
-            </div>
-            <div className="flex items-center gap-2">
-                <span>📞</span>
-                <span>+63 999 663 4946</span>
-            </div>
-            <div className="flex items-center gap-2">
-                <span>🌐</span>
-                <span className="text-blue-800 underline">www.nemsu.edu.ph</span>
-            </div>
-          </div>
-          
-          <div className="flex gap-2">
-            <div className="h-8 w-8 border border-gray-300 flex flex-col items-center justify-center bg-gray-50">
-                <span className="text-[5px] font-bold">ISO</span>
-                <span className="text-[5px]">9001</span>
-            </div>
-            <div className="h-8 w-8 border border-gray-300 flex flex-col items-center justify-center bg-gray-50">
-                <span className="text-[5px] font-bold">UKAS</span>
-                <span className="text-[5px]">✔</span>
-            </div>
-          </div>
-      </div>
-      <div className="text-center text-[7pt] text-gray-400 mt-1">
-          System Generated by NEMSU AI DocuFlow
-      </div>
-    </div>
-  );
-
-  const containerClasses = isMaximized 
-    ? "fixed inset-0 z-50 flex flex-col bg-gray-200 dark:bg-gray-900 h-screen w-screen animate-in fade-in duration-300" 
-    : "flex flex-col h-full bg-gray-100 dark:bg-gray-900 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 shadow-inner relative transition-all duration-300";
-
   return (
-    <div className={containerClasses}>
-      <style>{`
-        .document-editor table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
-        .document-editor th, .document-editor td { border: 1px solid black; padding: 4px 8px; vertical-align: top; }
-        .document-editor .no-border, .document-editor .no-border td { border: none !important; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Page Break Guide Line */
-        .page-guide {
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: 1px;
-          border-top: 1px dashed #ef4444;
-          pointer-events: none;
-          opacity: 0.5;
-          z-index: 10;
-        }
-        .page-guide::after {
-          content: 'Page Break';
-          position: absolute;
-          right: 10px;
-          top: -10px;
-          font-size: 10px;
-          color: #ef4444;
-          background: white;
-          padding: 0 4px;
-        }
-      `}</style>
-
-      {/* Toolbar */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 p-2 flex items-center gap-1 flex-wrap shadow-sm z-10 shrink-0 justify-start">
-        <ToolbarButton icon={Undo} cmd="undo" title="Undo" />
-        <ToolbarButton icon={Redo} cmd="redo" title="Redo" />
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2 hidden sm:block" />
-        <ToolbarButton icon={Bold} cmd="bold" title="Bold" />
-        <ToolbarButton icon={Italic} cmd="italic" title="Italic" />
-        <ToolbarButton icon={Underline} cmd="underline" title="Underline" />
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2 hidden sm:block" />
-        <ToolbarButton icon={AlignLeft} cmd="justifyLeft" title="Align Left" />
-        <ToolbarButton icon={AlignCenter} cmd="justifyCenter" title="Align Center" />
-        <ToolbarButton icon={AlignRight} cmd="justifyRight" title="Align Right" />
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2 hidden sm:block" />
-        <ToolbarButton icon={List} cmd="insertUnorderedList" title="Bullet List" />
-        <ToolbarButton icon={ListOrdered} cmd="insertOrderedList" title="Numbered List" />
-        <div className="flex-1 min-w-[10px]" />
-        
-        <button onClick={handleSave} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition flex items-center gap-2 text-sm font-medium">
-          <Save className="w-4 h-4" /> <span className="hidden lg:inline">Save</span>
-        </button>
-        <button 
-          onClick={() => setIsMaximized(!isMaximized)} 
-          className={`p-2 rounded transition flex items-center gap-2 text-sm font-medium ${isMaximized ? 'bg-blue-100 text-blue-700' : 'text-blue-600 hover:bg-blue-50'}`}
-        >
-          <Eye className="w-4 h-4" /> <span className="hidden lg:inline">Preview</span>
-        </button>
-        <button onClick={handleExportPDF} className="ml-2 px-3 py-1.5 md:px-4 md:py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg transition flex items-center gap-2 text-sm font-bold shadow-sm">
-          <FileText className="w-4 h-4" /> <span className="hidden sm:inline">PDF</span>
-        </button>
-      </div>
-
-      {/* Editor Workspace - Allows horizontal scroll for the A4 paper */}
-      <div className="flex-1 overflow-auto bg-gray-200 dark:bg-gray-900/50 flex flex-col items-center p-4 md:p-8 custom-scrollbar">
-        
-        {/* The Paper */}
-        <div 
-            className="bg-white text-black shadow-lg relative flex flex-col transition-all shrink-0"
-            style={{ 
-                width: PAGE_WIDTH, 
-                minHeight: Math.max(PAGE_HEIGHT, contentHeight + 200) // Ensure it grows
-            }}
-        >
-            {/* Visual Page Break Guides */}
-            {Array.from({ length: totalPages }).map((_, i) => i > 0 && (
-                <div key={i} className="page-guide" style={{ top: i * PAGE_HEIGHT }} />
-            ))}
-
-            <DocumentHeaderContent />
-
-            <div 
-                ref={editorRef}
-                contentEditable
-                onInput={checkHeight}
-                onKeyUp={checkHeight}
-                className="outline-none document-editor flex-1"
-                style={{
-                    width: '100%',
-                    paddingLeft: PAGE_MARGIN,
-                    paddingRight: PAGE_MARGIN,
-                    paddingTop: 20,
-                    paddingBottom: 40,
-                    fontSize: '12pt',
-                    lineHeight: '1.5',
-                }}
-            />
-
-            <DocumentFooterContent />
+    <div className="h-full w-full relative bg-gray-100 dark:bg-gray-900 overflow-hidden">
+      {error ? (
+        <div className="absolute inset-0 flex items-center justify-center z-10 bg-white dark:bg-gray-800 p-6 text-center text-red-500">
+           <p>{error}</p>
         </div>
-
-        <div className="h-20" />
-      </div>
-      
-      {/* Footer Info Bar */}
-      <div className="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-1 text-xs text-gray-500 flex justify-between shrink-0 z-20">
-        <span>Height: {contentHeight}px • Est. Pages: {totalPages}</span>
-        <span className="hidden sm:inline">A4 Layout</span>
-      </div>
-
-      {/* Voice Agent Button */}
-      {isMaximized && onToggleVoice && (
-        <button 
-            onClick={onToggleVoice}
-            className={`fixed bottom-8 right-8 z-[60] p-4 rounded-full shadow-2xl transition-all hover:scale-110 flex items-center justify-center ${isVoiceActive ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
-        >
-            {isVoiceActive ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
-        </button>
+      ) : !isEditorReady && (
+         <div className="absolute inset-0 flex items-center justify-center z-10 bg-white dark:bg-gray-800">
+            <div className="flex flex-col items-center gap-3">
+                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                <span className="text-sm text-gray-500">Initializing Editor...</span>
+            </div>
+         </div>
       )}
+      <textarea id={editorId} className="hidden" />
     </div>
   );
 };
