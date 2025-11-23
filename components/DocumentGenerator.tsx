@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DocumentType } from '../types';
 import { generateDocument, LiveSession } from '../services/geminiService';
-import { Bot, ArrowLeft, Sparkles, FormInput, Mic, PhoneOff, MicOff, GripVertical } from 'lucide-react';
+import { Bot, ArrowLeft, Sparkles, FormInput, Mic, PhoneOff, MicOff } from 'lucide-react';
 import { RichTextEditor } from './RichTextEditor';
 import * as THREE from 'three';
 
@@ -12,23 +12,11 @@ interface DocumentGeneratorProps {
 
 // MOCK DATA FOR DEMO PURPOSES
 const MOCK_GENERATED_DOC = `
-<div style="font-family: 'Times New Roman', serif; color: #000;">
-  
-  <!-- UNIVERSITY HEADER -->
-  <div style="display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
-    <img src="https://upload.wikimedia.org/wikipedia/en/2/2a/North_Eastern_Mindanao_State_University_logo.png" alt="NEMSU Logo" style="width: 90px; height: 90px; margin-right: 20px;">
-    <div style="text-align: center;">
-        <p style="margin: 0; font-size: 11pt; font-family: Arial, sans-serif;">Republic of the Philippines</p>
-        <p style="margin: 5px 0; font-size: 15pt; font-weight: bold; text-transform: uppercase; font-family: 'Times New Roman', serif;">North Eastern Mindanao State University</p>
-        <p style="margin: 0; font-size: 11pt; font-family: Arial, sans-serif;">Tandag City, Surigao del Sur</p>
-    </div>
-  </div>
-
-  <!-- DOCUMENT CONTENT -->
-  <p style="text-align: center; font-weight: bold; font-size: 14pt; margin-bottom: 20px;">ACTIVITY PROPOSAL</p>
-
-  <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom: 20px;">
-    <tr><td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Title of Activity</strong></td><td style="border: 1px solid black; padding: 5px;">CITE Days 2024</td></tr>
+<div style="font-family: 'Times New Roman', serif;">
+  <p style="text-align: center; font-weight: bold; font-size: 14pt;">ACTIVITY PROPOSAL</p>
+  <br>
+  <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+    <tr><td style="border: 1px solid black; padding: 5px;"><strong>Title of Activity</strong></td><td style="border: 1px solid black; padding: 5px;">CITE Days 2024</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Target Participants</strong></td><td style="border: 1px solid black; padding: 5px;">All CITE Students and Faculty</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Venue</strong></td><td style="border: 1px solid black; padding: 5px;">NEMSU Gymnasium</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Date</strong></td><td style="border: 1px solid black; padding: 5px;">October 24-25, 2024</td></tr>
@@ -36,11 +24,10 @@ const MOCK_GENERATED_DOC = `
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Total Budget</strong></td><td style="border: 1px solid black; padding: 5px;">PHP 15,000.00</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Source of Fund</strong></td><td style="border: 1px solid black; padding: 5px;">Org Funds</td></tr>
   </table>
-
-  <h3>I. RATIONALE</h3>
-  <p style="text-align: justify;">The College of Information Technology Education (CITE) Days is an annual event designed to foster camaraderie and sportsmanship among students. This activity serves as a platform for students to showcase their skills in various technical and non-technical competitions. It aligns with the university's mission to provide holistic development for its student body.</p>
   <br>
-  
+  <h3>I. RATIONALE</h3>
+  <p>The College of Information Technology Education (CITE) Days is an annual event designed to foster camaraderie and sportsmanship among students. This activity serves as a platform for students to showcase their skills in various technical and non-technical competitions. It aligns with the university's mission to provide holistic development for its student body.</p>
+  <br>
   <h3>II. OBJECTIVES</h3>
   <ol>
     <li>To promote unity among CITE students.</li>
@@ -48,7 +35,6 @@ const MOCK_GENERATED_DOC = `
     <li>To provide a venue for showcasing talents.</li>
   </ol>
   <br>
-  
   <h3>III. OUTCOMES</h3>
   <ol>
     <li>Improved student engagement and morale.</li>
@@ -56,9 +42,8 @@ const MOCK_GENERATED_DOC = `
     <li>Strengthened bond between faculty and students.</li>
   </ol>
   <br>
-  
   <h3>IV. BUDGETARY REQUIREMENTS</h3>
-  <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom: 20px;">
+  <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
     <tr style="background-color: #f0f0f0;">
         <th style="border: 1px solid black; padding: 5px;">Particulars</th>
         <th style="border: 1px solid black; padding: 5px;">Unit</th>
@@ -88,16 +73,16 @@ const MOCK_GENERATED_DOC = `
         <td style="border: 1px solid black; padding: 5px;">5,000.00</td>
     </tr>
   </table>
-
+  <br>
   <h3>V. SIGNATORIES</h3>
   <table style="width: 100%; border: none; margin-top: 20px;">
     <tr>
-        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Prepared by:<br><br><strong>JIM SHENDRICK</strong><br>Student Leader</td>
-        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Noted by:<br><br><strong>ADVISER NAME</strong><br>Org Adviser</td>
+        <td style="border: none; width: 50%; padding-top: 30px;">Prepared by:<br><br><strong>JIM SHENDRICK</strong><br>Student Leader</td>
+        <td style="border: none; width: 50%; padding-top: 30px;">Noted by:<br><br><strong>ADVISER NAME</strong><br>Org Adviser</td>
     </tr>
     <tr>
-        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Approved as to Appropriation:<br><br><strong>BUDGET OFFICER</strong></td>
-        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Approved as to Funds:<br><br><strong>ACCOUNTANT</strong></td>
+        <td style="border: none; width: 50%; padding-top: 30px;">Approved as to Appropriation:<br><br><strong>BUDGET OFFICER</strong></td>
+        <td style="border: none; width: 50%; padding-top: 30px;">Approved as to Funds:<br><br><strong>ACCOUNTANT</strong></td>
     </tr>
     <tr>
         <td colspan="2" style="border: none; text-align: center; padding-top: 30px;">Recommending Approval:<br><br><strong>DEAN NAME</strong><br>Dean, CITE</td>
@@ -106,24 +91,6 @@ const MOCK_GENERATED_DOC = `
         <td colspan="2" style="border: none; text-align: center; padding-top: 40px;">Approved:<br><br><strong>CAMPUS DIRECTOR</strong></td>
     </tr>
   </table>
-
-  <!-- DOCUMENT FOOTER -->
-  <div style="margin-top: 60px; border-top: 1px solid #999; padding-top: 8px; font-size: 9pt; font-family: Arial, sans-serif; color: #444; display: flex; justify-content: space-between; align-items: flex-end;">
-      <div style="display: flex; flex-direction: column; gap: 2px;">
-         <div style="display: flex; align-items: center; gap: 6px;">
-            <span>📍</span> <span>NEMSU Main Campus, Tandag City</span>
-         </div>
-         <div style="display: flex; align-items: center; gap: 6px;">
-            <span>📞</span> <span>+63 999 663 4946</span>
-         </div>
-         <div style="display: flex; align-items: center; gap: 6px;">
-            <span style="color: #0066cc;">🌐</span> <a href="http://www.nemsu.edu.ph" style="color: #0066cc; text-decoration: none;">www.nemsu.edu.ph</a>
-         </div>
-      </div>
-      <div style="text-align: right; color: #888; font-style: italic; font-size: 8pt;">
-         System Generated by NEMSU AI DocuFlow
-      </div>
-  </div>
 </div>
 `;
 
@@ -228,14 +195,6 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   const [result, setResult] = useState('');
   const [inputMode, setInputMode] = useState<'form' | 'chat'>('form');
 
-  // Sidebar Resizing State
-  const [sidebarWidth, setSidebarWidth] = useState(450);
-  const [isResizing, setIsResizing] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(true);
-  
-  // Use a ref to store start values to avoid dependency loop in effect
-  const resizingState = useRef({ startX: 0, startWidth: 0 });
-
   // Form State
   const [formData, setFormData] = useState({
     orgName: '',
@@ -270,13 +229,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   const frameIdRef = useRef<number>(0);
 
   useEffect(() => {
-    const checkDesktop = () => {
-        setIsDesktop(window.innerWidth >= 1024);
-    };
-    checkDesktop();
-    window.addEventListener('resize', checkDesktop);
     return () => {
-      window.removeEventListener('resize', checkDesktop);
       if (liveSessionRef.current) {
         liveSessionRef.current.disconnect();
       }
@@ -292,43 +245,6 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
           stopVisualizer();
       }
   }, [isLiveActive, inputMode]);
-
-  // Resizing Logic
-  const startResizing = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsResizing(true);
-    resizingState.current = {
-        startX: e.clientX,
-        startWidth: sidebarWidth
-    };
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  };
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-        if (!isResizing) return;
-        const delta = e.clientX - resizingState.current.startX;
-        const newWidth = Math.max(300, Math.min(800, resizingState.current.startWidth + delta));
-        setSidebarWidth(newWidth);
-    };
-
-    const handleMouseUp = () => {
-        setIsResizing(false);
-        document.body.style.cursor = '';
-        document.body.style.userSelect = '';
-    };
-
-    if (isResizing) {
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
-    }
-
-    return () => {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isResizing]);
 
   const initVisualizer = () => {
       if (!canvasRef.current) return;
@@ -494,13 +410,10 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   };
 
   return (
-    <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row overflow-hidden">
+    <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row gap-4 md:gap-6 overflow-hidden">
       {/* Left Panel: Controls */}
-      <div 
-        className="flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col h-[40vh] lg:h-full overflow-hidden"
-        style={{ width: isDesktop ? sidebarWidth : '100%' }}
-      >
-        <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4 shrink-0">
+      <div className="w-full lg:w-[450px] flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col h-[40vh] lg:h-full transition-all duration-300">
+        <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <button onClick={onBack} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
                 <ArrowLeft className="w-5 h-5" />
@@ -528,7 +441,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
         </div>
         
         {inputMode === 'form' ? (
-            <div className="p-4 md:p-6 overflow-y-auto flex-1 space-y-6 custom-scrollbar">
+            <div className="p-4 md:p-6 overflow-y-auto flex-1 space-y-6">
             <div>
                 <label className="block text-sm font-medium mb-2">Document Type</label>
                 <select 
@@ -638,17 +551,8 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
         )}
       </div>
 
-      {/* Resize Handle (Desktop Only) */}
-      <div
-        className="hidden lg:flex w-6 cursor-col-resize items-center justify-center hover:bg-blue-50/50 transition-colors z-20 flex-shrink-0 -ml-1 -mr-1 relative group"
-        onMouseDown={startResizing}
-        title="Drag to resize"
-      >
-        <div className={`w-1 h-12 rounded-full transition-all duration-200 ${isResizing ? 'bg-blue-600 h-16 w-1.5 shadow-lg' : 'bg-gray-300 dark:bg-gray-600 group-hover:bg-blue-400 group-hover:h-16'}`} />
-      </div>
-
       {/* Right Panel: Editor */}
-      <div className="flex-1 h-[60vh] lg:h-full flex flex-col min-w-0">
+      <div className="flex-1 h-[60vh] lg:h-full flex flex-col">
         {loading && !result ? (
           <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-gray-400">
              <Bot className="w-16 h-16 mb-4 text-blue-500 animate-bounce" />
