@@ -157,7 +157,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
                             </button>
                         )}
                         
-                        <div className={`${user.role === UserRole.ADMIN ? 'border-t border-gray-100 dark:border-gray-700 my-2 pt-2' : ''}`}>
+                        <button 
+                          onClick={() => handleNavigate('settings')}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 rounded-xl transition group"
+                        >
+                            <Settings className="w-5 h-5 text-gray-400 group-hover:text-blue-600 transition-colors group-hover:scale-110 transition-transform" />
+                            Settings
+                        </button>
+                        
+                        <div className="border-t border-gray-100 dark:border-gray-700 my-2 pt-2">
                             <button 
                             onClick={onLogout}
                             className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition"
