@@ -113,20 +113,24 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               display: flex;
               flex-direction: column;
               align-items: center;
+              overflow-y: scroll;
             }
             
             body {
               background-color: white;
               font-family: 'Times New Roman', serif;
               font-size: 12pt;
+              
+              /* A4 Dimensions */
               width: 210mm;
               min-height: 297mm;
-              margin: 0;
-              padding: 25.4mm;
+              margin: 0 auto;
+              padding: 25.4mm; /* 1 inch margin */
+              
               box-sizing: border-box;
               box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
               
-              /* Visual Page Break Gradient */
+              /* Visual Page Break Gradient (Simulates A4 pages stacking) */
               background-image: linear-gradient(to bottom, 
                   #ffffff 0%, 
                   #ffffff calc(297mm - 1px), 
@@ -155,8 +159,13 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             }
             
             table { border-collapse: collapse; width: 100%; margin: 1em 0; }
-            td, th { border: 1px solid black; padding: 4px 8px; }
+            td, th { border: 1px solid black; padding: 4px 8px; vertical-align: top; }
             p { margin-bottom: 0.5em; line-height: 1.5; }
+            
+            /* Styles for Header/Footer injected components */
+            .header, .footer {
+               width: 100%;
+            }
           `
         });
       } catch (e) {

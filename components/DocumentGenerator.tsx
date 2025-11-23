@@ -12,11 +12,23 @@ interface DocumentGeneratorProps {
 
 // MOCK DATA FOR DEMO PURPOSES
 const MOCK_GENERATED_DOC = `
-<div style="font-family: 'Times New Roman', serif;">
-  <p style="text-align: center; font-weight: bold; font-size: 14pt;">ACTIVITY PROPOSAL</p>
-  <br>
-  <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-    <tr><td style="border: 1px solid black; padding: 5px;"><strong>Title of Activity</strong></td><td style="border: 1px solid black; padding: 5px;">CITE Days 2024</td></tr>
+<div style="font-family: 'Times New Roman', serif; color: #000;">
+  
+  <!-- UNIVERSITY HEADER -->
+  <div style="display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 30px;">
+    <img src="https://upload.wikimedia.org/wikipedia/en/2/2a/North_Eastern_Mindanao_State_University_logo.png" alt="NEMSU Logo" style="width: 90px; height: 90px; margin-right: 20px;">
+    <div style="text-align: center;">
+        <p style="margin: 0; font-size: 11pt; font-family: Arial, sans-serif;">Republic of the Philippines</p>
+        <p style="margin: 5px 0; font-size: 15pt; font-weight: bold; text-transform: uppercase; font-family: 'Times New Roman', serif;">North Eastern Mindanao State University</p>
+        <p style="margin: 0; font-size: 11pt; font-family: Arial, sans-serif;">Tandag City, Surigao del Sur</p>
+    </div>
+  </div>
+
+  <!-- DOCUMENT CONTENT -->
+  <p style="text-align: center; font-weight: bold; font-size: 14pt; margin-bottom: 20px;">ACTIVITY PROPOSAL</p>
+
+  <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom: 20px;">
+    <tr><td style="border: 1px solid black; padding: 5px; width: 30%;"><strong>Title of Activity</strong></td><td style="border: 1px solid black; padding: 5px;">CITE Days 2024</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Target Participants</strong></td><td style="border: 1px solid black; padding: 5px;">All CITE Students and Faculty</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Venue</strong></td><td style="border: 1px solid black; padding: 5px;">NEMSU Gymnasium</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Date</strong></td><td style="border: 1px solid black; padding: 5px;">October 24-25, 2024</td></tr>
@@ -24,10 +36,11 @@ const MOCK_GENERATED_DOC = `
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Total Budget</strong></td><td style="border: 1px solid black; padding: 5px;">PHP 15,000.00</td></tr>
     <tr><td style="border: 1px solid black; padding: 5px;"><strong>Source of Fund</strong></td><td style="border: 1px solid black; padding: 5px;">Org Funds</td></tr>
   </table>
-  <br>
+
   <h3>I. RATIONALE</h3>
-  <p>The College of Information Technology Education (CITE) Days is an annual event designed to foster camaraderie and sportsmanship among students. This activity serves as a platform for students to showcase their skills in various technical and non-technical competitions. It aligns with the university's mission to provide holistic development for its student body.</p>
+  <p style="text-align: justify;">The College of Information Technology Education (CITE) Days is an annual event designed to foster camaraderie and sportsmanship among students. This activity serves as a platform for students to showcase their skills in various technical and non-technical competitions. It aligns with the university's mission to provide holistic development for its student body.</p>
   <br>
+  
   <h3>II. OBJECTIVES</h3>
   <ol>
     <li>To promote unity among CITE students.</li>
@@ -35,6 +48,7 @@ const MOCK_GENERATED_DOC = `
     <li>To provide a venue for showcasing talents.</li>
   </ol>
   <br>
+  
   <h3>III. OUTCOMES</h3>
   <ol>
     <li>Improved student engagement and morale.</li>
@@ -42,8 +56,9 @@ const MOCK_GENERATED_DOC = `
     <li>Strengthened bond between faculty and students.</li>
   </ol>
   <br>
+  
   <h3>IV. BUDGETARY REQUIREMENTS</h3>
-  <table style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+  <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom: 20px;">
     <tr style="background-color: #f0f0f0;">
         <th style="border: 1px solid black; padding: 5px;">Particulars</th>
         <th style="border: 1px solid black; padding: 5px;">Unit</th>
@@ -73,16 +88,16 @@ const MOCK_GENERATED_DOC = `
         <td style="border: 1px solid black; padding: 5px;">5,000.00</td>
     </tr>
   </table>
-  <br>
+
   <h3>V. SIGNATORIES</h3>
   <table style="width: 100%; border: none; margin-top: 20px;">
     <tr>
-        <td style="border: none; width: 50%; padding-top: 30px;">Prepared by:<br><br><strong>JIM SHENDRICK</strong><br>Student Leader</td>
-        <td style="border: none; width: 50%; padding-top: 30px;">Noted by:<br><br><strong>ADVISER NAME</strong><br>Org Adviser</td>
+        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Prepared by:<br><br><strong>JIM SHENDRICK</strong><br>Student Leader</td>
+        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Noted by:<br><br><strong>ADVISER NAME</strong><br>Org Adviser</td>
     </tr>
     <tr>
-        <td style="border: none; width: 50%; padding-top: 30px;">Approved as to Appropriation:<br><br><strong>BUDGET OFFICER</strong></td>
-        <td style="border: none; width: 50%; padding-top: 30px;">Approved as to Funds:<br><br><strong>ACCOUNTANT</strong></td>
+        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Approved as to Appropriation:<br><br><strong>BUDGET OFFICER</strong></td>
+        <td style="border: none; width: 50%; padding-top: 30px; vertical-align: top;">Approved as to Funds:<br><br><strong>ACCOUNTANT</strong></td>
     </tr>
     <tr>
         <td colspan="2" style="border: none; text-align: center; padding-top: 30px;">Recommending Approval:<br><br><strong>DEAN NAME</strong><br>Dean, CITE</td>
@@ -91,6 +106,24 @@ const MOCK_GENERATED_DOC = `
         <td colspan="2" style="border: none; text-align: center; padding-top: 40px;">Approved:<br><br><strong>CAMPUS DIRECTOR</strong></td>
     </tr>
   </table>
+
+  <!-- DOCUMENT FOOTER -->
+  <div style="margin-top: 60px; border-top: 1px solid #999; padding-top: 8px; font-size: 9pt; font-family: Arial, sans-serif; color: #444; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+         <div style="display: flex; align-items: center; gap: 6px;">
+            <span>📍</span> <span>NEMSU Main Campus, Tandag City</span>
+         </div>
+         <div style="display: flex; align-items: center; gap: 6px;">
+            <span>📞</span> <span>+63 999 663 4946</span>
+         </div>
+         <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="color: #0066cc;">🌐</span> <a href="http://www.nemsu.edu.ph" style="color: #0066cc; text-decoration: none;">www.nemsu.edu.ph</a>
+         </div>
+      </div>
+      <div style="text-align: right; color: #888; font-style: italic; font-size: 8pt;">
+         System Generated by NEMSU AI DocuFlow
+      </div>
+  </div>
 </div>
 `;
 
