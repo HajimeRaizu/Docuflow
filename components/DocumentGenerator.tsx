@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { DocumentType } from '../types';
+import { DocumentType, GeneratedDocument, DocumentVersion } from '../types';
 import { generateDocument, LiveSession } from '../services/geminiService';
 import { Bot, ArrowLeft, Sparkles, FormInput, Mic, PhoneOff, MicOff, GripVertical } from 'lucide-react';
 import { RichTextEditor } from './RichTextEditor';
@@ -200,6 +201,9 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   const [isResizing, setIsResizing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Document Tracking for Versioning
+  const [currentDocId, setCurrentDocId] = useState<string | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -416,6 +420,79 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
     }, 2000);
   };
 
+  const handleSaveToStorage = (content: string) => {
+    try {
+      // Determine a title based on available data or defaults
+      let title = "Untitled Document";
+      if (formData.title) title = formData.title;
+      else if (formData.subject) title = formData.subject;
+      else if (formData.orgName) title = `${formData.orgName} Resolution`;
+      else if (docType) title = `${docType} - ${new Date().toLocaleDateString()}`;
+
+      // Get existing docs
+      const existingDocsStr = localStorage.getItem('nemsu_smartdraft_docs');
+      const existingDocs: GeneratedDocument[] = existingDocsStr ? JSON.parse(existingDocsStr) : [];
+
+      if (currentDocId) {
+        // Update existing document with new version
+        const docIndex = existingDocs.findIndex(d => d.id === currentDocId);
+        
+        if (docIndex !== -1) {
+            const doc = existingDocs[docIndex];
+            const newVersionNumber = (doc.versions?.length || 0) + 1;
+            
+            const newVersion: DocumentVersion = {
+                id: Date.now().toString(),
+                content: content,
+                savedAt: new Date(),
+                versionNumber: newVersionNumber
+            };
+
+            const updatedDoc: GeneratedDocument = {
+                ...doc,
+                content: content,
+                updatedAt: new Date(),
+                versions: [...(doc.versions || []), newVersion]
+            };
+
+            existingDocs[docIndex] = updatedDoc;
+            localStorage.setItem('nemsu_smartdraft_docs', JSON.stringify(existingDocs));
+            alert(`Document saved! Version ${newVersionNumber} created.`);
+            return;
+        }
+      }
+
+      // Create New Document
+      const newDocId = Date.now().toString();
+      const initialVersion: DocumentVersion = {
+          id: Date.now().toString(),
+          content: content,
+          savedAt: new Date(),
+          versionNumber: 1
+      };
+
+      const newDoc: GeneratedDocument = {
+        id: newDocId,
+        title: title,
+        type: docType,
+        content: content,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: 'Draft',
+        versions: [initialVersion]
+      };
+      
+      const updatedDocs = [newDoc, ...existingDocs];
+      localStorage.setItem('nemsu_smartdraft_docs', JSON.stringify(updatedDocs));
+      setCurrentDocId(newDocId);
+      
+      alert("Document saved to 'My Documents' successfully!");
+    } catch (e) {
+      console.error("Failed to save document", e);
+      alert("Failed to save document. Local storage might be full.");
+    }
+  };
+
   const toggleLiveAgent = async () => {
     if (isLiveActive) {
       if (liveSessionRef.current) {
@@ -596,8 +673,10 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
         ) : (
           <RichTextEditor 
             initialContent={result} 
+            title={formData.title || formData.subject || "Document"}
             onToggleVoice={toggleLiveAgent}
             isVoiceActive={isLiveActive}
+            onSave={handleSaveToStorage}
           />
         )}
       </div>

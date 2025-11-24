@@ -21,13 +21,22 @@ export enum DocumentType {
   MEETING_MINUTES = 'Meeting Minutes',
 }
 
+export interface DocumentVersion {
+  id: string;
+  content: string;
+  savedAt: Date;
+  versionNumber: number;
+}
+
 export interface GeneratedDocument {
   id: string;
   title: string;
   type: DocumentType;
   content: string;
   createdAt: Date;
+  updatedAt?: Date;
   status: 'Draft' | 'Final';
+  versions?: DocumentVersion[];
 }
 
 export interface BudgetLineItem {

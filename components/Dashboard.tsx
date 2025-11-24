@@ -13,13 +13,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
     {
       title: 'New Activity Proposal',
       icon: FileText,
-      color: 'bg-blue-500',
+      color: 'bg-blue-600',
       action: () => onNavigate('generate', { type: DocumentType.ACTIVITY_PROPOSAL })
     },
     {
       title: 'Official Letter',
       icon: Mail,
-      color: 'bg-purple-500',
+      color: 'bg-purple-600',
       action: () => onNavigate('generate', { type: DocumentType.OFFICIAL_LETTER })
     },
     {
@@ -31,7 +31,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8">
+    <div className="p-6 max-w-[1600px] mx-auto space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
@@ -44,25 +44,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
       </div>
 
       {/* Quick Actions Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {tiles.map((tile, idx) => (
           <button
             key={idx}
             onClick={tile.action}
-            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm hover:shadow-md transition text-left group border border-gray-100 dark:border-gray-700 h-40 flex flex-col justify-between"
+            className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-left group border border-gray-200 dark:border-gray-700 h-72 flex flex-col justify-between relative overflow-hidden"
           >
-            <div className="flex justify-between items-start w-full">
-              <div className={`w-12 h-12 ${tile.color} rounded-lg flex items-center justify-center text-white shadow-lg`}>
-                <tile.icon className="w-6 h-6" />
+            {/* Decorative Background Blob */}
+            <div className={`absolute -right-8 -top-8 w-40 h-40 ${tile.color} opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity`}></div>
+            
+            <div className="flex justify-between items-start w-full z-10">
+              <div className={`w-20 h-20 ${tile.color} rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                <tile.icon className="w-10 h-10" />
               </div>
             </div>
             
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            <div className="z-10 mt-6">
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-3">
                 {tile.title}
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                Start now <ArrowRight className="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <p className="text-lg text-gray-500 dark:text-gray-400 flex items-center group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                Start drafting <ArrowRight className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" />
               </p>
             </div>
           </button>

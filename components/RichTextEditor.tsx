@@ -1,13 +1,15 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { 
   Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, 
-  List, ListOrdered, Undo, Redo, Save, Eye, FileText, Mic, MicOff, Check, Scissors
+  List, ListOrdered, Undo, Redo, Save, Eye, FileText, Mic, MicOff, Scissors, Download, Printer
 } from 'lucide-react';
 
 interface RichTextEditorProps {
   initialContent: string;
+  title?: string; // For filename
   onToggleVoice?: () => void;
   isVoiceActive?: boolean;
+  onSave?: (content: string) => void; // Handler for persistence
 }
 
 // A4 Dimensions in Pixels (approx at 96 DPI)
@@ -15,7 +17,13 @@ const PAGE_HEIGHT = 1123;
 const PAGE_WIDTH = 794; 
 const PAGE_MARGIN = 96; // 1 inch approx
 
-export const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialContent, onToggleVoice, isVoiceActive }) => {
+export const RichTextEditor: React.FC<RichTextEditorProps> = ({ 
+  initialContent, 
+  title = "Document", 
+  onToggleVoice, 
+  isVoiceActive,
+  onSave
+}) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isMaximized, setIsMaximized] = useState(false);
   const [contentHeight, setContentHeight] = useState(PAGE_HEIGHT);
@@ -52,11 +60,49 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialContent, 
     }
   }
 
-  const handleSave = () => {
-    alert("Document saved successfully!");
+  const handleSaveClick = () => {
+    if (editorRef.current && onSave) {
+      onSave(editorRef.current.innerHTML);
+    }
   };
 
-  const handleExportPDF = () => {
+  const handleExportDOCX = () => {
+    const headerContent = document.getElementById('doc-header-content')?.innerHTML || '';
+    const footerContent = document.getElementById('doc-footer-content')?.innerHTML || '';
+    const bodyContent = editorRef.current?.innerHTML || '';
+
+    // Construct a Word-compatible HTML structure
+    const preHtml = `
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head>
+        <meta charset="utf-8">
+        <title>${title}</title>
+        <style>
+          body { font-family: 'Times New Roman', serif; font-size: 12pt; }
+          table { border-collapse: collapse; width: 100%; }
+          td, th { border: 1px solid black; padding: 5px; }
+          .no-border td { border: none !important; }
+        </style>
+      </head>
+      <body>
+        <div class="header" style="text-align: center; margin-bottom: 20px;">${headerContent}</div>
+        ${bodyContent}
+        <div class="footer" style="margin-top: 50px; border-top: 1px solid #ccc; font-size: 8pt;">${footerContent}</div>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob(['\ufeff', preHtml], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${title.replace(/\s+/g, '_')}.doc`; // .doc opens more reliably in Word as HTML than .docx without conversion lib
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handlePrint = () => {
     const editorContent = editorRef.current?.innerHTML || '';
     const headerContent = document.getElementById('doc-header-content')?.innerHTML || '';
     const footerContent = document.getElementById('doc-footer-content')?.innerHTML || '';
@@ -67,7 +113,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialContent, 
     printWindow.document.write(`
       <html>
         <head>
-          <title>${document.title || 'Exported Document'}</title>
+          <title>${title}</title>
           <script src="https://cdn.tailwindcss.com"></script>
           <style>
             @media print {
@@ -313,17 +359,26 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({ initialContent, 
         <ToolbarButton icon={Scissors} cmd="insertHTML" arg='<div class="page-break"></div>' title="Insert Page Break" />
         <div className="flex-1 min-w-[10px]" />
         
-        <button onClick={handleSave} className="p-2 text-blue-600 hover:bg-blue-50 rounded transition flex items-center gap-2 text-sm font-medium">
+        {/* Actions */}
+        <button onClick={handleSaveClick} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium" title="Save to My Documents">
           <Save className="w-4 h-4" /> <span className="hidden lg:inline">Save</span>
         </button>
+        
+        <button onClick={handleExportDOCX} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium" title="Download as Word Doc">
+           <Download className="w-4 h-4" /> <span className="hidden lg:inline">.doc</span>
+        </button>
+
+        <button onClick={handlePrint} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium" title="Print / Save as PDF">
+           <Printer className="w-4 h-4" /> <span className="hidden lg:inline">Print</span>
+        </button>
+        
+        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2 hidden sm:block" />
+        
         <button 
           onClick={() => setIsMaximized(!isMaximized)} 
-          className={`p-2 rounded transition flex items-center gap-2 text-sm font-medium ${isMaximized ? 'bg-blue-100 text-blue-700' : 'text-blue-600 hover:bg-blue-50'}`}
+          className={`p-2 rounded transition flex items-center gap-2 text-sm font-medium ${isMaximized ? 'bg-blue-100 text-blue-700' : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'}`}
         >
-          <Eye className="w-4 h-4" /> <span className="hidden lg:inline">Preview</span>
-        </button>
-        <button onClick={handleExportPDF} className="ml-2 px-3 py-1.5 md:px-4 md:py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg transition flex items-center gap-2 text-sm font-bold shadow-sm">
-          <FileText className="w-4 h-4" /> <span className="hidden sm:inline">PDF</span>
+          <Eye className="w-4 h-4" /> <span className="hidden lg:inline">View</span>
         </button>
       </div>
 
