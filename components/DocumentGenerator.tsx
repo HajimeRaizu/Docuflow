@@ -2,9 +2,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DocumentType, GeneratedDocument, DocumentVersion } from '../types';
 import { generateDocument, LiveSession } from '../services/geminiService';
-import { Bot, ArrowLeft, Sparkles, FormInput, Mic, PhoneOff, MicOff, GripVertical } from 'lucide-react';
+import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical } from 'lucide-react';
 import { RichTextEditor } from './RichTextEditor';
 import * as THREE from 'three';
+// @ts-ignore
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+// @ts-ignore
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+// @ts-ignore
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+// @ts-ignore
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 interface DocumentGeneratorProps {
   initialType?: DocumentType;
@@ -95,14 +103,17 @@ const MOCK_GENERATED_DOC = `
 </div>
 `;
 
-// Shader for the visualizer sphere
+// --- SHADERS ---
+
 const vertexShader = `
 uniform float u_time;
 uniform float u_frequency;
 varying vec2 vUv;
 varying vec3 vNormal;
+varying float vDisplacement;
 
-// Simplex noise function (simplified)
+// Simplex 3D Noise 
+// (Simplified for performance)
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -117,18 +128,18 @@ float snoise(vec3 v) {
   vec3 i1 = min( g.xyz, l.zxy );
   vec3 i2 = max( g.xyz, l.zxy );
   vec3 x1 = x0 - i1 + C.xxx;
-  vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y
-  vec3 x3 = x0 - D.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y
+  vec3 x2 = x0 - i2 + C.yyy;
+  vec3 x3 = x0 - D.yyy;
   i = mod289(i);
   vec4 p = permute( permute( permute(
              i.z + vec4(0.0, i1.z, i2.z, 1.0 ))
            + i.y + vec4(0.0, i1.y, i2.y, 1.0 ))
            + i.x + vec4(0.0, i1.x, i2.x, 1.0 ));
-  float n_ = 0.142857142857; // 1.0/7.0
+  float n_ = 0.142857142857;
   vec3  ns = n_ * D.wyz - D.xzx;
-  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);  //  mod(p,7*7)
+  vec4 j = p - 49.0 * floor(p * ns.z * ns.z);
   vec4 x_ = floor(j * ns.z);
-  vec4 y_ = floor(j - 7.0 * x_ );    // mod(j,N)
+  vec4 y_ = floor(j - 7.0 * x_ );
   vec4 x = x_ *ns.x + ns.yyyy;
   vec4 y = y_ *ns.x + ns.yyyy;
   vec4 h = 1.0 - abs(x) - abs(y);
@@ -158,11 +169,16 @@ void main() {
   vUv = uv;
   vNormal = normal;
   
-  // Displacement based on noise + frequency
-  float noiseVal = snoise(position * 2.0 + u_time * 0.5);
-  float displacement = noiseVal * (u_frequency * 2.0); // Amplify by audio
+  // Dynamic noise moving with time
+  float noise = snoise(position * 3.0 + vec3(u_time * 0.8));
   
-  vec3 newPosition = position + normal * displacement * 0.5;
+  // Amplify displacement with frequency
+  // Use higher frequency multiplier for spikes
+  float spike = max(0.0, noise);
+  vDisplacement = spike * (0.2 + u_frequency * 1.5);
+  
+  // Displace along normal
+  vec3 newPosition = position + normal * vDisplacement;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
 }
@@ -171,22 +187,30 @@ void main() {
 const fragmentShader = `
 uniform float u_time;
 uniform float u_frequency;
-varying vec2 vUv;
 varying vec3 vNormal;
+varying float vDisplacement;
 
 void main() {
-  // Base color
-  vec3 colorA = vec3(0.1, 0.3, 0.8); // Royal Blue
-  vec3 colorB = vec3(0.5, 0.8, 1.0); // Light Blue
+  // Core colors - Deep Blue to Neon Cyan
+  vec3 colorBase = vec3(0.05, 0.1, 0.4); 
+  vec3 colorHigh = vec3(0.2, 0.8, 1.0);
   
-  // Mix based on normal and frequency
-  float mixVal = (vNormal.y + 1.0) * 0.5;
-  vec3 finalColor = mix(colorA, colorB, mixVal + u_frequency);
+  // Mix based on displacement (higher spikes = lighter)
+  float t = smoothstep(0.0, 0.8, vDisplacement);
+  vec3 finalColor = mix(colorBase, colorHigh, t);
   
-  // Add pulse glow
-  float glow = u_frequency * 0.5;
+  // Audio reactivity for Glow
+  // We boost the intensity well above 1.0 to trigger the Bloom effect
+  float glowIntensity = 1.5 + (u_frequency * 4.0);
+  finalColor *= glowIntensity;
+
+  // Add a pulsing core effect
+  float pulse = sin(u_time * 2.0) * 0.5 + 0.5;
+  vec3 pulseColor = vec3(0.5, 0.0, 0.8) * pulse * u_frequency;
   
-  gl_FragColor = vec4(finalColor + glow, 1.0);
+  finalColor += pulseColor;
+  
+  gl_FragColor = vec4(finalColor, 1.0);
 }
 `;
 
@@ -233,9 +257,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   // Visualizer Refs
   const canvasRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const sceneRef = useRef<THREE.Scene | null>(null);
-  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const sphereRef = useRef<THREE.Mesh | null>(null);
+  const composerRef = useRef<EffectComposer | null>(null);
   const frameIdRef = useRef<number>(0);
 
   // Handle Resize and Desktop Check
@@ -307,51 +329,75 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
       const width = canvasRef.current.clientWidth;
       const height = canvasRef.current.clientHeight;
 
-      // Scene
+      // 1. Scene & Camera
       const scene = new THREE.Scene();
-      sceneRef.current = scene;
+      // Add a dark background color to make bloom pop, or keep transparent
+      // scene.background = new THREE.Color(0x050510); 
 
-      // Camera
-      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-      camera.position.z = 3;
-      cameraRef.current = camera;
+      const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
+      camera.position.z = 2.5;
 
-      // Renderer
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      // 2. Renderer
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); // Antialias false for post-processing performance
       renderer.setSize(width, height);
+      renderer.setPixelRatio(window.devicePixelRatio);
       canvasRef.current.appendChild(renderer.domElement);
       rendererRef.current = renderer;
 
-      // Sphere Uniforms
+      // 3. Post Processing (Bloom)
+      const renderScene = new RenderPass(scene, camera);
+      
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(width, height),
+        1.5,  // strength
+        0.4,  // radius
+        0.1   // threshold
+      );
+
+      const outputPass = new OutputPass();
+
+      const composer = new EffectComposer(renderer);
+      composer.addPass(renderScene);
+      composer.addPass(bloomPass);
+      composer.addPass(outputPass);
+      composerRef.current = composer;
+
+      // 4. Object (The AI Orb)
       const uniforms = {
           u_time: { value: 0.0 },
           u_frequency: { value: 0.0 }
       };
 
-      // Geometry & Material
-      const geometry = new THREE.IcosahedronGeometry(1.2, 4); // Detailed sphere
+      const geometry = new THREE.IcosahedronGeometry(1.0, 15); // High subdivision for smooth spikes
       const material = new THREE.ShaderMaterial({
           uniforms: uniforms,
           vertexShader: vertexShader,
           fragmentShader: fragmentShader,
-          wireframe: true,
-          transparent: true
+          wireframe: true, // Wireframe often looks techy with bloom
+          transparent: true,
+          side: THREE.DoubleSide
       });
 
       const sphere = new THREE.Mesh(geometry, material);
       scene.add(sphere);
-      sphereRef.current = sphere;
 
-      // Animation Loop
+      // Inner Core (Solid glow)
+      const coreGeo = new THREE.IcosahedronGeometry(0.8, 2);
+      const coreMat = new THREE.MeshBasicMaterial({ color: 0x001133 });
+      const core = new THREE.Mesh(coreGeo, coreMat);
+      scene.add(core);
+
+      // 5. Animation Loop
       const animate = () => {
           frameIdRef.current = requestAnimationFrame(animate);
           
           const time = performance.now() * 0.001;
           uniforms.u_time.value = time;
-          sphere.rotation.y = time * 0.2;
-          sphere.rotation.z = time * 0.1;
+          
+          sphere.rotation.y = time * 0.1;
+          sphere.rotation.z = time * 0.05;
 
-          // Audio Data
+          // Audio Data Integration
           let avgFreq = 0;
           if (liveSessionRef.current) {
                // Mix Input and Output
@@ -362,7 +408,9 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
                if (session.inputAnalyser) {
                    const data = new Uint8Array(session.inputAnalyser.frequencyBinCount);
                    session.inputAnalyser.getByteFrequencyData(data);
-                   const inputAvg = data.reduce((a, b) => a + b, 0) / data.length;
+                   // Focus on lower frequencies for visual impact
+                   const subArray = data.slice(0, data.length / 2);
+                   const inputAvg = subArray.reduce((a, b) => a + b, 0) / subArray.length;
                    sum += inputAvg;
                    count++;
                }
@@ -371,27 +419,26 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
                    const data = new Uint8Array(session.outputAnalyser.frequencyBinCount);
                    session.outputAnalyser.getByteFrequencyData(data);
                    const outputAvg = data.reduce((a, b) => a + b, 0) / data.length;
-                   sum += outputAvg;
+                   sum += outputAvg * 1.5; // Boost output visual
                    count++;
                }
 
                if (count > 0) {
                    avgFreq = sum / count; 
                }
-          } else if (isLiveActive) {
-            // FAKE FREQUENCY for demo purposes when not actually connected
-            // Create a pulsating effect using sine waves
-            const pulse = Math.sin(time * 3) * 0.5 + 0.5; // 0 to 1
-            const jitter = Math.random() * 0.2;
-            avgFreq = (pulse * 50) + (jitter * 20);
           }
           
-          // Smooth the frequency value for the shader (0.0 to 1.0 range approximate)
-          const targetFreq = avgFreq / 128.0; 
-          // Simple Lerp for smoothness
-          uniforms.u_frequency.value += (targetFreq - uniforms.u_frequency.value) * 0.2;
+          // Normalize (0.0 to 1.0 approx)
+          const targetFreq = Math.min(avgFreq / 100.0, 1.2); 
+          
+          // Smooth Lerp
+          uniforms.u_frequency.value += (targetFreq - uniforms.u_frequency.value) * 0.15;
+          
+          // Adjust Bloom strength dynamically based on loudness
+          bloomPass.strength = 1.2 + uniforms.u_frequency.value * 2.0;
+          bloomPass.radius = 0.4 + uniforms.u_frequency.value * 0.2;
 
-          renderer.render(scene, camera);
+          composer.render();
       };
       
       animate();
@@ -404,6 +451,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
           rendererRef.current.dispose();
       }
       rendererRef.current = null;
+      composerRef.current = null;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -495,13 +543,35 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
 
   const toggleLiveAgent = async () => {
     if (isLiveActive) {
+      // Disconnect
       if (liveSessionRef.current) {
         liveSessionRef.current.disconnect();
         liveSessionRef.current = null;
       }
       setIsLiveActive(false);
     } else {
-      setIsLiveActive(true);
+      // Connect
+      
+      const session = new LiveSession((html) => {
+          // Callback when document is generated by voice
+          setResult(html);
+          setLoading(false);
+          // Optional: Disconnect after generation if desired, 
+          // or stay connected for feedback. 
+          // For now, we'll keep connection open but show result.
+      });
+
+      liveSessionRef.current = session;
+      
+      try {
+        await session.connect();
+        setIsLiveActive(true);
+      } catch (e) {
+        console.error("Failed to connect live agent:", e);
+        setIsLiveActive(false);
+        liveSessionRef.current = null;
+        alert(`Failed to connect to Voice Agent: ${(e as Error).message}`);
+      }
     }
   };
 
@@ -620,31 +690,31 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
                 <div 
                   ref={canvasRef} 
                   className="absolute inset-0 w-full h-full z-0" 
-                  style={{ background: 'radial-gradient(circle at center, #0a102e 0%, #000000 70%)' }}
+                  style={{ background: 'radial-gradient(circle at center, #050510 0%, #000000 70%)' }}
                 />
 
                 {/* UI Overlay */}
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-12 pointer-events-none">
-                    <h3 className="text-xl md:text-2xl font-bold mb-2 text-white drop-shadow-md">
-                        {isLiveActive ? "Listening..." : "NEMSU AI Agent"}
+                    <h3 className="text-xl md:text-2xl font-bold mb-2 text-white drop-shadow-[0_0_10px_rgba(0,200,255,0.8)] tracking-wide">
+                        {isLiveActive ? "NEMSU AI COORDINATOR" : "NEMSU AI AGENT"}
                     </h3>
                     <p className="text-gray-300 mb-8 max-w-xs text-center drop-shadow-md text-sm md:text-base">
                         {isLiveActive 
-                            ? "Discuss your event details. I'm visualizing your voice." 
-                            : "Start a call to discuss your proposal with the AI Coordinator."}
+                            ? "Listening to your proposal details..." 
+                            : "Connect to start the interview process."}
                     </p>
 
                     <button
                         onClick={toggleLiveAgent}
                         className={`
-                            px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl pointer-events-auto
+                            px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg flex items-center gap-3 transition-all transform hover:scale-105 shadow-2xl pointer-events-auto border-2
                             ${isLiveActive 
-                                ? 'bg-red-500 hover:bg-red-600 text-white' 
-                                : 'bg-blue-600 hover:bg-blue-700 text-white'}
+                                ? 'bg-red-500/20 border-red-500 text-red-100 hover:bg-red-500 hover:text-white backdrop-blur-sm' 
+                                : 'bg-blue-600/20 border-blue-500 text-blue-100 hover:bg-blue-500 hover:text-white backdrop-blur-sm'}
                         `}
                     >
                         {isLiveActive ? (
-                            <><PhoneOff className="w-5 h-5 md:w-6 md:h-6" /> End Call</>
+                            <><PhoneOff className="w-5 h-5 md:w-6 md:h-6" /> End Session</>
                         ) : (
                             <><Mic className="w-5 h-5 md:w-6 md:h-6" /> Start Interview</>
                         )}
@@ -668,7 +738,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
           <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-gray-400">
              <Bot className="w-16 h-16 mb-4 text-blue-500 animate-bounce" />
              <p className="text-lg font-medium text-gray-600 dark:text-gray-300">Drafting your document...</p>
-             <p className="text-sm">This uses the 2.5 Flash model for speed.</p>
+             <p className="text-sm">Generating your document...</p>
           </div>
         ) : (
           <RichTextEditor 

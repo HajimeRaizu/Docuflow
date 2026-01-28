@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, LiveServerMessage, Modality, FunctionDeclaration, Type } from "@google/genai";
 import { DocumentType, BudgetLineItem, ChatMessage } from "../types";
 
@@ -268,20 +269,31 @@ export class LiveSession {
     const currentKey = getApiKey();
     if (!currentKey) {
         console.error("API Key is missing for LiveSession! Please set API_KEY in env.");
-        alert("API Key is missing. The Voice Agent will not connect.");
     }
     this.ai = new GoogleGenAI({ apiKey: currentKey });
     this.onDocumentGenerated = onDocumentGenerated;
   }
 
   async connect() {
-    // Initialize AudioContexts
+    // 1. Get User Media FIRST to ensure permission and device existence
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Voice features require a secure context (HTTPS) and microphone access.");
+    }
+
+    try {
+        this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (e) {
+        console.error("Microphone access failed:", e);
+        throw new Error("Microphone not found or permission denied. Please allow microphone access.");
+    }
+
+    // 2. Initialize AudioContexts only after permissions are granted
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     
-    // Input: Try to request 16kHz for consistency with Gemini
+    // Input: Force 16kHz sample rate as required by Gemini Live for optimal performance
     this.inputContext = new AudioContextClass({ sampleRate: 16000 });
     
-    // Output: Let the browser decide the sample rate to avoid playback speed issues
+    // Output: Standard playback rate (usually 44.1 or 48k)
     this.outputContext = new AudioContextClass(); 
     
     // Create Analysers
@@ -296,12 +308,12 @@ export class LiveSession {
       await this.outputContext.resume();
     }
 
-    this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
     const config = {
-      model: 'gemini-2.5-flash-native-audio-preview-09-2025',
+      model: 'gemini-2.5-flash-native-audio-preview-12-2025',
       callbacks: {
-        onopen: () => console.log("Connection opened"),
+        onopen: () => {
+           console.log("Connection opened");
+        },
         onmessage: this.onMessage.bind(this),
         onclose: () => console.log('Session closed'),
         onerror: (e: any) => console.error('Session error', e),
@@ -371,8 +383,10 @@ export class LiveSession {
     if (!this.inputContext || !this.stream) return;
 
     this.source = this.inputContext.createMediaStreamSource(this.stream);
+    // Connect to analyser for visualization
     this.source.connect(this.inputAnalyser!); 
     
+    // Use ScriptProcessor for raw PCM access (bufferSize, inputChannels, outputChannels)
     this.processor = this.inputContext.createScriptProcessor(4096, 1, 1);
     
     this.processor.onaudioprocess = (e) => {
@@ -407,7 +421,7 @@ export class LiveSession {
     // Handle Audio
     const audioData = message.serverContent?.modelTurn?.parts?.[0]?.inlineData?.data;
     if (audioData) {
-      this.playAudio(audioData);
+      await this.playAudio(audioData);
     }
 
     // Handle Tool Call
@@ -459,6 +473,11 @@ export class LiveSession {
 
   private async playAudio(base64: string) {
      if (!this.outputContext || !this.outputAnalyser) return;
+
+     // CRITICAL: Ensure context is running. Browsers may suspend it if not initiated by user gesture.
+     if (this.outputContext.state === 'suspended') {
+        await this.outputContext.resume();
+     }
      
      try {
         // Decode base64
@@ -480,7 +499,6 @@ export class LiveSession {
         const dataInt16 = new Int16Array(bytes.buffer);
         
         // Use the Gemini native rate (24000) for the buffer
-        // The AudioContext (which might be 44.1k or 48k) will handle resampling on playback
         const buffer = this.outputContext.createBuffer(1, dataInt16.length, 24000);
         const channelData = buffer.getChannelData(0);
         for(let i=0; i<dataInt16.length; i++) {
@@ -488,6 +506,8 @@ export class LiveSession {
         }
 
         // Play
+        // The `nextStartTime` variable acts as a cursor to track the end of the audio playback queue.
+        // Scheduling each new audio chunk to start at this time ensures smooth, gapless playback.
         this.nextStartTime = Math.max(this.nextStartTime, this.outputContext.currentTime);
         const source = this.outputContext.createBufferSource();
         source.buffer = buffer;
