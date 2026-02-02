@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { 
-  Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, 
+import {
+  Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight,
   List, ListOrdered, Undo, Redo, Save, Eye, FileText, Mic, MicOff, Scissors, Download, Printer
 } from 'lucide-react';
 
@@ -14,14 +14,14 @@ interface RichTextEditorProps {
 }
 
 // A4 Dimensions in Pixels (approx at 96 DPI)
-const PAGE_HEIGHT = 1123; 
-const PAGE_WIDTH = 794; 
+const PAGE_HEIGHT = 1123;
+const PAGE_WIDTH = 794;
 const PAGE_MARGIN = 96; // 1 inch approx
 
-export const RichTextEditor: React.FC<RichTextEditorProps> = ({ 
-  initialContent, 
-  title = "Document", 
-  onToggleVoice, 
+export const RichTextEditor: React.FC<RichTextEditorProps> = ({
+  initialContent,
+  title = "Document",
+  onToggleVoice,
   isVoiceActive,
   onSave
 }) => {
@@ -57,7 +57,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   const checkHeight = () => {
     if (editorRef.current) {
-        setContentHeight(editorRef.current.scrollHeight);
+      setContentHeight(editorRef.current.scrollHeight);
     }
   }
 
@@ -107,7 +107,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     const editorContent = editorRef.current?.innerHTML || '';
     const headerContent = document.getElementById('doc-header-content')?.innerHTML || '';
     const footerContent = document.getElementById('doc-footer-content')?.innerHTML || '';
-    
+
     const printWindow = window.open('', '', 'width=900,height=1200');
     if (!printWindow) return;
 
@@ -120,10 +120,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             @media print {
               @page { 
                 size: A4; 
-                margin: 10mm 15mm; 
+                margin: 0; /* Important: Removes browser headers/footers */
               }
               body { 
-                margin: 0;
+                margin: 20mm; /* Add margins back via body */
                 font-family: 'Times New Roman', Times, serif;
                 -webkit-print-color-adjust: exact; 
                 print-color-adjust: exact;
@@ -131,7 +131,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                 background: white;
               }
               
-              /* Print Layout Structure - Uses Table to repeat Header/Footer */
+              /* Print Layout Structure selected by ID to avoid duplication issues if any */
               table { width: 100%; border-collapse: collapse; }
               thead { display: table-header-group; }
               tfoot { display: table-footer-group; }
@@ -140,6 +140,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                 width: 100%;
                 text-align: center;
                 margin-bottom: 20px;
+                /* Ensure invalid images don't break layout */
               }
               
               .print-footer {
@@ -237,11 +238,14 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const DocumentHeaderContent = () => (
     <div id="doc-header-content" className="flex flex-col items-center justify-center pt-4 text-center font-serif">
       <div className="flex items-center justify-center mb-2">
-          <img 
-            src="https://scontent.ftdg1-1.fna.fbcdn.net/v/t39.30808-6/323766341_1815321958848574_2117577963714806811_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeF0pB7omAB0Hs0EpFMi_0gZwAVcbrVbqabABVxutVuppqcF0Aueh0wANR0alAlX-J6jLjEcX8e9d1vbkNISXj3N&_nc_ohc=gMfzxv9KRkcQ7kNvwFcFgqa&_nc_oc=AdlGXE4dig6-cPjQUBih7VKi_-gxfr7zNKSq47IMZGPNpEAOamq7DdbcNwyO6YLSKdg&_nc_zt=23&_nc_ht=scontent.ftdg1-1.fna&_nc_gid=8XXB00fpTHe-ZMnFghur6A&oh=00_AfgpJgyeM22JoPjAt-uOPdKItgI8xeInCzjaYyJT3NGrtA&oe=69285512" 
-            alt="NEMSU Logo" 
-            className="w-12 h-12 md:w-16 md:h-16 object-contain"
-          />
+        <img
+          src="https://ui-avatars.com/api/?name=NEMSU&background=0D8ABC&color=fff&size=128&length=1"
+          alt="NEMSU Logo"
+          className="w-12 h-12 md:w-16 md:h-16 object-contain"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none'; // Hide if fails
+          }}
+        />
       </div>
       <p className="text-[9pt] md:text-[10pt] leading-tight">Republic of the Philippines</p>
       <h1 className="text-[10pt] md:text-[12pt] font-bold uppercase text-blue-900 tracking-wide leading-tight">
@@ -255,40 +259,40 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     <div id="doc-footer-content" className="flex flex-col justify-end pt-4 pb-2 px-8">
       <div className="border-t border-blue-900/50 w-full mb-2"></div>
       <div className="flex items-end justify-between text-[8pt] font-sans text-gray-600">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2">
-                <span>📍</span>
-                <span>NEMSU Main Campus, Tandag City</span>
-            </div>
-            <div className="flex items-center gap-2">
-                <span>📞</span>
-                <span>+63 999 663 4946</span>
-            </div>
-            <div className="flex items-center gap-2">
-                <span>🌐</span>
-                <span className="text-blue-800 underline">www.nemsu.edu.ph</span>
-            </div>
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-2">
+            <span>📍</span>
+            <span>NEMSU Main Campus, Tandag City</span>
           </div>
-          
-          <div className="flex gap-2">
-            <div className="h-8 w-8 border border-gray-300 flex flex-col items-center justify-center bg-gray-50">
-                <span className="text-[5px] font-bold">ISO</span>
-                <span className="text-[5px]">9001</span>
-            </div>
-            <div className="h-8 w-8 border border-gray-300 flex flex-col items-center justify-center bg-gray-50">
-                <span className="text-[5px] font-bold">UKAS</span>
-                <span className="text-[5px]">✔</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <span>📞</span>
+            <span>+63 999 663 4946</span>
           </div>
+          <div className="flex items-center gap-2">
+            <span>🌐</span>
+            <span className="text-blue-800 underline">www.nemsu.edu.ph</span>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <div className="h-8 w-8 border border-gray-300 flex flex-col items-center justify-center bg-gray-50">
+            <span className="text-[5px] font-bold">ISO</span>
+            <span className="text-[5px]">9001</span>
+          </div>
+          <div className="h-8 w-8 border border-gray-300 flex flex-col items-center justify-center bg-gray-50">
+            <span className="text-[5px] font-bold">UKAS</span>
+            <span className="text-[5px]">✔</span>
+          </div>
+        </div>
       </div>
       <div className="text-center text-[7pt] text-gray-400 mt-1">
-          System Generated by NEMSU AI DocuFlow
+        System Generated by NEMSU AI DocuFlow
       </div>
     </div>
   );
 
-  const containerClasses = isMaximized 
-    ? "fixed inset-0 z-[100] flex flex-col bg-gray-100 dark:bg-gray-900 h-screen w-screen animate-zoom-in-center origin-center" 
+  const containerClasses = isMaximized
+    ? "fixed inset-0 z-[100] flex flex-col bg-gray-100 dark:bg-gray-900 h-screen w-screen animate-zoom-in-center origin-center"
     : "flex flex-col h-full bg-gray-100 dark:bg-gray-900 overflow-hidden rounded-xl border border-gray-300 dark:border-gray-700 shadow-inner relative animate-restore-in";
 
   return (
@@ -359,24 +363,24 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         <ToolbarButton icon={ListOrdered} cmd="insertOrderedList" title="Numbered List" />
         <ToolbarButton icon={Scissors} cmd="insertHTML" arg='<div class="page-break"></div>' title="Insert Page Break" />
         <div className="flex-1 min-w-[10px]" />
-        
+
         {/* Actions */}
         <button onClick={handleSaveClick} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium" title="Save to My Documents">
           <Save className="w-4 h-4" /> <span className="hidden lg:inline">Save</span>
         </button>
-        
+
         <button onClick={handleExportDOCX} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium" title="Download as Word Doc">
-           <Download className="w-4 h-4" /> <span className="hidden lg:inline">.doc</span>
+          <Download className="w-4 h-4" /> <span className="hidden lg:inline">.doc</span>
         </button>
 
         <button onClick={handlePrint} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium" title="Print / Save as PDF">
-           <Printer className="w-4 h-4" /> <span className="hidden lg:inline">Print</span>
+          <Printer className="w-4 h-4" /> <span className="hidden lg:inline">Print</span>
         </button>
-        
+
         <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2 hidden sm:block" />
-        
-        <button 
-          onClick={() => setIsMaximized(!isMaximized)} 
+
+        <button
+          onClick={() => setIsMaximized(!isMaximized)}
           className={`p-2 rounded transition flex items-center gap-2 text-sm font-medium ${isMaximized ? 'bg-blue-100 text-blue-700' : 'text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20'}`}
         >
           <Eye className="w-4 h-4" /> <span className="hidden lg:inline">View</span>
@@ -385,45 +389,45 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
       {/* Editor Workspace - Allows horizontal scroll for the A4 paper */}
       <div className="flex-1 overflow-auto bg-gray-200 dark:bg-gray-900/50 flex flex-col items-center p-4 md:p-8 custom-scrollbar">
-        
+
         {/* The Paper */}
-        <div 
-            className="bg-white text-black shadow-lg relative flex flex-col transition-all shrink-0"
-            style={{ 
-                width: PAGE_WIDTH, 
-                minHeight: Math.max(PAGE_HEIGHT, contentHeight + 200) // Ensure it grows
-            }}
+        <div
+          className="bg-white text-black shadow-lg relative flex flex-col transition-all shrink-0"
+          style={{
+            width: PAGE_WIDTH,
+            minHeight: Math.max(PAGE_HEIGHT, contentHeight + 200) // Ensure it grows
+          }}
         >
-            {/* Visual Page Break Guides */}
-            {Array.from({ length: totalPages }).map((_, i) => i > 0 && (
-                <div key={i} className="page-guide" style={{ top: i * PAGE_HEIGHT }} />
-            ))}
+          {/* Visual Page Break Guides */}
+          {Array.from({ length: totalPages }).map((_, i) => i > 0 && (
+            <div key={i} className="page-guide" style={{ top: i * PAGE_HEIGHT }} />
+          ))}
 
-            <DocumentHeaderContent />
+          <DocumentHeaderContent />
 
-            <div 
-                ref={editorRef}
-                contentEditable
-                onInput={checkHeight}
-                onKeyUp={checkHeight}
-                className="outline-none document-editor flex-1"
-                style={{
-                    width: '100%',
-                    paddingLeft: PAGE_MARGIN,
-                    paddingRight: PAGE_MARGIN,
-                    paddingTop: 20,
-                    paddingBottom: 40,
-                    fontSize: '12pt',
-                    lineHeight: '1.5',
-                }}
-            />
+          <div
+            ref={editorRef}
+            contentEditable
+            onInput={checkHeight}
+            onKeyUp={checkHeight}
+            className="outline-none document-editor flex-1"
+            style={{
+              width: '100%',
+              paddingLeft: PAGE_MARGIN,
+              paddingRight: PAGE_MARGIN,
+              paddingTop: 20,
+              paddingBottom: 40,
+              fontSize: '12pt',
+              lineHeight: '1.5',
+            }}
+          />
 
-            <DocumentFooterContent />
+          <DocumentFooterContent />
         </div>
 
         <div className="h-20" />
       </div>
-      
+
       {/* Footer Info Bar */}
       <div className="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-1 text-xs text-gray-500 flex justify-between shrink-0 z-20">
         <span>Height: {contentHeight}px • Est. Pages: {totalPages}</span>
@@ -432,11 +436,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
       {/* Voice Agent Button */}
       {isMaximized && onToggleVoice && (
-        <button 
-            onClick={onToggleVoice}
-            className={`fixed bottom-8 right-8 z-[60] p-4 rounded-full shadow-2xl transition-all hover:scale-110 flex items-center justify-center ${isVoiceActive ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+        <button
+          onClick={onToggleVoice}
+          className={`fixed bottom-8 right-8 z-[60] p-4 rounded-full shadow-2xl transition-all hover:scale-110 flex items-center justify-center ${isVoiceActive ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
         >
-            {isVoiceActive ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+          {isVoiceActive ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
         </button>
       )}
     </div>

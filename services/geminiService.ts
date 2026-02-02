@@ -11,14 +11,14 @@ const FALLBACK_KEY = "AIzaSyBfperGLp6lhXd9Uz-U_inGt-SshTmc4KA";
 const getApiKey = () => {
   try {
     let key = '';
-    
+
     // 1. Check process.env (Standard Node/Vercel/Next.js)
     if (typeof process !== 'undefined' && process.env) {
       if (process.env.API_KEY) key = process.env.API_KEY;
       else if (process.env.NEXT_PUBLIC_API_KEY) key = process.env.NEXT_PUBLIC_API_KEY;
       else if (process.env.REACT_APP_API_KEY) key = process.env.REACT_APP_API_KEY;
     }
-    
+
     // 2. Check import.meta.env (Vite)
     // @ts-ignore
     if (!key && typeof import.meta !== 'undefined' && import.meta.env) {
@@ -27,7 +27,7 @@ const getApiKey = () => {
       // @ts-ignore
       if (import.meta.env.API_KEY) key = import.meta.env.API_KEY;
     }
-    
+
     // 3. Use Fallback if no env var found
     if (!key) {
       console.log("Using Fallback API Key for testing.");
@@ -75,9 +75,9 @@ export const generateDocument = async (
 
   // Re-initialize to ensure we have the latest key if it loaded late
   const genAI = new GoogleGenAI({ apiKey: currentKey });
-  
+
   const model = 'gemini-2.5-flash';
-  
+
   // Get Admin-configured settings
   const aiSettings = getAISettings();
   const styleInstruction = `
@@ -85,9 +85,9 @@ export const generateDocument = async (
     - **Tone**: ${aiSettings.tone} (Ensure the language reflects this tone).
     - **Length/Verbosity**: ${aiSettings.length} (Adjust paragraph length and detail accordingly).
   `;
-  
+
   let prompt = "";
-  
+
   switch (type) {
     case DocumentType.ACTIVITY_PROPOSAL:
       prompt = `
@@ -264,11 +264,12 @@ export class LiveSession {
   private nextStartTime = 0;
   private audioSourceNodes = new Set<AudioBufferSourceNode>();
   private onDocumentGenerated: (html: string) => void;
+  private isConnected = false;
 
   constructor(onDocumentGenerated: (html: string) => void) {
     const currentKey = getApiKey();
     if (!currentKey) {
-        console.error("API Key is missing for LiveSession! Please set API_KEY in env.");
+      console.error("API Key is missing for LiveSession! Please set API_KEY in env.");
     }
     this.ai = new GoogleGenAI({ apiKey: currentKey });
     this.onDocumentGenerated = onDocumentGenerated;
@@ -277,29 +278,29 @@ export class LiveSession {
   async connect() {
     // 1. Get User Media FIRST to ensure permission and device existence
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        throw new Error("Voice features require a secure context (HTTPS) and microphone access.");
+      throw new Error("Voice features require a secure context (HTTPS) and microphone access.");
     }
 
     try {
-        this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (e) {
-        console.error("Microphone access failed:", e);
-        throw new Error("Microphone not found or permission denied. Please allow microphone access.");
+      console.error("Microphone access failed:", e);
+      throw new Error("Microphone not found or permission denied. Please allow microphone access.");
     }
 
     // 2. Initialize AudioContexts only after permissions are granted
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-    
+
     // Input: Force 16kHz sample rate as required by Gemini Live for optimal performance
     this.inputContext = new AudioContextClass({ sampleRate: 16000 });
-    
+
     // Output: Standard playback rate (usually 44.1 or 48k)
-    this.outputContext = new AudioContextClass(); 
-    
+    this.outputContext = new AudioContextClass();
+
     // Create Analysers
     this.inputAnalyser = this.inputContext.createAnalyser();
     this.inputAnalyser.fftSize = 256;
-    
+
     this.outputAnalyser = this.outputContext.createAnalyser();
     this.outputAnalyser.fftSize = 256;
 
@@ -312,23 +313,28 @@ export class LiveSession {
       model: 'gemini-2.5-flash-native-audio-preview-12-2025',
       callbacks: {
         onopen: () => {
-           console.log("Connection opened");
+          console.log("Connection opened");
         },
         onmessage: this.onMessage.bind(this),
         onclose: () => console.log('Session closed'),
         onerror: (e: any) => console.error('Session error', e),
       },
+      // Correct configuration structure handling for Live API
       config: {
-        responseModalities: [Modality.AUDIO],
-        speechConfig: {
-          voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } },
+        generationConfig: {
+          responseModalities: [Modality.AUDIO],
+          speechConfig: {
+            voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Kore' } },
+          },
         },
-        systemInstruction: `You are a friendly and enthusiastic NEMSU Activity Coordinator.
+        systemInstruction: {
+          parts: [{
+            text: `You are a friendly and enthusiastic NEMSU Activity Coordinator.
         Your goal is to interview the student to gather details for an Activity Proposal.
         
         CRITICAL: The user has just connected. YOU MUST SPEAK FIRST.
         Immediately say: "Hello! I'm your NEMSU AI Coordinator. I'm here to help you draft your activity proposal. What is the title of your activity?"
-
+        
         Then ask one question at a time to gather these details:
         1. Date of activity
         2. Venue
@@ -354,28 +360,31 @@ export class LiveSession {
           - Approved: Campus Director
        - DO NOT include the logo/header.
        - Ensure all generic tables have style="border-collapse: collapse; width: 100%; border: 1px solid black;" and cells have style="border: 1px solid black; padding: 5px;".
-        `,
+        `
+          }],
+        },
         tools: [{ functionDeclarations: [proposalTool] }],
       },
     };
 
     // @ts-ignore 
     this.sessionPromise = this.ai.live.connect(config);
-    
+
     // Wait for connection to completely resolve
     const session = await this.sessionPromise;
-    
+
     // Start Audio Stream after connection is ready
+    this.isConnected = true;
     this.startAudioInput();
 
     // TRIGGER THE MODEL: Send a silent audio frame to wake it up.
     // This is more reliable than text triggers for getting an initial audio response.
     try {
-        const silentFrame = new Float32Array(512).fill(0); // Brief silence
-        const blob = this.createBlob(silentFrame);
-        session.sendRealtimeInput({ media: blob });
+      const silentFrame = new Float32Array(512).fill(0); // Brief silence
+      const blob = this.createBlob(silentFrame);
+      session.sendRealtimeInput({ media: blob });
     } catch (e) {
-        console.warn("Failed to send wake-up frame", e);
+      console.warn("Failed to send wake-up frame", e);
     }
   }
 
@@ -384,21 +393,23 @@ export class LiveSession {
 
     this.source = this.inputContext.createMediaStreamSource(this.stream);
     // Connect to analyser for visualization
-    this.source.connect(this.inputAnalyser!); 
-    
+    this.source.connect(this.inputAnalyser!);
+
     // Use ScriptProcessor for raw PCM access (bufferSize, inputChannels, outputChannels)
     this.processor = this.inputContext.createScriptProcessor(4096, 1, 1);
-    
+
     this.processor.onaudioprocess = (e) => {
+      if (!this.isConnected) return;
       const inputData = e.inputBuffer.getChannelData(0);
       const pcmBlob = this.createBlob(inputData);
-      
+
       this.sessionPromise?.then((session: any) => {
-         try {
-            session.sendRealtimeInput({ media: pcmBlob });
-         } catch(e) {
-            // Ignore send errors if session closed
-         }
+        if (!this.isConnected) return;
+        try {
+          session.sendRealtimeInput({ media: pcmBlob });
+        } catch (e) {
+          // Ignore send errors if session closed
+        }
       });
     };
 
@@ -411,7 +422,7 @@ export class LiveSession {
     const interrupted = message.serverContent?.interrupted;
     if (interrupted) {
       this.audioSourceNodes.forEach(node => {
-        try { node.stop(); } catch(e) {}
+        try { node.stop(); } catch (e) { }
       });
       this.audioSourceNodes.clear();
       this.nextStartTime = 0;
@@ -427,108 +438,109 @@ export class LiveSession {
     // Handle Tool Call
     const toolCall = message.toolCall;
     if (toolCall) {
-       for (const call of toolCall.functionCalls) {
-           if (call.name === 'generate_proposal_document') {
-               const html = (call.args as any).htmlContent;
-               this.onDocumentGenerated(html);
-               
-               // Send success response
-               this.sessionPromise?.then((session: any) => {
-                   session.sendToolResponse({
-                       functionResponses: {
-                           id: call.id,
-                           name: call.name,
-                           response: { result: 'Document generated successfully.' }
-                       }
-                   });
-               });
-           }
-       }
+      for (const call of toolCall.functionCalls) {
+        if (call.name === 'generate_proposal_document') {
+          const html = (call.args as any).htmlContent;
+          this.onDocumentGenerated(html);
+
+          // Send success response
+          this.sessionPromise?.then((session: any) => {
+            session.sendToolResponse({
+              functionResponses: {
+                id: call.id,
+                name: call.name,
+                response: { result: 'Document generated successfully.' }
+              }
+            });
+          });
+        }
+      }
     }
   }
 
   private createBlob(data: Float32Array) {
-     const l = data.length;
-     const int16 = new Int16Array(l);
-     for (let i = 0; i < l; i++) {
-       // Clamp values to -1.0 to 1.0 before scaling to avoid distortion
-       const val = Math.max(-1, Math.min(1, data[i]));
-       int16[i] = val * 32768;
-     }
-     
-     // Manual base64 encoding
-     let binary = '';
-     const bytes = new Uint8Array(int16.buffer);
-     const len = bytes.byteLength;
-     for (let i = 0; i < len; i++) {
-       binary += String.fromCharCode(bytes[i]);
-     }
-     const base64 = btoa(binary);
+    const l = data.length;
+    const int16 = new Int16Array(l);
+    for (let i = 0; i < l; i++) {
+      // Clamp values to -1.0 to 1.0 before scaling to avoid distortion
+      const val = Math.max(-1, Math.min(1, data[i]));
+      int16[i] = val * 32768;
+    }
 
-     return {
-       data: base64,
-       mimeType: 'audio/pcm;rate=16000'
-     };
+    // Manual base64 encoding
+    let binary = '';
+    const bytes = new Uint8Array(int16.buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const base64 = btoa(binary);
+
+    return {
+      data: base64,
+      mimeType: 'audio/pcm;rate=16000'
+    };
   }
 
   private async playAudio(base64: string) {
-     if (!this.outputContext || !this.outputAnalyser) return;
+    if (!this.outputContext || !this.outputAnalyser) return;
 
-     // CRITICAL: Ensure context is running. Browsers may suspend it if not initiated by user gesture.
-     if (this.outputContext.state === 'suspended') {
-        await this.outputContext.resume();
-     }
-     
-     try {
-        // Decode base64
-        const binaryString = atob(base64);
-        const len = binaryString.length;
-        let bytes = new Uint8Array(len);
-        for (let i = 0; i < len; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-        }
-        
-        // IMPORTANT: Ensure bytes.length is even for Int16Array
-        if (bytes.length % 2 !== 0) {
-            const newBytes = new Uint8Array(bytes.length + 1);
-            newBytes.set(bytes);
-            bytes = newBytes;
-        }
-        
-        // Convert PCM to AudioBuffer
-        const dataInt16 = new Int16Array(bytes.buffer);
-        
-        // Use the Gemini native rate (24000) for the buffer
-        const buffer = this.outputContext.createBuffer(1, dataInt16.length, 24000);
-        const channelData = buffer.getChannelData(0);
-        for(let i=0; i<dataInt16.length; i++) {
-            channelData[i] = dataInt16[i] / 32768.0;
-        }
+    // CRITICAL: Ensure context is running. Browsers may suspend it if not initiated by user gesture.
+    if (this.outputContext.state === 'suspended') {
+      await this.outputContext.resume();
+    }
 
-        // Play
-        // The `nextStartTime` variable acts as a cursor to track the end of the audio playback queue.
-        // Scheduling each new audio chunk to start at this time ensures smooth, gapless playback.
-        this.nextStartTime = Math.max(this.nextStartTime, this.outputContext.currentTime);
-        const source = this.outputContext.createBufferSource();
-        source.buffer = buffer;
-        
-        // Connect source -> Analyser -> Destination
-        source.connect(this.outputAnalyser);
-        this.outputAnalyser.connect(this.outputContext.destination);
-        
-        source.onended = () => {
-          this.audioSourceNodes.delete(source);
-        };
-        this.audioSourceNodes.add(source);
+    try {
+      // Decode base64
+      const binaryString = atob(base64);
+      const len = binaryString.length;
+      let bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
 
-        source.start(this.nextStartTime);
-        this.nextStartTime += buffer.duration;
-     } catch(e) {
-         console.error("Error playing audio chunk", e);
-     }
+      // IMPORTANT: Ensure bytes.length is even for Int16Array
+      if (bytes.length % 2 !== 0) {
+        const newBytes = new Uint8Array(bytes.length + 1);
+        newBytes.set(bytes);
+        bytes = newBytes;
+      }
+
+      // Convert PCM to AudioBuffer
+      const dataInt16 = new Int16Array(bytes.buffer);
+
+      // Use the Gemini native rate (24000) for the buffer
+      const buffer = this.outputContext.createBuffer(1, dataInt16.length, 24000);
+      const channelData = buffer.getChannelData(0);
+      for (let i = 0; i < dataInt16.length; i++) {
+        channelData[i] = dataInt16[i] / 32768.0;
+      }
+
+      // Play
+      // The `nextStartTime` variable acts as a cursor to track the end of the audio playback queue.
+      // Scheduling each new audio chunk to start at this time ensures smooth, gapless playback.
+      this.nextStartTime = Math.max(this.nextStartTime, this.outputContext.currentTime);
+      const source = this.outputContext.createBufferSource();
+      source.buffer = buffer;
+
+      // Connect source -> Analyser -> Destination
+      source.connect(this.outputAnalyser);
+      this.outputAnalyser.connect(this.outputContext.destination);
+
+      source.onended = () => {
+        this.audioSourceNodes.delete(source);
+      };
+      this.audioSourceNodes.add(source);
+
+      source.start(this.nextStartTime);
+      this.nextStartTime += buffer.duration;
+    } catch (e) {
+      console.error("Error playing audio chunk", e);
+    }
   }
 
   disconnect() {
+    this.isConnected = false;
     this.sessionPromise?.then((session: any) => session.close());
     this.processor?.disconnect();
     this.source?.disconnect();
@@ -536,7 +548,7 @@ export class LiveSession {
     this.inputContext?.close();
     this.outputContext?.close();
     this.audioSourceNodes.forEach(node => {
-        try { node.stop(); } catch(e) {}
+      try { node.stop(); } catch (e) { }
     });
     this.audioSourceNodes.clear();
   }

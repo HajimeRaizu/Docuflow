@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, UserRole } from '../types';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { supabase } from '../services/supabaseClient';
 
 interface AuthProps {
   onLogin: (user: User) => void;
@@ -11,6 +12,24 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/`,
+        },
+      });
+      if (error) throw error;
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred during Google login.');
+      }
+    }
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +71,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        
+
         {/* Branding (First on Mobile, Last on Desktop) */}
         <div className="text-center lg:text-left flex flex-col items-center lg:items-center justify-center p-4 lg:order-last">
           <h1 className="text-6xl md:text-7xl font-serif italic text-blue-900 mb-6 drop-shadow-sm">
@@ -129,10 +148,11 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
             >
               Login
             </button>
-            
+
             <button
               type="button"
-              className="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3.5 rounded-lg transition flex items-center justify-center gap-2 hover:bg-gray-50"
+              onClick={handleGoogleLogin}
+              className="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3.5 rounded-lg transition flex items-center justify-center gap-2 hover:bg-gray-50 hover:shadow-sm"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path

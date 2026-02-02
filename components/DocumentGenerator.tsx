@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { DocumentType, GeneratedDocument, DocumentVersion } from '../types';
+import { DocumentType, GeneratedDocument, DocumentVersion, User } from '../types';
 import { generateDocument, LiveSession } from '../services/geminiService';
+import { supabase } from '../services/supabaseClient';
 import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical } from 'lucide-react';
 import { RichTextEditor } from './RichTextEditor';
 import * as THREE from 'three';
@@ -15,7 +16,9 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 interface DocumentGeneratorProps {
+  user: User;
   initialType?: DocumentType;
+  initialDoc?: GeneratedDocument;
   onBack: () => void;
 }
 
@@ -214,10 +217,10 @@ void main() {
 }
 `;
 
-export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialType = DocumentType.ACTIVITY_PROPOSAL, onBack }) => {
-  const [docType, setDocType] = useState<DocumentType>(initialType);
+export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, initialType = DocumentType.ACTIVITY_PROPOSAL, initialDoc, onBack }) => {
+  const [docType, setDocType] = useState<DocumentType>(initialDoc ? initialDoc.type : initialType);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState(initialDoc ? initialDoc.content : '');
   const [inputMode, setInputMode] = useState<'form' | 'chat'>('form');
 
   // Sidebar Resize State
@@ -227,7 +230,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // Document Tracking for Versioning
-  const [currentDocId, setCurrentDocId] = useState<string | null>(null);
+  const [currentDocId, setCurrentDocId] = useState<string | null>(initialDoc ? initialDoc.id : null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -250,10 +253,22 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
     resolved: ''
   });
 
+  // Load initial document data into form if editing
+  useEffect(() => {
+    if (initialDoc) {
+      setFormData(prev => ({
+        ...prev,
+        title: initialDoc.title || '',
+        // If we had more structured data saved, we would populate it here.
+        // For now, we only have generic content and title from the DB for re-opening.
+      }));
+    }
+  }, [initialDoc]);
+
   // Live Agent State
   const [isLiveActive, setIsLiveActive] = useState(false);
   const liveSessionRef = useRef<LiveSession | null>(null);
-  
+
   // Visualizer Refs
   const canvasRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -274,7 +289,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
       if (sidebarRef.current) {
         const sidebarRect = sidebarRef.current.getBoundingClientRect();
         const newWidth = e.clientX - sidebarRect.left;
-        
+
         // Min 300px, Max 800px constraint
         if (newWidth > 300 && newWidth < 800) {
           setSidebarWidth(newWidth);
@@ -310,148 +325,148 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
       stopVisualizer();
     };
   }, []);
-  
+
   // Start/Stop Visualizer when active state changes
   useEffect(() => {
-      if (isLiveActive && inputMode === 'chat') {
-          setTimeout(initVisualizer, 100); // Slight delay for DOM
-      } else {
-          stopVisualizer();
-      }
+    if (isLiveActive && inputMode === 'chat') {
+      setTimeout(initVisualizer, 100); // Slight delay for DOM
+    } else {
+      stopVisualizer();
+    }
   }, [isLiveActive, inputMode]);
 
   const initVisualizer = () => {
-      if (!canvasRef.current) return;
-      
-      // Cleanup existing
-      if (rendererRef.current) stopVisualizer();
+    if (!canvasRef.current) return;
 
-      const width = canvasRef.current.clientWidth;
-      const height = canvasRef.current.clientHeight;
+    // Cleanup existing
+    if (rendererRef.current) stopVisualizer();
 
-      // 1. Scene & Camera
-      const scene = new THREE.Scene();
-      // Add a dark background color to make bloom pop, or keep transparent
-      // scene.background = new THREE.Color(0x050510); 
+    const width = canvasRef.current.clientWidth;
+    const height = canvasRef.current.clientHeight;
 
-      const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
-      camera.position.z = 2.5;
+    // 1. Scene & Camera
+    const scene = new THREE.Scene();
+    // Add a dark background color to make bloom pop, or keep transparent
+    // scene.background = new THREE.Color(0x050510); 
 
-      // 2. Renderer
-      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); // Antialias false for post-processing performance
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      canvasRef.current.appendChild(renderer.domElement);
-      rendererRef.current = renderer;
+    const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 1000);
+    camera.position.z = 2.5;
 
-      // 3. Post Processing (Bloom)
-      const renderScene = new RenderPass(scene, camera);
-      
-      const bloomPass = new UnrealBloomPass(
-        new THREE.Vector2(width, height),
-        1.5,  // strength
-        0.4,  // radius
-        0.1   // threshold
-      );
+    // 2. Renderer
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false }); // Antialias false for post-processing performance
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    canvasRef.current.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
 
-      const outputPass = new OutputPass();
+    // 3. Post Processing (Bloom)
+    const renderScene = new RenderPass(scene, camera);
 
-      const composer = new EffectComposer(renderer);
-      composer.addPass(renderScene);
-      composer.addPass(bloomPass);
-      composer.addPass(outputPass);
-      composerRef.current = composer;
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(width, height),
+      1.5,  // strength
+      0.4,  // radius
+      0.1   // threshold
+    );
 
-      // 4. Object (The AI Orb)
-      const uniforms = {
-          u_time: { value: 0.0 },
-          u_frequency: { value: 0.0 }
-      };
+    const outputPass = new OutputPass();
 
-      const geometry = new THREE.IcosahedronGeometry(1.0, 15); // High subdivision for smooth spikes
-      const material = new THREE.ShaderMaterial({
-          uniforms: uniforms,
-          vertexShader: vertexShader,
-          fragmentShader: fragmentShader,
-          wireframe: true, // Wireframe often looks techy with bloom
-          transparent: true,
-          side: THREE.DoubleSide
-      });
+    const composer = new EffectComposer(renderer);
+    composer.addPass(renderScene);
+    composer.addPass(bloomPass);
+    composer.addPass(outputPass);
+    composerRef.current = composer;
 
-      const sphere = new THREE.Mesh(geometry, material);
-      scene.add(sphere);
+    // 4. Object (The AI Orb)
+    const uniforms = {
+      u_time: { value: 0.0 },
+      u_frequency: { value: 0.0 }
+    };
 
-      // Inner Core (Solid glow)
-      const coreGeo = new THREE.IcosahedronGeometry(0.8, 2);
-      const coreMat = new THREE.MeshBasicMaterial({ color: 0x001133 });
-      const core = new THREE.Mesh(coreGeo, coreMat);
-      scene.add(core);
+    const geometry = new THREE.IcosahedronGeometry(1.0, 15); // High subdivision for smooth spikes
+    const material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      wireframe: true, // Wireframe often looks techy with bloom
+      transparent: true,
+      side: THREE.DoubleSide
+    });
 
-      // 5. Animation Loop
-      const animate = () => {
-          frameIdRef.current = requestAnimationFrame(animate);
-          
-          const time = performance.now() * 0.001;
-          uniforms.u_time.value = time;
-          
-          sphere.rotation.y = time * 0.1;
-          sphere.rotation.z = time * 0.05;
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
 
-          // Audio Data Integration
-          let avgFreq = 0;
-          if (liveSessionRef.current) {
-               // Mix Input and Output
-               const session = liveSessionRef.current;
-               let sum = 0;
-               let count = 0;
+    // Inner Core (Solid glow)
+    const coreGeo = new THREE.IcosahedronGeometry(0.8, 2);
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0x001133 });
+    const core = new THREE.Mesh(coreGeo, coreMat);
+    scene.add(core);
 
-               if (session.inputAnalyser) {
-                   const data = new Uint8Array(session.inputAnalyser.frequencyBinCount);
-                   session.inputAnalyser.getByteFrequencyData(data);
-                   // Focus on lower frequencies for visual impact
-                   const subArray = data.slice(0, data.length / 2);
-                   const inputAvg = subArray.reduce((a, b) => a + b, 0) / subArray.length;
-                   sum += inputAvg;
-                   count++;
-               }
-               
-               if (session.outputAnalyser) {
-                   const data = new Uint8Array(session.outputAnalyser.frequencyBinCount);
-                   session.outputAnalyser.getByteFrequencyData(data);
-                   const outputAvg = data.reduce((a, b) => a + b, 0) / data.length;
-                   sum += outputAvg * 1.5; // Boost output visual
-                   count++;
-               }
+    // 5. Animation Loop
+    const animate = () => {
+      frameIdRef.current = requestAnimationFrame(animate);
 
-               if (count > 0) {
-                   avgFreq = sum / count; 
-               }
-          }
-          
-          // Normalize (0.0 to 1.0 approx)
-          const targetFreq = Math.min(avgFreq / 100.0, 1.2); 
-          
-          // Smooth Lerp
-          uniforms.u_frequency.value += (targetFreq - uniforms.u_frequency.value) * 0.15;
-          
-          // Adjust Bloom strength dynamically based on loudness
-          bloomPass.strength = 1.2 + uniforms.u_frequency.value * 2.0;
-          bloomPass.radius = 0.4 + uniforms.u_frequency.value * 0.2;
+      const time = performance.now() * 0.001;
+      uniforms.u_time.value = time;
 
-          composer.render();
-      };
-      
-      animate();
+      sphere.rotation.y = time * 0.1;
+      sphere.rotation.z = time * 0.05;
+
+      // Audio Data Integration
+      let avgFreq = 0;
+      if (liveSessionRef.current) {
+        // Mix Input and Output
+        const session = liveSessionRef.current;
+        let sum = 0;
+        let count = 0;
+
+        if (session.inputAnalyser) {
+          const data = new Uint8Array(session.inputAnalyser.frequencyBinCount);
+          session.inputAnalyser.getByteFrequencyData(data);
+          // Focus on lower frequencies for visual impact
+          const subArray = data.slice(0, data.length / 2);
+          const inputAvg = subArray.reduce((a, b) => a + b, 0) / subArray.length;
+          sum += inputAvg;
+          count++;
+        }
+
+        if (session.outputAnalyser) {
+          const data = new Uint8Array(session.outputAnalyser.frequencyBinCount);
+          session.outputAnalyser.getByteFrequencyData(data);
+          const outputAvg = data.reduce((a, b) => a + b, 0) / data.length;
+          sum += outputAvg * 1.5; // Boost output visual
+          count++;
+        }
+
+        if (count > 0) {
+          avgFreq = sum / count;
+        }
+      }
+
+      // Normalize (0.0 to 1.0 approx)
+      const targetFreq = Math.min(avgFreq / 100.0, 1.2);
+
+      // Smooth Lerp
+      uniforms.u_frequency.value += (targetFreq - uniforms.u_frequency.value) * 0.15;
+
+      // Adjust Bloom strength dynamically based on loudness
+      bloomPass.strength = 1.2 + uniforms.u_frequency.value * 2.0;
+      bloomPass.radius = 0.4 + uniforms.u_frequency.value * 0.2;
+
+      composer.render();
+    };
+
+    animate();
   };
 
   const stopVisualizer = () => {
-      cancelAnimationFrame(frameIdRef.current);
-      if (rendererRef.current && canvasRef.current) {
-          canvasRef.current.innerHTML = '';
-          rendererRef.current.dispose();
-      }
-      rendererRef.current = null;
-      composerRef.current = null;
+    cancelAnimationFrame(frameIdRef.current);
+    if (rendererRef.current && canvasRef.current) {
+      canvasRef.current.innerHTML = '';
+      rendererRef.current.dispose();
+    }
+    rendererRef.current = null;
+    composerRef.current = null;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -460,15 +475,23 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
 
   const handleGenerate = async () => {
     setLoading(true);
-    
-    // DEMO OVERRIDE: Simulate generation without API call
-    setTimeout(() => {
-        setResult(MOCK_GENERATED_DOC);
-        setLoading(false);
-    }, 2000);
+    try {
+      const generatedContent = await generateDocument(docType, formData);
+      setResult(generatedContent);
+    } catch (error) {
+      console.error("Generation failed", error);
+      alert("Failed to generate document. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSaveToStorage = (content: string) => {
+  const handleSaveToStorage = async (content: string) => {
+    if (!user || !user.id) {
+      alert("You must be logged in to save documents.");
+      return;
+    }
+
     try {
       // Determine a title based on available data or defaults
       let title = "Untitled Document";
@@ -477,67 +500,42 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
       else if (formData.orgName) title = `${formData.orgName} Resolution`;
       else if (docType) title = `${docType} - ${new Date().toLocaleDateString()}`;
 
-      // Get existing docs
-      const existingDocsStr = localStorage.getItem('nemsu_smartdraft_docs');
-      const existingDocs: GeneratedDocument[] = existingDocsStr ? JSON.parse(existingDocsStr) : [];
-
-      if (currentDocId) {
-        // Update existing document with new version
-        const docIndex = existingDocs.findIndex(d => d.id === currentDocId);
-        
-        if (docIndex !== -1) {
-            const doc = existingDocs[docIndex];
-            const newVersionNumber = (doc.versions?.length || 0) + 1;
-            
-            const newVersion: DocumentVersion = {
-                id: Date.now().toString(),
-                content: content,
-                savedAt: new Date(),
-                versionNumber: newVersionNumber
-            };
-
-            const updatedDoc: GeneratedDocument = {
-                ...doc,
-                content: content,
-                updatedAt: new Date(),
-                versions: [...(doc.versions || []), newVersion]
-            };
-
-            existingDocs[docIndex] = updatedDoc;
-            localStorage.setItem('nemsu_smartdraft_docs', JSON.stringify(existingDocs));
-            alert(`Document saved! Version ${newVersionNumber} created.`);
-            return;
-        }
-      }
-
-      // Create New Document
-      const newDocId = Date.now().toString();
-      const initialVersion: DocumentVersion = {
-          id: Date.now().toString(),
-          content: content,
-          savedAt: new Date(),
-          versionNumber: 1
-      };
-
-      const newDoc: GeneratedDocument = {
-        id: newDocId,
+      // Upsert to Supabase
+      const docData = {
+        user_id: user.id,
         title: title,
         type: docType,
         content: content,
-        createdAt: new Date(),
-        updatedAt: new Date(),
         status: 'Draft',
-        versions: [initialVersion]
+        updated_at: new Date().toISOString()
       };
-      
-      const updatedDocs = [newDoc, ...existingDocs];
-      localStorage.setItem('nemsu_smartdraft_docs', JSON.stringify(updatedDocs));
-      setCurrentDocId(newDocId);
-      
-      alert("Document saved to 'My Documents' successfully!");
+
+      if (currentDocId) {
+        // Update
+        const { error } = await supabase
+          .from('documents')
+          .update(docData)
+          .eq('id', currentDocId);
+
+        if (error) throw error;
+        alert("Document updated successfully!");
+      } else {
+        // Insert
+        const { data, error } = await supabase
+          .from('documents')
+          .insert([docData])
+          .select()
+          .single();
+
+        if (error) throw error;
+        if (data) {
+          setCurrentDocId(data.id);
+          alert("New document created and saved!");
+        }
+      }
     } catch (e) {
       console.error("Failed to save document", e);
-      alert("Failed to save document. Local storage might be full.");
+      alert(`Failed to save document: ${(e as Error).message}`);
     }
   };
 
@@ -551,18 +549,18 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
       setIsLiveActive(false);
     } else {
       // Connect
-      
+
       const session = new LiveSession((html) => {
-          // Callback when document is generated by voice
-          setResult(html);
-          setLoading(false);
-          // Optional: Disconnect after generation if desired, 
-          // or stay connected for feedback. 
-          // For now, we'll keep connection open but show result.
+        // Callback when document is generated by voice
+        setResult(html);
+        setLoading(false);
+        // Optional: Disconnect after generation if desired, 
+        // or stay connected for feedback. 
+        // For now, we'll keep connection open but show result.
       });
 
       liveSessionRef.current = session;
-      
+
       try {
         await session.connect();
         setIsLiveActive(true);
@@ -578,171 +576,171 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ initialTyp
   return (
     <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row gap-4 lg:gap-0 overflow-hidden">
       {/* Left Panel - Resizable on Desktop */}
-      <div 
+      <div
         ref={sidebarRef}
         className="flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col h-[40vh] lg:h-full"
-        style={{ 
-            width: isDesktop ? sidebarWidth : '100%',
-            marginBottom: isDesktop ? 0 : '1rem'
+        style={{
+          width: isDesktop ? sidebarWidth : '100%',
+          marginBottom: isDesktop ? 0 : '1rem'
         }}
       >
         <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4">
           <div className="flex items-center gap-3">
             <button onClick={onBack} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
-                <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5" />
             </button>
             <h2 className="text-xl font-bold">Generator</h2>
           </div>
-          
+
           <div className="bg-gray-100 dark:bg-gray-700 p-1 rounded-lg flex">
-              <button 
-                onClick={() => setInputMode('form')}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition ${inputMode === 'form' ? 'bg-white dark:bg-gray-600 shadow text-blue-700 dark:text-blue-300' : 'text-gray-500'}`}
-              >
-                  <FormInput className="w-4 h-4" /> Form Input
-              </button>
-              <button 
-                onClick={() => {
-                    setInputMode('chat');
-                    if(docType !== DocumentType.ACTIVITY_PROPOSAL) setDocType(DocumentType.ACTIVITY_PROPOSAL);
-                }}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition ${inputMode === 'chat' ? 'bg-white dark:bg-gray-600 shadow text-blue-700 dark:text-blue-300' : 'text-gray-500'}`}
-              >
-                  <Mic className="w-4 h-4" /> Voice Agent
-              </button>
+            <button
+              onClick={() => setInputMode('form')}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition ${inputMode === 'form' ? 'bg-white dark:bg-gray-600 shadow text-blue-700 dark:text-blue-300' : 'text-gray-500'}`}
+            >
+              <FormInput className="w-4 h-4" /> Form Input
+            </button>
+            <button
+              onClick={() => {
+                setInputMode('chat');
+                if (docType !== DocumentType.ACTIVITY_PROPOSAL) setDocType(DocumentType.ACTIVITY_PROPOSAL);
+              }}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-medium transition ${inputMode === 'chat' ? 'bg-white dark:bg-gray-600 shadow text-blue-700 dark:text-blue-300' : 'text-gray-500'}`}
+            >
+              <Mic className="w-4 h-4" /> Voice Agent
+            </button>
           </div>
         </div>
-        
+
         {inputMode === 'form' ? (
-            <div className="p-4 md:p-6 overflow-y-auto flex-1 space-y-6">
+          <div className="p-4 md:p-6 overflow-y-auto flex-1 space-y-6">
             <div>
-                <label className="block text-sm font-medium mb-2">Document Type</label>
-                <select 
-                value={docType} 
+              <label className="block text-sm font-medium mb-2">Document Type</label>
+              <select
+                value={docType}
                 onChange={(e) => setDocType(e.target.value as DocumentType)}
                 className="w-full p-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600"
-                >
+              >
                 {Object.values(DocumentType).map(t => (
-                    <option key={t} value={t}>{t}</option>
+                  <option key={t} value={t}>{t}</option>
                 ))}
-                </select>
+              </select>
             </div>
 
             {/* Dynamic Fields */}
             {docType === DocumentType.ACTIVITY_PROPOSAL && (
-                <>
+              <>
                 <input name="orgName" placeholder="Organization Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <input name="title" placeholder="Activity Title" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <input name="venue" placeholder="Venue" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-                    <input type="date" name="date" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                  <input name="venue" placeholder="Venue" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                  <input type="date" name="date" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 </div>
-                
+
                 <input name="proponent" placeholder="Proponent (Your Name)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <input name="budget" placeholder="Est. Budget (e.g. 5,000)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-                    <input name="source" placeholder="Source (e.g. STF)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                  <input name="budget" placeholder="Est. Budget (e.g. 5,000)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                  <input name="source" placeholder="Source (e.g. STF)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 </div>
 
                 <textarea name="objectives" placeholder="Objectives (List them)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-32" />
-                </>
+              </>
             )}
 
             {docType === DocumentType.OFFICIAL_LETTER && (
-                <>
+              <>
                 <input name="senderName" placeholder="Your Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <input name="senderPosition" placeholder="Your Position" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <input name="recipientName" placeholder="Recipient Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <input name="subject" placeholder="Subject" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <textarea name="details" placeholder="Key details to include in the body..." onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-32" />
-                </>
+              </>
             )}
 
             {docType === DocumentType.RESOLUTION && (
-                <>
+              <>
                 <input name="orgName" placeholder="Organization Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <input name="resNum" placeholder="Resolution No. (e.g. 001-2024)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <input name="topic" placeholder="Topic/Subject" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                 <textarea name="whereas" placeholder="Whereas clauses (Context)..." onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
                 <textarea name="resolved" placeholder="Resolved clause (Action)..." onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
-                </>
+              </>
             )}
-            
-            <button 
-                onClick={handleGenerate}
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-lg font-bold hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50"
+
+            <button
+              onClick={handleGenerate}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-lg font-bold hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
-                {loading ? (
+              {loading ? (
                 <>
-                    <Bot className="w-5 h-5 animate-spin" /> Generating...
+                  <Bot className="w-5 h-5 animate-spin" /> Generating...
                 </>
-                ) : (
+              ) : (
                 <><Bot className="w-5 h-5" /> Generate Document</>
-                )}
+              )}
             </button>
-            </div>
+          </div>
         ) : (
-            // Voice Agent Interface with Three.js Visualizer
-            <div className="flex flex-col flex-1 h-full bg-black relative overflow-hidden rounded-b-xl lg:rounded-b-none lg:rounded-br-none">
-                {/* Visualizer Canvas Container */}
-                <div 
-                  ref={canvasRef} 
-                  className="absolute inset-0 w-full h-full z-0" 
-                  style={{ background: 'radial-gradient(circle at center, #050510 0%, #000000 70%)' }}
-                />
+          // Voice Agent Interface with Three.js Visualizer
+          <div className="flex flex-col flex-1 h-full bg-black relative overflow-hidden rounded-b-xl lg:rounded-b-none lg:rounded-br-none">
+            {/* Visualizer Canvas Container */}
+            <div
+              ref={canvasRef}
+              className="absolute inset-0 w-full h-full z-0"
+              style={{ background: 'radial-gradient(circle at center, #050510 0%, #000000 70%)' }}
+            />
 
-                {/* UI Overlay */}
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-12 pointer-events-none">
-                    <h3 className="text-xl md:text-2xl font-bold mb-2 text-white drop-shadow-[0_0_10px_rgba(0,200,255,0.8)] tracking-wide">
-                        {isLiveActive ? "NEMSU AI COORDINATOR" : "NEMSU AI AGENT"}
-                    </h3>
-                    <p className="text-gray-300 mb-8 max-w-xs text-center drop-shadow-md text-sm md:text-base">
-                        {isLiveActive 
-                            ? "Listening to your proposal details..." 
-                            : "Connect to start the interview process."}
-                    </p>
+            {/* UI Overlay */}
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-12 pointer-events-none">
+              <h3 className="text-xl md:text-2xl font-bold mb-2 text-white drop-shadow-[0_0_10px_rgba(0,200,255,0.8)] tracking-wide">
+                {isLiveActive ? "NEMSU AI COORDINATOR" : "NEMSU AI AGENT"}
+              </h3>
+              <p className="text-gray-300 mb-8 max-w-xs text-center drop-shadow-md text-sm md:text-base">
+                {isLiveActive
+                  ? "Listening to your proposal details..."
+                  : "Connect to start the interview process."}
+              </p>
 
-                    <button
-                        onClick={toggleLiveAgent}
-                        className={`
+              <button
+                onClick={toggleLiveAgent}
+                className={`
                             px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-base md:text-lg flex items-center gap-3 transition-all transform hover:scale-105 shadow-2xl pointer-events-auto border-2
-                            ${isLiveActive 
-                                ? 'bg-red-500/20 border-red-500 text-red-100 hover:bg-red-500 hover:text-white backdrop-blur-sm' 
-                                : 'bg-blue-600/20 border-blue-500 text-blue-100 hover:bg-blue-500 hover:text-white backdrop-blur-sm'}
+                            ${isLiveActive
+                    ? 'bg-red-500/20 border-red-500 text-red-100 hover:bg-red-500 hover:text-white backdrop-blur-sm'
+                    : 'bg-blue-600/20 border-blue-500 text-blue-100 hover:bg-blue-500 hover:text-white backdrop-blur-sm'}
                         `}
-                    >
-                        {isLiveActive ? (
-                            <><PhoneOff className="w-5 h-5 md:w-6 md:h-6" /> End Session</>
-                        ) : (
-                            <><Mic className="w-5 h-5 md:w-6 md:h-6" /> Start Interview</>
-                        )}
-                    </button>
-                </div>
+              >
+                {isLiveActive ? (
+                  <><PhoneOff className="w-5 h-5 md:w-6 md:h-6" /> End Session</>
+                ) : (
+                  <><Mic className="w-5 h-5 md:w-6 md:h-6" /> Start Interview</>
+                )}
+              </button>
             </div>
+          </div>
         )}
       </div>
 
       {/* Resize Handle (Desktop Only) */}
-      <div 
-         className="hidden lg:flex w-5 cursor-col-resize items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0 text-gray-400 hover:text-blue-500 select-none"
-         onMouseDown={() => setIsResizing(true)}
+      <div
+        className="hidden lg:flex w-5 cursor-col-resize items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0 text-gray-400 hover:text-blue-500 select-none"
+        onMouseDown={() => setIsResizing(true)}
       >
-         <GripVertical className="w-4 h-4" />
+        <GripVertical className="w-4 h-4" />
       </div>
 
       {/* Right Panel */}
       <div className="flex-1 h-[60vh] lg:h-full flex flex-col min-w-0">
         {loading && !result ? (
           <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-gray-400">
-             <Bot className="w-16 h-16 mb-4 text-blue-500 animate-bounce" />
-             <p className="text-lg font-medium text-gray-600 dark:text-gray-300">Drafting your document...</p>
-             <p className="text-sm">Generating your document...</p>
+            <Bot className="w-16 h-16 mb-4 text-blue-500 animate-bounce" />
+            <p className="text-lg font-medium text-gray-600 dark:text-gray-300">Drafting your document...</p>
+            <p className="text-sm">Generating your document...</p>
           </div>
         ) : (
-          <RichTextEditor 
-            initialContent={result} 
+          <RichTextEditor
+            initialContent={result}
             title={formData.title || formData.subject || "Document"}
             onToggleVoice={toggleLiveAgent}
             isVoiceActive={isLiveActive}

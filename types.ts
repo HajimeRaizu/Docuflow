@@ -1,13 +1,16 @@
 
 export enum UserRole {
+  STUDENT = 'Student',
   STUDENT_LEADER = 'Student Leader',
   ADVISER = 'Organization Adviser',
   ADMIN = 'Campus Admin',
 }
 
 export interface User {
+  id?: string;
   email: string;
   name: string;
+  profile_picture_url?: string;
   role: UserRole;
   organization?: string;
 }
