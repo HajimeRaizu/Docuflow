@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { DocumentType, GeneratedDocument, DocumentVersion, User } from '../types';
-import { generateDocument, LiveSession } from '../services/geminiService';
+import { generateDocument, LiveSession } from '../services/openaiService';
 import { supabase } from '../services/supabaseClient';
 import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical } from 'lucide-react';
 import { RichTextEditor } from './RichTextEditor';

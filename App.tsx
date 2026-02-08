@@ -5,8 +5,7 @@ import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
 import { AdminDashboard } from './components/AdminDashboard';
 import { DocumentGenerator } from './components/DocumentGenerator';
-import { BudgetCalculator } from './components/BudgetCalculator';
-import { MealPlanner } from './components/MealPlanner';
+
 import { DocumentList } from './components/DocumentList';
 import { Layout } from './components/Layout';
 import { User, DocumentType, UserRole } from './types';
@@ -324,15 +323,11 @@ const App: React.FC = () => {
         />
       );
       break;
-    case 'budget':
-      content = <BudgetCalculator onBack={() => handleNavigate(getBackRoute())} />;
-      break;
+
     case 'documents':
       content = <DocumentList user={user} onNavigate={handleNavigate} />;
       break;
-    case 'meal-planner':
-      content = <MealPlanner onBack={() => handleNavigate(getBackRoute())} />;
-      break;
+
     default:
       content = (
         <div className="flex items-center justify-center h-full text-gray-500">

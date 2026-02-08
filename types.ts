@@ -42,13 +42,7 @@ export interface GeneratedDocument {
   versions?: DocumentVersion[];
 }
 
-export interface BudgetLineItem {
-  id: string;
-  item: string;
-  quantity: number;
-  unitPrice: number;
-  total: number;
-}
+
 
 export interface ChatMessage {
   role: 'user' | 'model';

@@ -40,6 +40,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
       const adminUser: User = {
         email,
         name: 'Jim Shendrick',
+        id: 'mock-admin-id-001',
         role: UserRole.ADMIN,
         organization: 'System Administration'
       };
