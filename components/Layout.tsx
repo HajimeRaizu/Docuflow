@@ -70,55 +70,58 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
           </h1>
         </div>
 
-        {/* Desktop Navigation Links (Moved to Right) */}
-        <div className="hidden md:flex items-center gap-4 lg:gap-8 ml-auto mr-6">
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center gap-8 ml-auto px-8">
           <button
             onClick={() => handleNavigate(getHomeRoute())}
-            className={`flex items-center gap-2 text-sm font-medium transition-colors ${(currentView === 'dashboard' || currentView === 'admin-dashboard')
-              ? 'text-blue-600 dark:text-blue-400'
-              : 'text-gray-600 dark:text-gray-300 hover:text-blue-600'
+            className={`flex items-center gap-2 text-[15px] font-medium transition-colors ${(currentView === 'dashboard' || currentView === 'admin-dashboard')
+              ? 'text-blue-600'
+              : 'text-gray-600 hover:text-blue-600'
               }`}
           >
             <Home className="w-4 h-4" />
-            <span className="hidden lg:inline">Home</span>
+            <span>Home</span>
           </button>
           <button
             onClick={() => handleNavigate('documents')}
-            className={`flex items-center gap-2 text-sm font-medium transition-colors ${currentView === 'documents'
-              ? 'text-blue-600 dark:text-blue-400'
-              : 'text-gray-600 dark:text-gray-300 hover:text-blue-600'
+            className={`flex items-center gap-2 text-[15px] font-medium transition-colors ${currentView === 'documents'
+              ? 'text-blue-600'
+              : 'text-gray-600 hover:text-blue-600'
               }`}
           >
             <LayoutIcon className="w-4 h-4" />
-            <span className="hidden lg:inline">Documents</span>
+            <span>Documents</span>
           </button>
           <button
             onClick={() => handleNavigate('archives')}
-            className={`flex items-center gap-2 text-sm font-medium transition-colors ${currentView === 'archives'
-              ? 'text-blue-600 dark:text-blue-400'
-              : 'text-gray-600 dark:text-gray-300 hover:text-blue-600'
+            className={`flex items-center gap-2 text-[15px] font-medium transition-colors ${currentView === 'archives'
+              ? 'text-blue-600'
+              : 'text-gray-600 hover:text-blue-600'
               }`}
           >
             <Archive className="w-4 h-4" />
-            <span className="hidden lg:inline">Archives</span>
+            <span>Archives</span>
           </button>
         </div>
 
         {/* User Profile Section */}
-        <div className="flex items-center gap-2 md:gap-4 relative" ref={dropdownRef}>
-          <div className="hidden md:block h-8 w-px bg-gray-200 dark:bg-gray-700 mx-2"></div>
+        <div className="flex items-center gap-4 relative" ref={dropdownRef}>
+          <div className="h-8 w-[1px] bg-gray-200 dark:bg-gray-700 mx-2"></div>
 
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center gap-2 md:gap-3 outline-none group"
+            className="flex items-center gap-3 outline-none group"
           >
-            <div className="hidden md:flex flex-col items-end mr-1">
-              <span className="text-sm font-semibold text-gray-800 dark:text-white group-hover:text-blue-600 transition max-w-[100px] truncate">{user.full_name}</span>
+            <span className="text-[15px] font-medium text-gray-700 dark:text-gray-200 group-hover:text-blue-600 transition truncate max-w-[150px]">
+              {user.full_name}
+            </span>
+            <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 border border-blue-100 dark:border-blue-800 shadow-sm overflow-hidden transition-transform group-hover:scale-105">
+              <img
+                src={user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=0D8ABC&color=fff&size=80`}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
             </div>
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-              <UserIcon className="w-4 h-4 md:w-5 md:h-5" />
-            </div>
-            <ChevronDown className={`hidden sm:block w-4 h-4 text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {/* Dropdown Card */}
@@ -148,7 +151,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
 
               {/* Role Based Menu Items */}
               <div className="space-y-2">
-                {(user.user_type === UserRole.SUPER_ADMIN || (user.user_type === UserRole.ADMIN && user.specific_role !== 'University Staff')) && (
+                {(user.user_type === UserRole.SUPER_ADMIN || (user.user_type === UserRole.ADMIN && user.specific_role !== 'University Staff' && user.specific_role !== 'University Official')) && (
                   <button
                     onClick={() => handleNavigate('admin-dashboard')}
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 rounded-xl transition group"

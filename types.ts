@@ -5,7 +5,7 @@ export enum UserRole {
 }
 
 export type SpecificRole =
-  | 'CITE Governor' | 'CAS Governor' | 'CBM Governor' | 'CTE Governor' | 'CET Governor' | 'USG President' | 'University Staff'
+  | 'CITE Governor' | 'CAS Governor' | 'CBM Governor' | 'CTE Governor' | 'CET Governor' | 'USG President' | 'University Official'
   | 'Vice Governor' | 'Secretary' | 'Treasurer' | 'Auditor' | 'P.I.O' | 'Business Manager' | 'Sgt. at Arms' | 'Other';
 
 export type Department = 'CITE' | 'CAS' | 'CBM' | 'CTE' | 'CET' | 'USG' | 'System Administration';

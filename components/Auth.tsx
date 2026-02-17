@@ -118,78 +118,28 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
         </div>
 
         {/* Login Form (Second on Mobile, First on Desktop) */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 md:p-10 max-w-md w-full mx-auto transition-colors">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 md:p-10 max-w-md w-full mx-auto transition-colors flex flex-col items-center justify-center">
           <h2 className="text-3xl font-serif italic text-center text-blue-900 dark:text-white mb-8 transition-colors">
-            Welcome Back!
+            Welcome!
           </h2>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-transparent outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                  placeholder="name@nemsu.edu.ph"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-transparent outline-none transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-                  placeholder="Enter your password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center text-gray-600 dark:text-gray-400">
-                <input type="checkbox" className="mr-2 rounded border-gray-300 dark:border-gray-600 text-blue-900 focus:ring-blue-900 bg-white dark:bg-gray-700" />
-                Remember me
-              </label>
-              <button type="button" className="text-gray-500 dark:text-gray-400 hover:text-blue-900 dark:hover:text-blue-400 hover:underline">
-                Forgot password?
-              </button>
-            </div>
+          <div className="w-full space-y-6">
+            <p className="text-center text-gray-600 dark:text-gray-400 text-sm mb-4">
+              Sign in with your university account to continue.
+            </p>
 
             {error && (
-              <div className="text-red-500 text-sm text-center bg-red-50 p-2 rounded">
+              <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-100 animate-shake">
                 {error}
               </div>
             )}
 
             <button
-              type="submit"
-              className="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3.5 rounded-lg transition uppercase tracking-wide text-sm shadow-lg transform active:scale-95"
-            >
-              Login
-            </button>
-
-            <button
               type="button"
               onClick={handleGoogleLogin}
-              className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white font-semibold py-3.5 rounded-lg transition flex items-center justify-center gap-2 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-sm"
+              className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-lg transform active:scale-95 shadow-md"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <svg className="w-6 h-6" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -213,7 +163,11 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
               </svg>
               Continue with Google
             </button>
-          </form>
+
+            <p className="text-center text-[10px] text-gray-400 mt-8 uppercase tracking-widest font-bold">
+              Secure OAuth 2.0 Identity Verification
+            </p>
+          </div>
         </div>
       </div>
     </div>

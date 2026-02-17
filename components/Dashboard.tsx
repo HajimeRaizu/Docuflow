@@ -37,56 +37,56 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   ];
 
   return (
-    <div className="p-6 max-w-[1600px] mx-auto space-y-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-            Welcome, {user.full_name}
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
-            {user.specific_role || user.user_type} • {user.department}
-          </p>
-        </div>
+    <div className="p-8 md:p-12 max-w-[1400px] mx-auto space-y-12">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold text-gray-950 dark:text-white tracking-tight">
+          Welcome, {user.full_name}
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400 font-medium text-lg">
+          {user.specific_role || user.user_type} • {user.department}
+        </p>
       </div>
 
       {/* Quick Actions Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {tiles.map((tile, idx) => (
-          <button
+          <div
             key={idx}
-            onClick={tile.enabled ? tile.action : () => onNavigate('documents', { initialTab: 'shared', initialType: tile.docType })}
-            className={`
-              relative overflow-hidden p-8 rounded-2xl border transition-all duration-300 flex flex-col justify-between h-72 text-left group
-              ${tile.enabled
-                ? 'bg-white dark:bg-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-1 border-gray-200 dark:border-gray-700 cursor-pointer'
-                : 'bg-gray-50 dark:bg-gray-900/50 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer'
-              }
-            `}
+            className="bg-white dark:bg-gray-800 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all duration-500 p-8 flex flex-col items-center text-center group relative overflow-hidden h-[400px]"
           >
-            {/* Decorative Background Blob - Only show if enabled */}
-            {tile.enabled && (
-              <div className={`absolute -right-8 -top-8 w-40 h-40 ${tile.color} opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity`}></div>
-            )}
+            {/* Top Section with Dot Pattern or Dotted Circle */}
+            <div className="flex-1 flex flex-col items-center justify-center">
+              <div className="relative mb-8">
+                {/* Dotted Outer Circle */}
+                <div className="absolute inset-[-12px] rounded-full border-2 border-dashed border-blue-200 dark:border-blue-800/50 group-hover:rotate-45 transition-transform duration-1000"></div>
 
-            <div className="flex justify-between items-start w-full z-10">
-              <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-white shadow-lg transition-transform duration-300 ${tile.enabled ? `${tile.color} group-hover:scale-110` : 'bg-gray-400 dark:bg-gray-700'}`}>
-                <tile.icon className="w-10 h-10" />
+                {/* Icon Container */}
+                <div className="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-2xl relative z-10 transform group-hover:scale-110 transition-transform duration-500">
+                  <tile.icon className="w-12 h-12" />
+                </div>
               </div>
-            </div>
 
-            <div className="z-10 mt-6">
-              <h3 className={`text-2xl font-bold mb-3 transition-colors ${tile.enabled ? 'text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`}>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {tile.title}
               </h3>
-              <p className={`text-lg flex items-center transition-colors ${tile.enabled ? 'text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400' : 'text-gray-500 dark:text-gray-500'}`}>
-                {tile.enabled ? (
-                  <>Start drafting <ArrowRight className="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition-transform" /></>
-                ) : (
-                  <span className="flex items-center gap-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">View Generated Documents <ArrowRight className="w-4 h-4 ml-2" /></span>
-                )}
+              <p className="text-gray-500 dark:text-gray-400 text-base">
+                {tile.title === 'New Activity Proposal' && 'Start drafting a new proposal.'}
+                {tile.title === 'Official Letter' && 'Create an official letter.'}
+                {tile.title === 'Constitution & By-Laws' && 'Draft or revise by-laws.'}
               </p>
             </div>
-          </button>
+
+            {/* Bottom Button */}
+            <button
+              onClick={tile.enabled ? tile.action : () => onNavigate('documents', { initialTab: 'shared', initialType: tile.docType })}
+              className={`
+                w-full py-4 px-6 rounded-full font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all duration-300 flex items-center justify-center gap-2 group/btn
+              `}
+            >
+              Start drafting
+              <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+            </button>
+          </div>
         ))}
       </div>
     </div>

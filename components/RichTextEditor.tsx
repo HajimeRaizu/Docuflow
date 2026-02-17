@@ -12,6 +12,7 @@ interface RichTextEditorProps {
   isVoiceActive?: boolean;
   onSave?: (content: string) => void; // Handler for persistence
   readOnly?: boolean;
+  templateUrl?: string | null; // New Prop
 }
 
 // A4 Dimensions in Pixels (approx at 96 DPI)
@@ -25,7 +26,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onToggleVoice,
   isVoiceActive,
   onSave,
-  readOnly = false
+  readOnly = false,
+  templateUrl
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isMaximized, setIsMaximized] = useState(false);
@@ -70,7 +72,38 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   };
 
-  const handleExportDOCX = () => {
+  const handleExportDOCX = async () => {
+    // If a custom template URL exists, prioritize downloading that (User requested "use actual template")
+    // NOTE: True merging of HTML content INTO a DOCX client-side requires heavy libraries (docxtemplater/pizzip).
+    // For now, we will offer the Original Template file if available, 
+    // OR continue with the HTML-based DOC export if no template.
+
+    if (templateUrl) {
+      // Download the original template file
+      try {
+        const response = await fetch(templateUrl);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        // Extract filename or default
+        const ext = templateUrl.split('.').pop()?.split('?')[0] || 'docx';
+        link.download = `${title.replace(/\s+/g, '_')}_OfficialTemplate.${ext}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Also offer to download the CONTENT separately so they can copy-paste?
+        // Or just notify?
+        // alert("Official Template downloaded. Please copy-paste the generated content into it.");
+        return;
+      } catch (e) {
+        console.error("Failed to download template:", e);
+        // Fallback to normal export
+      }
+    }
+
+    // Standard HTML-to-DOC export (Fallback or default)
     const headerContent = document.getElementById('doc-header-content')?.innerHTML || '';
     const footerContent = document.getElementById('doc-footer-content')?.innerHTML || '';
     const bodyContent = editorRef.current?.innerHTML || '';

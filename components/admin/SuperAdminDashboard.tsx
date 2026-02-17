@@ -28,7 +28,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
         else if (assignRole.includes('CTE')) setAssignDept('CTE');
         else if (assignRole.includes('CET')) setAssignDept('CET');
         else if (assignRole === 'USG President') setAssignDept('USG');
-        else if (assignRole === 'University Staff') setAssignDept('System Administration');
+        else if (assignRole === 'University Official') setAssignDept('System Administration');
     }, [assignRole]);
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                     status: 'active',
                     specific_role: assignRole,
                     department: assignDept,
-                    permissions: (assignRole.includes('Governor') || assignRole === 'University Staff') ? {
+                    permissions: (assignRole.includes('Governor') || assignRole === 'University Official' || assignRole === 'USG President') ? {
                         official_letter: 'edit',
                         activity_proposal: 'edit',
                         constitution: 'edit'
@@ -234,26 +234,26 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
             {/* Sidebar */}
-            <aside className="w-64 bg-blue-900 text-white flex flex-col fixed h-full z-10">
+            <aside className="w-64 bg-blue-900 text-white flex flex-col fixed h-full z-10 dark:bg-gray-800 dark:border-r dark:border-gray-700">
                 <div className="p-6">
                     <h1 className="text-2xl font-serif italic">SmartDraft</h1>
-                    <p className="text-blue-200 text-sm">Super Admin</p>
+                    <p className="text-blue-200 text-sm dark:text-gray-400">Super Admin</p>
                 </div>
 
                 <nav className="flex-1 px-4 space-y-2">
                     <button
                         onClick={() => onNavigate('dashboard')}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition text-blue-200 hover:bg-white/5 mb-2"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition text-blue-200 hover:bg-white/5 mb-2 dark:text-gray-400 dark:hover:bg-gray-700"
                     >
                         <Home className="w-5 h-5" />
                         Back to Workspace
                     </button>
-                    <div className="h-px bg-blue-800 my-2 mx-4"></div>
+                    <div className="h-px bg-blue-800 my-2 mx-4 dark:bg-gray-700"></div>
                     <button
                         onClick={() => setActiveTab('requests')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'requests' ? 'bg-white/10 text-white' : 'text-blue-200 hover:bg-white/5'}`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'requests' ? 'bg-white/10 text-white dark:bg-gray-700' : 'text-blue-200 hover:bg-white/5 dark:text-gray-400 dark:hover:bg-gray-700'}`}
                     >
                         <UserCheck className="w-5 h-5" />
                         Staff Requests
@@ -261,15 +261,15 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                     </button>
                     <button
                         onClick={() => setActiveTab('governors')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'governors' ? 'bg-white/10 text-white' : 'text-blue-200 hover:bg-white/5'}`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'governors' ? 'bg-white/10 text-white dark:bg-gray-700' : 'text-blue-200 hover:bg-white/5 dark:text-gray-400 dark:hover:bg-gray-700'}`}
                     >
                         <Users className="w-5 h-5" />
                         Active Governors
                     </button>
                 </nav>
 
-                <div className="p-4 border-t border-blue-800">
-                    <button onClick={onLogout} className="flex items-center gap-2 text-blue-200 hover:text-white transition w-full">
+                <div className="p-4 border-t border-blue-800 dark:border-gray-700">
+                    <button onClick={onLogout} className="flex items-center gap-2 text-blue-200 hover:text-white transition w-full dark:text-gray-400 dark:hover:text-white">
                         <LogOut className="w-4 h-4" /> Sign Out
                     </button>
                 </div>
@@ -278,7 +278,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
             {/* Main Content */}
             <main className="flex-1 ml-64 p-8">
                 <header className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-bold text-gray-800">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
                         {activeTab === 'requests' ? 'Pending Staff Approvals' : 'Active Governors & Staff'}
                     </h2>
                 </header>
@@ -293,27 +293,27 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                         {activeTab === 'requests' && (
                             <div className="space-y-4">
                                 {pendingStaff.length === 0 ? (
-                                    <div className="bg-white p-8 rounded-xl text-center text-gray-500 shadow-sm">
+                                    <div className="bg-white p-8 rounded-xl text-center text-gray-500 shadow-sm dark:bg-gray-800 dark:text-gray-400">
                                         <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
                                         No pending requests.
                                     </div>
                                 ) : (
                                     pendingStaff.map(user => (
-                                        <div key={user.role_id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                                        <div key={user.role_id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between dark:bg-gray-800 dark:border-gray-700">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-900 font-bold uppercase">
+                                                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-900 font-bold uppercase dark:bg-blue-900/30 dark:text-blue-400">
                                                     {user.full_name.charAt(0)}
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-bold text-gray-900">{user.full_name}</h3>
-                                                    <p className="text-sm text-gray-500">{user.email}</p>
-                                                    <p className="text-xs text-blue-600 font-medium mt-1">{user.specific_role}</p>
+                                                    <h3 className="font-bold text-gray-900 dark:text-white">{user.full_name}</h3>
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                                                    <p className="text-xs text-blue-600 font-medium mt-1 dark:text-blue-400">{user.specific_role}</p>
                                                 </div>
                                             </div>
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => handleReject(user.role_id!)}
-                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                                                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition dark:text-red-400 dark:hover:bg-red-900/20"
                                                     title="Reject"
                                                 >
                                                     <X className="w-5 h-5" />
@@ -335,13 +335,13 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                         {activeTab === 'governors' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {activeGovernors.map(user => (
-                                    <div key={user.role_id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative group">
+                                    <div key={user.role_id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 relative group dark:bg-gray-800 dark:border-gray-700">
                                         <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
                                             {user.status === 'disabled' ? (
                                                 <button
                                                     onClick={() => handleEnable(user.role_id!)}
                                                     disabled={actionLoading === user.role_id}
-                                                    className="text-green-600 hover:bg-green-50 p-2 rounded-lg text-xs font-bold flex items-center gap-1"
+                                                    className="text-green-600 hover:bg-green-50 p-2 rounded-lg text-xs font-bold flex items-center gap-1 dark:text-green-400 dark:hover:bg-green-900/20"
                                                 >
                                                     <Power className="w-4 h-4" /> Enable
                                                 </button>
@@ -349,21 +349,21 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                                                 <button
                                                     onClick={() => handleEndTerm(user.role_id!)}
                                                     disabled={actionLoading === user.role_id}
-                                                    className="text-red-500 hover:bg-red-50 p-2 rounded-lg text-xs font-bold flex items-center gap-1"
+                                                    className="text-red-500 hover:bg-red-50 p-2 rounded-lg text-xs font-bold flex items-center gap-1 dark:text-red-400 dark:hover:bg-red-900/20"
                                                 >
                                                     <Power className="w-4 h-4" /> End Term
                                                 </button>
                                             )}
                                         </div>
                                         <div className="flex flex-col items-center text-center">
-                                            <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center font-bold text-xl mb-4">
+                                            <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center font-bold text-xl mb-4 dark:bg-blue-900/30 dark:text-blue-400">
                                                 {user.full_name.charAt(0)}
                                             </div>
-                                            <h3 className="font-bold text-gray-900 text-lg">{user.specific_role}</h3>
-                                            <p className="text-gray-500 text-sm mb-4">{user.department} • {user.academic_year}</p>
+                                            <h3 className="font-bold text-gray-900 text-lg dark:text-white">{user.specific_role}</h3>
+                                            <p className="text-gray-500 text-sm mb-4 dark:text-gray-400">{user.department} • {user.academic_year}</p>
                                             <div className={`text-xs px-3 py-1 rounded-full border ${user.status === 'active'
-                                                ? 'bg-green-50 text-green-700 border-green-100'
-                                                : 'bg-red-50 text-red-700 border-red-100'
+                                                ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
+                                                : 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
                                                 }`}>
                                                 {user.status === 'active' ? 'Active' : 'Disabled'}
                                             </div>
@@ -377,18 +377,18 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
 
                 {/* Approval Modal */}
                 {selectedUser && (
-                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-                        <div className="bg-white rounded-xl max-w-md w-full p-6">
-                            <h3 className="text-xl font-bold mb-4">Approve Staff Request</h3>
-                            <p className="text-gray-600 mb-6">Assign a role and department to <strong>{selectedUser.full_name}</strong>.</p>
+                    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 animate-fade-in backdrop-blur-sm">
+                        <div className="bg-white rounded-xl max-w-md w-full p-6 dark:bg-gray-800 dark:border dark:border-gray-700">
+                            <h3 className="text-xl font-bold mb-4 dark:text-white">Approve Staff Request</h3>
+                            <p className="text-gray-600 mb-6 dark:text-gray-300">Assign a role and department to <strong>{selectedUser.full_name}</strong>.</p>
 
                             <div className="space-y-4 mb-8">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Specific Role</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Specific Role</label>
                                     <select
                                         value={assignRole}
                                         onChange={(e) => setAssignRole(e.target.value as SpecificRole)}
-                                        className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-900"
+                                        className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500"
                                     >
                                         <option value="CITE Governor">CITE Governor</option>
                                         <option value="CAS Governor">CAS Governor</option>
@@ -396,24 +396,24 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                                         <option value="CTE Governor">CTE Governor</option>
                                         <option value="CET Governor">CET Governor</option>
                                         <option value="USG President">USG President</option>
-                                        <option value="University Staff">University Staff</option>
+                                        <option value="University Official">University Official</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Department</label>
                                     <input
                                         type="text"
                                         value={assignDept}
                                         disabled
-                                        className="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-100 text-gray-500 cursor-not-allowed"
+                                        className="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Department is automatically assigned based on role.</p>
+                                    <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Department is automatically assigned based on role.</p>
                                 </div>
                             </div>
 
                             <div className="flex gap-3">
-                                <button onClick={() => setSelectedUser(null)} className="flex-1 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                                <button onClick={() => setSelectedUser(null)} className="flex-1 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg dark:text-gray-300 dark:hover:bg-gray-700">Cancel</button>
                                 <button
                                     onClick={handleApprove}
                                     disabled={!!actionLoading}
@@ -426,7 +426,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                     </div>
                 )}
             </main>
-        </div >
+        </div>
     );
 };
 

@@ -32,7 +32,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ user, onRequestSub
             const { error } = await supabase.from('user_roles').insert({
                 user_id: user.id,
                 role: UserRole.ADMIN,
-                specific_role: 'University Staff (Applicant)',
+                specific_role: 'University Official (Applicant)',
                 status: 'pending',
                 academic_year: '2025-2026'
             });
@@ -124,7 +124,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ user, onRequestSub
                             </div>
                             <div className="text-center">
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Student Officer</h3>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm">For elected officers of student organizations (Governors, Mayors, etc.)</p>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm">For elected officers (Vice Governor and below)</p>
                             </div>
                         </button>
 
@@ -136,8 +136,8 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ user, onRequestSub
                                 <Shield className="w-10 h-10" />
                             </div>
                             <div className="text-center">
-                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">University Staff</h3>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm">For administrative staff, faculty, and university employees.</p>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">University Officials</h3>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm">For administrative staff, faculty, university employees, Department Governors, and Organization Presidents.</p>
                             </div>
                         </button>
                     </div>
@@ -147,7 +147,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ user, onRequestSub
                     <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-8 rounded-2xl max-w-lg mx-auto shadow-lg">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Confirm Request</h3>
                         <p className="text-gray-600 dark:text-gray-300 mb-6">
-                            You are applying as <strong>University Staff</strong>. This request will be sent to the System SuperAdmin for validation.
+                            You are applying as <strong>University Official</strong>. This request will be sent to the System SuperAdmin for validation.
                         </p>
                         <div className="flex gap-4">
                             <button onClick={() => setStep('selection')} className="flex-1 py-3 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition">Back</button>
