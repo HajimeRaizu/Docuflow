@@ -341,6 +341,7 @@ export class LiveSession {
             source.connect(this.inputAnalyser);
 
             // 2. Initialize Gemini Chat Session using the working pattern
+            // @ts-ignore
             this.chatSession = geminiService['getAI']().chats.create({
                 model: "gemini-3-flash-preview",
                 config: {
@@ -395,23 +396,15 @@ export class LiveSession {
 
                 if (searchResults && searchResults.length > 0) {
                     const refContent = searchResults.map((d: any) => d.file_content || d.content).join("\n\n");
-                    // Inject context as a system-like message or hint safely
-                    await this.chatSession.sendMessage({
-                        role: "user",
-                        parts: [{ text: `SYSTEM NOTE: The following reference documents were found in the database. Use their structure and style as a guide if the user asks to generate a document: \n\n${refContent}` }]
-                    });
+                    // Inject context as a system-like message or hint
+                    // @ts-ignore
+                    await this.chatSession.sendMessage(`SYSTEM NOTE: The following reference documents were found in the database. Use their structure and style as a guide if the user asks to generate a document: \n\n${refContent}`);
                 }
             }
 
-            const safeMessage = message ? message.trim() : "";
-            if (!safeMessage) return ""; // Guard against empty transcripts
-
-            const result = await this.chatSession.sendMessage({
-                role: "user",
-                parts: [{ text: safeMessage }]
-            });
+            const result = await this.chatSession.sendMessage(message);
             // @ts-ignore
-            const text = result.text || result.response?.text?.() || "";
+            const text = result.response?.text?.() || result.text || "";
 
             // If the response contains HTML that looks like a document, trigger the callback
             if (text.includes('<div') || text.includes('<table')) {
