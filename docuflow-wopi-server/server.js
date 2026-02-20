@@ -18,7 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 const supabaseUrl = process.env.SUPABASE_URL || '';
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
-
 // In-Memory Lock Store for WOPI (In production, use Redis or Postgres table)
 // Format: { file_id: { lockId: "uuid", expiresAt: timestamp } }
 const locks = {};
