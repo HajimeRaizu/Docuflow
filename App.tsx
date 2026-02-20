@@ -340,7 +340,7 @@ const App: React.FC = () => {
 
     case 'admin-dashboard':
       if (user.user_type === UserRole.SUPER_ADMIN) {
-        return <SuperAdminDashboard onNavigate={handleNavigate} onLogout={() => supabase.auth.signOut()} />;
+        return <SuperAdminDashboard user={user} onNavigate={handleNavigate} onLogout={() => supabase.auth.signOut()} />;
       }
       if (isGovernor) {
         return <GovernorDashboard user={user} onNavigate={handleNavigate} onLogout={() => supabase.auth.signOut()} />;
