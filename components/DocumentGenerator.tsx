@@ -5,7 +5,7 @@ import { ConfirmModal } from './ConfirmModal';
 import { generateDocument, LiveSession } from '../services/geminiService';
 import { supabase } from '../services/supabaseClient';
 import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical, Eye } from 'lucide-react';
-import { RichTextEditor } from './RichTextEditor';
+import { DocumentEditor } from '@onlyoffice/document-editor-react';
 import * as THREE from 'three';
 // @ts-ignore
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -250,6 +250,154 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   }, [docType, user.department]);
   const [inputMode, setInputMode] = useState<'form' | 'chat'>('form');
   const [visibility, setVisibility] = useState<'private' | 'department'>(initialDoc?.visibility || 'private');
+  const [onlyofficeKey, setOnlyofficeKey] = useState<string>(
+    initialDoc ? initialDoc.id : `doc_${Date.now()}`
+  );
+  const [editorToken, setEditorToken] = useState<string | null>(null);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    orgName: '',
+    title: '',
+    venue: '',
+    date: '',
+    proponent: '',
+    budget: '',
+    source: '',
+    objectives: '',
+    senderName: '',
+    senderPosition: '',
+    recipientName: '',
+    subject: '',
+    details: '',
+    resNum: '',
+    topic: '',
+    whereas: '',
+    resolved: ''
+  });
+
+  // Load initial document data into form if editing
+  useEffect(() => {
+    if (initialDoc) {
+      setFormData(prev => ({
+        ...prev,
+        title: initialDoc.title || '',
+        subject: initialDoc.title || '',
+      }));
+    }
+  }, [initialDoc]);
+
+  // Permissions Check (moved up because it's used in JWT generation)
+  const isOwner = initialDoc?.user_id === user.id;
+  const isSharedWithDept = initialDoc?.visibility === 'department' && initialDoc?.department === user.department;
+  const hasTypePermission = user.user_type === 'admin' || user.user_type === 'super_admin' ||
+    (user.permissions && user.permissions[DocumentTypePermissionKey[docType]] === 'edit');
+  const canEdit = !initialDoc || isOwner || (isSharedWithDept && hasTypePermission);
+
+  // Generate JWT for OnlyOffice DocSpace
+  useEffect(() => {
+    const generateToken = async () => {
+      const secretKey = import.meta.env.VITE_ONLYOFFICE_API;
+      if (!secretKey) return;
+
+      try {
+        const { SignJWT } = await import('jose');
+
+        // The payload usually requires exactly what's inside the 'document' and 'editorConfig' objects
+        const payload = {
+          document: {
+            fileType: "docx",
+            key: onlyofficeKey,
+            title: formData.title || formData.subject || "Document",
+            url: templateUrl || "https://example.com/url-to-example-document.docx",
+          },
+          documentType: "word",
+          editorConfig: {
+            mode: canEdit ? "edit" : "view",
+            lang: "en",
+            user: {
+              id: user.id || "anonymous",
+              name: user.full_name || "Guest"
+            },
+            callbackUrl: `https://jrnueauojbzccmvzeidv.supabase.co/functions/v1/onlyoffice-callback`,
+          }
+        };
+
+        const secret = new TextEncoder().encode(secretKey);
+        const jwt = await new SignJWT(payload)
+          .setProtectedHeader({ alg: 'HS256' })
+          .setIssuedAt()
+          .setExpirationTime('1h') // Token valid for 1 hour
+          .sign(secret);
+
+        setEditorToken(jwt);
+      } catch (err) {
+        console.error("Failed to generate JWT for OnlyOffice:", err);
+      }
+    };
+
+    generateToken();
+  }, [docType, user, canEdit, onlyofficeKey, templateUrl, formData.title, formData.subject]);
+
+  // Helper to inject HTML into OnlyOffice
+  const handleInjectHtml = () => {
+    if (result && window.DocEditor && window.DocEditor.instances["docxEditor"]) {
+      try {
+        console.log("Checking DocumentEditor capabilities...");
+        const docEditor = window.DocEditor.instances["docxEditor"];
+
+        // 1. If callCommand is available (Developer Edition), use it to clear and paste
+        if (typeof docEditor.callCommand === 'function') {
+          docEditor.callCommand(function () {
+            var oDocument = Api.GetDocument();
+            oDocument.RemoveAllElements();
+            var oParagraph = Api.CreateParagraph();
+            oDocument.InsertContent([oParagraph]);
+          }, false, true, function () {
+            // 2. Paste the AI generated HTML 
+            try {
+              if (typeof docEditor.serviceCommand === 'function') {
+                docEditor.serviceCommand("PasteHtml", result);
+              } else {
+                copyToClipboardFallback();
+              }
+            } catch (e) {
+              console.error("PasteHtml failed", e);
+              copyToClipboardFallback();
+            }
+          });
+        } else {
+          // Free Tier / Community Edition fallback
+          copyToClipboardFallback();
+        }
+      } catch (err) {
+        console.error("Failed to process OnlyOffice Editor", err);
+        copyToClipboardFallback();
+      }
+    }
+  };
+
+  const copyToClipboardFallback = () => {
+    if (result) {
+      navigator.clipboard.writeText(result).then(() => {
+        showAlert("AI Document Ready!", "The AI has finished drafting your document and it has been copied to your clipboard.\n\n1. Click inside the document editor below.\n2. Delete any template placeholder text if necessary.\n3. Press Ctrl+V (or Cmd+V) to paste the finalized document.", "success");
+      }).catch(err => {
+        console.error("Clipboard copy failed", err);
+      });
+    }
+  };
+
+  // Handle injecting AI HTML into OnlyOffice when result changes
+  useEffect(() => {
+    handleInjectHtml();
+  }, [result]);
+
+  // Callback when OnlyOffice is ready
+  const onDocumentReady = () => {
+    console.log("Document is ready");
+    // Attempting to inject HTML result using OnlyOffice api if result already exists when editor loads
+    handleInjectHtml();
+  };
 
   // Sidebar Resize State
   const [sidebarWidth, setSidebarWidth] = useState(320);
@@ -294,54 +442,6 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
 
   // Document Tracking for Versioning
   const [currentDocId, setCurrentDocId] = useState<string | null>(initialDoc ? initialDoc.id : null);
-
-  // Permissions Check
-  const isOwner = initialDoc?.user_id === user.id;
-  const isSharedWithDept = initialDoc?.visibility === 'department' && initialDoc?.department === user.department;
-
-  // Check if user has specific permission for this document type
-  // If user is Admin/SuperAdmin, they might have global edit access (optional, but good practice)
-  const hasTypePermission = user.user_type === 'admin' || user.user_type === 'super_admin' ||
-    (user.permissions && user.permissions[DocumentTypePermissionKey[docType]] === 'edit');
-
-  // Can Edit if:
-  // 1. New Document (no initialDoc)
-  // 2. Owner
-  // 3. Shared with Dept AND User has 'edit' permission for this specific DocType
-  const canEdit = !initialDoc || isOwner || (isSharedWithDept && hasTypePermission);
-
-  // Form State
-  const [formData, setFormData] = useState({
-    orgName: '',
-    title: '',
-    venue: '',
-    date: '',
-    proponent: '',
-    budget: '',
-    source: '',
-    objectives: '',
-    senderName: '',
-    senderPosition: '',
-    recipientName: '',
-    subject: '',
-    details: '',
-    resNum: '',
-    topic: '',
-    whereas: '',
-    resolved: ''
-  });
-
-  // Load initial document data into form if editing
-  useEffect(() => {
-    if (initialDoc) {
-      setFormData(prev => ({
-        ...prev,
-        title: initialDoc.title || '',
-        // If we had more structured data saved, we would populate it here.
-        // For now, we only have generic content and title from the DB for re-opening.
-      }));
-    }
-  }, [initialDoc]);
 
   // Live Agent State
   const [isLiveActive, setIsLiveActive] = useState(false);
@@ -906,15 +1006,37 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
           </div>
         ) : (
           <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
-            <div className="flex-1 overflow-hidden relative">
-              <RichTextEditor
-                initialContent={result}
-                title={formData.title || formData.subject || "Document"}
-                onToggleVoice={toggleLiveAgent}
-                isVoiceActive={isLiveActive}
-                onSave={handleSaveToStorage}
-                readOnly={!canEdit}
-              />
+            <div className="flex-1 overflow-hidden relative" style={{ height: '100%', width: '100%' }}>
+              {(!import.meta.env.VITE_ONLYOFFICE_API || editorToken) ? (
+                <DocumentEditor
+                  id="docxEditor"
+                  documentServerUrl="https://6f4bfa5f.docs.onlyoffice.com/"
+                  config={{
+                    document: {
+                      fileType: "docx",
+                      key: onlyofficeKey,
+                      title: formData.title || formData.subject || "Document",
+                      url: templateUrl || "https://example.com/url-to-example-document.docx",
+                    },
+                    documentType: "word",
+                    editorConfig: {
+                      mode: canEdit ? "edit" : "view",
+                      lang: "en",
+                      user: {
+                        id: user.id || "anonymous",
+                        name: user.full_name || "Guest"
+                      },
+                      callbackUrl: `https://jrnueauojbzccmvzeidv.supabase.co/functions/v1/onlyoffice-callback`,
+                    },
+                    token: editorToken || undefined
+                  }}
+                  events_onDocumentReady={onDocumentReady}
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-gray-500">
+                  <Bot className="w-8 h-8 animate-spin mr-2" /> Authenticating Editor...
+                </div>
+              )}
             </div>
           </div>
         )}
