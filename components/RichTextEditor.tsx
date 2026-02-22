@@ -196,18 +196,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   };
 
-  const handlePrint = () => {
-    const superdoc = editorInstanceRef.current;
-    if (superdoc) {
-      // Some versions of SuperDoc have a native print, otherwise we use window.print
-      if (typeof superdoc.print === 'function') {
-        superdoc.print();
-      } else {
-        window.print();
-      }
-    }
-  };
-
   // Handle editor load
   const handleEditorLoad = (event: any) => {
     editorInstanceRef.current = event.superdoc;
@@ -247,9 +235,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           )}
           <button onClick={handleExportDOCX} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium">
             <Download className="w-4 h-4" /> <span>DOCX</span>
-          </button>
-          <button onClick={handlePrint} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium no-print">
-            <Printer className="w-4 h-4" /> <span>Print</span>
           </button>
         </div>
 
