@@ -6,6 +6,16 @@ export class HocuspocusProvider {
     disconnect() { }
     destroy() { }
 }
+
+export class HocuspocusProviderWebsocket {
+    constructor() { }
+    on() { }
+    off() { }
+    connect() { }
+    disconnect() { }
+    destroy() { }
+}
+
 export const WebSocketStatus = {
     Connecting: 'connecting',
     Connected: 'connected',
