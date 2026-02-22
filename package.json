@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@google/genai": "^1.41.0",
-    "@hocuspocus/provider": "^3.4.4",
     "@supabase/supabase-js": "^2.93.3",
     "@superdoc-dev/react": "^1.0.0-rc.2",
     "jszip": "^3.10.1",
