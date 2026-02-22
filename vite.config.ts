@@ -17,6 +17,7 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
+        '@hocuspocus/provider': path.resolve(__dirname, './hocuspocus-mock.js'),
       }
     },
     build: {
