@@ -19,11 +19,6 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, '.'),
         '@hocuspocus/provider': path.resolve(__dirname, './hocuspocus-mock.js'),
       }
-    },
-    build: {
-      rollupOptions: {
-        external: ['@hocuspocus/provider']
-      }
     }
   };
 });
