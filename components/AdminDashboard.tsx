@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { Users, FileText, Folder, Activity, Plus, Database, History, X, Settings, CheckCircle, ChevronRight, Bell, Search, Edit2, Trash2, Mail, Shield, Upload, File } from 'lucide-react';
+import { Users, FileText, Folder, Activity, Plus, Database, History, X, Settings, CheckCircle, ChevronRight, Bell, Search, Edit2, Trash2, Mail, Shield, Upload, File, AlertCircle, Info } from 'lucide-react';
+import { useNotification } from './NotificationProvider';
 import { supabase } from '../services/supabaseClient';
 import { parseFile } from '../services/fileUtils';
 
@@ -18,6 +19,7 @@ const MOCK_USERS = [
 ];
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) => {
+  const { showToast, confirm: confirmAction } = useNotification();
   // State for modals
   const [isManageUserOpen, setIsManageUserOpen] = useState(false);
   const [isUpdateTemplateOpen, setIsUpdateTemplateOpen] = useState(false);
@@ -47,7 +49,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
 
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    alert("This feature is deprecated in the old Admin Dashboard. Please use the Governor Dashboard.");
+    showToast("This feature is deprecated in the old Admin Dashboard. Please use the Governor Dashboard.", "warning");
     return;
     /* 
     // DEPRECATED UPLOAD LOGIC
@@ -97,19 +99,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
     */
   };
 
-  const handleDeleteDataset = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this dataset?')) return;
-
-    // Check constraints: sections usually cascade delete, but let's be safe
-    // Actually Supabase likely has cascade on foreign key, if not we might need to delete sections first.
-    // Assuming cascade or simple delete for now.
-    const { error } = await supabase.from('datasets').delete().eq('id', id);
-    if (error) {
-      console.error('Delete failed:', error);
-      alert('Failed to delete.');
-    } else {
-      fetchDatasets();
-    }
+  const handleDeleteDataset = (id: string) => {
+    confirmAction({
+      title: 'Delete Dataset',
+      message: 'Are you sure you want to delete this dataset? This action cannot be undone.',
+      variant: 'error',
+      confirmLabel: 'Delete',
+      onConfirm: async () => {
+        try {
+          const { error } = await supabase.from('datasets').delete().eq('id', id);
+          if (error) throw error;
+          fetchDatasets();
+          showToast("Dataset deleted successfully", "success");
+        } catch (error) {
+          console.error('Delete failed:', error);
+          showToast("Failed to delete dataset.", "error");
+        }
+      }
+    });
   };
 
   // Stats Data
@@ -509,7 +516,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
                           <div className="flex items-center gap-2">
                             <button
                               onClick={async () => {
-                                alert("Verification not available for legacy datasets.");
+                                showToast("Verification not available for legacy datasets.", "info");
                                 /*
                                 const { data } = await supabase.from('dataset_sections').select('content').eq('dataset_id', ds.id).single();
                                 if (data) {

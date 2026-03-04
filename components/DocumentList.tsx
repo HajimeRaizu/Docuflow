@@ -1,9 +1,9 @@
 
 import React, { useEffect, useState } from 'react';
-import { FileText, MoreVertical, Download, Clock, Trash2, Eye, History, X, ChevronRight, Share2, Users } from 'lucide-react';
+import { FileText, MoreVertical, Download, Clock, Trash2, Eye, History, X, ChevronRight, Share2, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 import { GeneratedDocument, DocumentVersion, User, DocumentType } from '../types';
-import { ConfirmModal } from './ConfirmModal';
+import { useNotification } from './NotificationProvider';
 
 interface DocumentListProps {
     user: User;
@@ -13,6 +13,7 @@ interface DocumentListProps {
 }
 
 export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, initialTab = 'my', initialType = 'ALL' }) => {
+    const { showToast, confirm: confirmAction } = useNotification();
     const [docs, setDocs] = useState<GeneratedDocument[]>([]);
     const [historyDoc, setHistoryDoc] = useState<GeneratedDocument | null>(null);
     const [previewVersion, setPreviewVersion] = useState<DocumentVersion | null>(null);
@@ -20,24 +21,6 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
     const [activeTab, setActiveTab] = useState<'my' | 'shared'>(initialTab);
     const [filterType, setFilterType] = useState<DocumentType | 'ALL'>(initialType);
 
-    // Confirmation State
-    const [confirmState, setConfirmState] = useState<{
-        isOpen: boolean;
-        title: string;
-        message: string;
-        confirmLabel: string;
-        variant: 'danger' | 'info';
-        onConfirm: () => void;
-    }>({
-        isOpen: false,
-        title: '',
-        message: '',
-        confirmLabel: 'Confirm',
-        variant: 'info',
-        onConfirm: () => { }
-    });
-
-    const closeConfirm = () => setConfirmState(prev => ({ ...prev, isOpen: false }));
 
     // Update state if props change (e.g. navigation from dashboard)
     useEffect(() => {
@@ -83,13 +66,12 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
         loadDocs();
     }, [user, historyDoc]); // Reload when user changes or closing history modal
 
-    const handleDelete = async (id: string) => {
-        setConfirmState({
-            isOpen: true,
-            title: 'Delete Document',
-            message: 'Are you sure you want to delete this document? This action cannot be undone.',
-            confirmLabel: 'Delete',
-            variant: 'danger',
+    const handleDelete = (id: string) => {
+        confirmAction({
+            title: "Delete Document",
+            message: "Are you sure you want to delete this document? This action cannot be undone.",
+            variant: "error",
+            confirmLabel: "Delete",
             onConfirm: async () => {
                 try {
                     const { error } = await supabase
@@ -101,9 +83,9 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
 
                     const updated = docs.filter(d => d.id !== id);
                     setDocs(updated);
+                    showToast("Document deleted successfully", "success");
                 } catch (e) {
-                    console.error("Failed to delete document", e);
-                    alert("Failed to delete document.");
+                    showToast("Failed to delete document", "error");
                 }
             }
         });
@@ -125,19 +107,17 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
             setDocs(docs.map(d => d.id === doc.id ? { ...d, visibility: newVisibility, department: user.department } : d));
         } catch (e) {
             console.error("Failed to update visibility", e);
-            alert("Failed to update share settings.");
+            showToast("Failed to update share settings.", "error");
         }
     };
 
-    const handleRollback = async (version: DocumentVersion) => {
+    const handleRollback = (version: DocumentVersion) => {
         if (!historyDoc || !user.id) return;
 
-        setConfirmState({
-            isOpen: true,
+        confirmAction({
             title: 'Restore Version',
             message: `Are you sure you want to rollback to Version ${version.versionNumber}? This will overwrite the current content with this version's content.`,
             confirmLabel: 'Restore',
-            variant: 'info',
             onConfirm: async () => {
                 try {
                     const currentVersions = historyDoc.versions || [];
@@ -175,9 +155,10 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                     setHistoryDoc(updatedDoc);
                     setDocs(docs.map(d => d.id === historyDoc.id ? updatedDoc : d));
                     setPreviewVersion(newVersion);
+                    showToast("Version restored successfully", "success");
                 } catch (e) {
                     console.error("Failed to restore document", e);
-                    alert("Failed to restore document.");
+                    showToast("Failed to restore document.", "error");
                 }
             }
         });
@@ -429,16 +410,6 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                     </div>
                 </div>
             )}
-            {/* Active Confirmation Modal */}
-            <ConfirmModal
-                isOpen={confirmState.isOpen}
-                onClose={closeConfirm}
-                onConfirm={confirmState.onConfirm}
-                title={confirmState.title}
-                message={confirmState.message}
-                confirmLabel={confirmState.confirmLabel}
-                variant={confirmState.variant}
-            />
         </div>
     );
 };

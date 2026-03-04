@@ -1,0 +1,1956 @@
+{
+    "items": [
+        {
+            "description": "ALCOHOL OR ACETONE BASED ANTISEPTICS",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "ALCOHOL, Ethyl, 500 mL",
+            "unit": "bottle",
+            "price": "95.0",
+            "is_procurable": "",
+            "procurement_object": "Traveling Expenses-Local",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "ALCOHOL, Ethyl,  1 Gallon",
+            "unit": "gallon",
+            "price": "435.0",
+            "is_procurable": "",
+            "procurement_object": "Traveling Expenses-Foreign",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "ARTS AND CRAFTS EQUIPMENT AND ACCESSORIES AND SUPPLIES",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "Training Expenses",
+            "budget_object": ""
+        },
+        {
+            "description": "CLEARBOOK, A4 size",
+            "unit": "piece",
+            "price": "45.0",
+            "is_procurable": "",
+            "procurement_object": "Scholarship Grants/Expenses",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "CLEARBOOK, Legal size",
+            "unit": "piece",
+            "price": "48.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "STICKER PAPER",
+            "unit": "pack",
+            "price": "180.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Foods Supplies(Basic Commodities)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "DOUBLE SIDED TAPE",
+            "unit": "roll",
+            "price": "98.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Accountable forms Expense",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "PHOTO PAPER",
+            "unit": "pack",
+            "price": "400.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Animal/Zoological Supplies Expenses",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "CERTIFICATE FRAME",
+            "unit": "piece",
+            "price": "165.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Drugs and medicine Expenses",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "CERTIFICATE HOLDER",
+            "unit": "piece",
+            "price": "115.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Medical, Dental, and Laboratory Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "PLASTIC FASTENER",
+            "unit": "box",
+            "price": "75.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Fuel, oil, and Lubricants expenses",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "VELLUM BOARD PAPER, Legal 20pcs",
+            "unit": "pck",
+            "price": "145.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Agricultural and marine Supplies and materials",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "COLORED PAPER",
+            "unit": "pack",
+            "price": "135.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Spare Parts",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "BOND PAPER, A4, 70 GSM",
+            "unit": "ream",
+            "price": "250.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Textbooks and Instructional Materials Expenses",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "BOND PAPER, A4, 80 GSM",
+            "unit": "ream",
+            "price": "280.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi-expendable Expenses - Books",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "BOND PAPER, LONG, 70 GSM",
+            "unit": "ream",
+            "price": "280.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Machinery)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "BOND PAPER, LONG, 80 GSM",
+            "unit": "ream",
+            "price": "300.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Office equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "BOND PAPER, SHORT, 70 GSM",
+            "unit": "ream",
+            "price": "240.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (ICT equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "BOND PAPER, SHORT, 80 GSM",
+            "unit": "ream",
+            "price": "260.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi-Expendable Expenses - Information and Communications Technology Equipment",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "PUSH PIN",
+            "unit": "box",
+            "price": "70.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi-Expendable Expenses - Marine and Fishery Equipment",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "GLUE STICK (PASTE)",
+            "unit": "piece",
+            "price": "60.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Agriculture and Forestry equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "GLUE STICK (FOR GLUE GUN)",
+            "unit": "pc",
+            "price": "10.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Marine and fishery equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "MANILA PAPER",
+            "unit": "piece",
+            "price": "15.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Communication equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Plastic box storage container (70L)",
+            "unit": "box",
+            "price": "1350.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Medical equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "PLASTIC ENVELOPE (long)",
+            "unit": "piece",
+            "price": "45.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Printing equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "ERASER, plastic/rubber",
+            "unit": "piece",
+            "price": "19.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Sports equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Extra Fine Tip, Black",
+            "unit": "piece",
+            "price": "40.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses( Audio/Visual Presentation & Composing Equipment’s)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Fine Tip, Black",
+            "unit": "piece",
+            "price": "57.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Technical and Scientific equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Medium Tip, Black",
+            "unit": "piece",
+            "price": "67.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Photographic/Filming or Video Equipment’s)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Extra Fine Tip, Blue",
+            "unit": "piece",
+            "price": "30.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Other machinery equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Fine Tip, Blue",
+            "unit": "piece",
+            "price": "57.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Machinery and Equipment expenses (Furniture and fixture)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Medium Tip, Blue",
+            "unit": "piece",
+            "price": "70.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi-Expendable Machinaries & Equipment (Disaster & Rescue Equipment)",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Extra Fine Tip, Red",
+            "unit": "piece",
+            "price": "52.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi-expendable Expenses Communication Equipment",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Fine Tip, Red",
+            "unit": "piece",
+            "price": "52.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi-Expendable Expenses - Other Equipment",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "SIGN PEN, Medium Tip, Red",
+            "unit": "piece",
+            "price": "52.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Semi Expendables Books",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "WRAPPING PAPER",
+            "unit": "pack",
+            "price": "173.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "BATTERIES AND CELLS AND ACCESSORIES",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies and Materials Expenses",
+            "budget_object": ""
+        },
+        {
+            "description": "BATTERY, dry cell, size AA",
+            "unit": "pack",
+            "price": "70.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies & Materials (Basic Commodities)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "BATTERY, dry cell, size AAA",
+            "unit": "pack",
+            "price": "83.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies and Materials (Automotive Batteries)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "CLEANING EQUIPMENT AND SUPPLIES",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies and Materials (Cleaning Materials and Supplies)",
+            "budget_object": ""
+        },
+        {
+            "description": "AIR FRESHENER 320ml",
+            "unit": "bot",
+            "price": "300.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies and Materials(Electrical Materials and Supplies)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "BROOM (Walis Tambo)",
+            "unit": "piece",
+            "price": "145.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies & Materials (Awards and Prizes)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "BROOM (Walis Ting-ting)",
+            "unit": "piece",
+            "price": "65.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies and Materials(Graduation supplies & materials)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "CLEANER, Toilet Bowl and Urinal",
+            "unit": "bottle",
+            "price": "70.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies and Materials(Kitchen utensils supplies & materials)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "CLEANSER, Scouring Powder",
+            "unit": "pc",
+            "price": "43.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Supplies and Materials(Garments supplies)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "DETERGENT BAR",
+            "unit": "piece",
+            "price": "19.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Laboratory Tools, Equipment, and Machinery",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "DETERGENT POWDER 1kg",
+            "unit": "kls",
+            "price": "165.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Research, Exploration and Development Expenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "DETERGENT POWDER, all purpose",
+            "unit": "dozen",
+            "price": "180.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Hardware & Construction Supplies",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "DISINFECTANT SPRAY",
+            "unit": "can",
+            "price": "157.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Travel Expense",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "DUST PAN",
+            "unit": "piece",
+            "price": "120.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Water Expenses(water connection)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "FLOOR WAX, paste type, red",
+            "unit": "can",
+            "price": "340.0",
+            "is_procurable": "Direct-1",
+            "procurement_object": "Electricity (Electric power)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "FURNITURE CLEANER",
+            "unit": "can",
+            "price": "160.0",
+            "is_procurable": "Direct-1",
+            "procurement_object": "Gas/Heating Expenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "HAND SOAP, liquid, 500mL",
+            "unit": "bottle",
+            "price": "85.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Postage and courier services",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "MOP BUCKET (Tornado Mop)",
+            "unit": "unit",
+            "price": "900.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Telephone expenses (Mobile)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "RAGS",
+            "unit": "kilo",
+            "price": "85.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Telephone expenses (landline)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "SCOURING PAD",
+            "unit": "pack",
+            "price": "93.0",
+            "is_procurable": "Direct-1",
+            "procurement_object": "Internet subscription (internet subscription services)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TRASHBAG, XXL size",
+            "unit": "roll/pack",
+            "price": "145.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Survey Expenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TRASHBAG, Large size",
+            "unit": "roll/pack",
+            "price": "135.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Cable, Satelite, Telegraph Expenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TRASHBAG, XL size",
+            "unit": "roll/pack",
+            "price": "85.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Advertising Expenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "BLEACHING SOLUTION",
+            "unit": "galloon",
+            "price": "220.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Printing, Publication and Binding Expenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "DISHWASHING LIQUID 500ml",
+            "unit": "bot",
+            "price": "140.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other Subscription Expenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "DISPOSABLE GLOVES",
+            "unit": "box",
+            "price": "83.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Labor and Wages",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "COLOR COMPOUNDS AND DISPERSIONS",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "Library and Other Reading Materials Subscription Expenses",
+            "budget_object": ""
+        },
+        {
+            "description": "INK, for stamp pad",
+            "unit": "bottle",
+            "price": "60.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Security Services",
+            "budget_object": "Office Supplies and Materials"
+        },
+        {
+            "description": "CONSUMER ELECTRONICS",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "Website maintenance",
+            "budget_object": ""
+        },
+        {
+            "description": "FILMS",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "FIRE FIGHTING EQUIPMENT",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "FIRE EXTINGUISHER, dry chemical 10lbs",
+            "unit": "pc",
+            "price": "2800.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other General Services",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Fire Extinguisher - 10 Lbs. Chemical (Green) Refillable",
+            "unit": "pc",
+            "price": "4200.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other General Services",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "FURNITURE AND FURNISHINGS",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "MONOBLOC CHAIR, beige",
+            "unit": "pc",
+            "price": "600.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repairs and Maintenance - Hostels and Dormitories",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "MONOBLOC CHAIR, white",
+            "unit": "pc",
+            "price": "600.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Infrastructure assets",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Executive Table",
+            "unit": "pc",
+            "price": "12000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Land Improvements",
+            "budget_object": "Semi-Expendable Office Equipment"
+        },
+        {
+            "description": "L-Shape Presidential Table",
+            "unit": "pc",
+            "price": "27000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Other Structures",
+            "budget_object": "Semi-Expendable Office Equipment"
+        },
+        {
+            "description": "Executive Chair High-back with armrest and headrest",
+            "unit": "pc",
+            "price": "11500.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair & Maintenance-Other PPE",
+            "budget_object": "Semi-Expendable Office Equipment"
+        },
+        {
+            "description": "Executive Chair High-back with armrest",
+            "unit": "pc",
+            "price": "9000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance-Office Equipment",
+            "budget_object": "Semi-Expendable Office Equipment"
+        },
+        {
+            "description": "Dining Table, 6-seater dining set with top glass",
+            "unit": "set",
+            "price": "45000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance-Other Machinery equipment",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "Sala Set, Leather with table",
+            "unit": "set",
+            "price": "55000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Transportation equipment",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "Steel Cabinet (swing door glass with lock sliding door with 6 layers)",
+            "unit": "unit",
+            "price": "16000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance-Furniture and Fixtures",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "Vertical Filing Steel Cabinet 4 layers",
+            "unit": "unit",
+            "price": "12000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repairs and Maintenance - Other Property, Plant and Equipment",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "HEATING AND VENTILATION AND AIR CIRCULATION",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "ELECTRIC FAN, ceiling mount, orbit type",
+            "unit": "unit",
+            "price": "2300.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Agriculture and Fishery equipment",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "ELECTRIC FAN, industrial, ground type",
+            "unit": "unit",
+            "price": "1300.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Communication equipment",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "ELECTRIC FAN, stand type",
+            "unit": "unit",
+            "price": "1800.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Medical equipment",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "ELECTRIC FAN, wall mount",
+            "unit": "unit",
+            "price": "1500.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Technical and Scientific equipment",
+            "budget_object": "Semi-Expendable Furniture and Fixtures"
+        },
+        {
+            "description": "INFORMATION AND COMMUNICATION TECHNOLOGY (ICT) EQUIPMENT AND DEVICES AND ACCESSORIES",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "DESKTOP, for Basic Users",
+            "unit": "unit",
+            "price": "35000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance- Transportation equipment",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "EXTERNAL HARD DRIVE 1TB",
+            "unit": "unit",
+            "price": "3200.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance-Furniture and Fixtures",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "SSD HP 16TB External Hard Disk",
+            "unit": "unit",
+            "price": "780.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repair and Maintenance-Furniture and Fixtures",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "LAPTOP COMPUTER, for Mid-range Users",
+            "unit": "unit",
+            "price": "40000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Repairs and Maintenance - Semi-Expendable Office Equipment",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "PRINTER 3 IN 1",
+            "unit": "unit",
+            "price": "15000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Motor Vehicles rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "PRINTER, Laser, Monochrome",
+            "unit": "unit",
+            "price": "3000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Rent/Lease Expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "UPS 1000 watts",
+            "unit": "unit",
+            "price": "5400.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Equipment rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "Photocopier machine with Feeder",
+            "unit": "unit",
+            "price": "60000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Infrastructure rental expenses",
+            "budget_object": "Semi-Expendable Office Equipment"
+        },
+        {
+            "description": "Document Scanner with ADF",
+            "unit": "unit",
+            "price": "26000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Equipment rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "Inkjet Printer single function",
+            "unit": "unit",
+            "price": "7000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Equipment rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "Office Mobile Phone",
+            "unit": "unit",
+            "price": "15000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Equipment rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "Full HD CCTV Camera",
+            "unit": "unit",
+            "price": "2800.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Equipment rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "Wireless HDMI, Transmitter and Receiver",
+            "unit": "unit",
+            "price": "4800.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Equipment rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "XGA RESOLUTION/3300 LUMENS/3LCD PROJECTOR",
+            "unit": "unit",
+            "price": "32000.0",
+            "is_procurable": "1.0",
+            "procurement_object": "ICT Equipment rental expenses",
+            "budget_object": "Semi-Expendable ICT Equipment"
+        },
+        {
+            "description": "LIGHTING AND FIXTURES AND ACCESSORIES",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "MANUFACTURING COMPONENTS AND SUPPLIES",
+            "unit": "",
+            "price": "",
+            "is_procurable": "1.0",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "GLUE, all-purpose 130g",
+            "unit": "bottle",
+            "price": "95.0",
+            "is_procurable": "1.0",
+            "procurement_object": "Other MOOE",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "STAPLE WIRE, heavy duty (binder type), 23/13",
+            "unit": "box",
+            "price": "85.0",
+            "is_procurable": "0.0",
+            "procurement_object": "Membership Dues and Contributions to Organizations",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "STAPLE WIRE, standard #35",
+            "unit": "box",
+            "price": "40.0",
+            "is_procurable": "0.0",
+            "procurement_object": "Fidelity Bond Premiums",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "TAPE, electrical",
+            "unit": "roll",
+            "price": "35.0",
+            "is_procurable": "0.0",
+            "procurement_object": "Tax Refund",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TAPE, masking, 24mm",
+            "unit": "roll",
+            "price": "65.0",
+            "is_procurable": "0.0",
+            "procurement_object": "Taxes, Duties and Licenses",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TAPE, masking, 48 mm",
+            "unit": "roll",
+            "price": "135.0",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TAPE, packaging, 48 mm",
+            "unit": "roll",
+            "price": "30.0",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TAPE, transparent, 24mm",
+            "unit": "roll",
+            "price": "25.0",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TAPE, transparent, 48 mm",
+            "unit": "roll",
+            "price": "28.0",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "TWINE, plastic",
+            "unit": "roll",
+            "price": "75.0",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "MEASURING AND OBSERVING AND TESTING EQUIPMENT",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "OFFICE EQUIPMENT AND ACCESSORIES AND SUPPLIES",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "3-4 Layer Desk File Organizer Document Paper Tray",
+            "unit": "pc",
+            "price": "385.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Acetate Plastic Folder A4",
+            "unit": "box",
+            "price": "2000.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Ballpen (black)",
+            "unit": "pc",
+            "price": "10.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Binder clip 1 1/4”",
+            "unit": "box",
+            "price": "65.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Binder clip 2”",
+            "unit": "box",
+            "price": "70.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Brown Folder, Long",
+            "unit": "pc",
+            "price": "9.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "White Folder, Long",
+            "unit": "pc",
+            "price": "9.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Clear Folder, Long",
+            "unit": "pc",
+            "price": "20.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "L-Type Clear Folder, Plastic",
+            "unit": "pc",
+            "price": "30.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Calculator, Scientific",
+            "unit": "pc",
+            "price": "450.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Correction Tape (10m*5mm)",
+            "unit": "pcs",
+            "price": "115.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Data File Box made of Chipboard",
+            "unit": "pc",
+            "price": "280.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Data File storage box with cover",
+            "unit": "pc",
+            "price": "450.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Data filer-long (landscape)with finger ring",
+            "unit": "pcs",
+            "price": "320.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Date stamp with received/ dater stamp",
+            "unit": "pc",
+            "price": "480.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Dater stamp",
+            "unit": "pc",
+            "price": "450.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Double Sided Tape (1 inch)",
+            "unit": "roll",
+            "price": "75.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Double Sided Tape (3/4 inch)",
+            "unit": "roll",
+            "price": "98.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Double sided tape 2\"",
+            "unit": "roll",
+            "price": "90.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Envelope, Documentary, Legal",
+            "unit": "box",
+            "price": "1150.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Expanded Envelope, Long, with Garter",
+            "unit": "pcs",
+            "price": "20.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Expanded Long Folder (Green)",
+            "unit": "pcs",
+            "price": "16.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Fastener",
+            "unit": "box",
+            "price": "110.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Folder (A4 )",
+            "unit": "pcs",
+            "price": "12.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Folder (Long )",
+            "unit": "pcs",
+            "price": "12.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Folder with Tab, legal (50's/pack)",
+            "unit": "pack",
+            "price": "500.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Folder, Fancy w/ slide, A4 (Assorted color)",
+            "unit": "bundle",
+            "price": "160.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Folder, Fancy w/ slide, Legal (Assorted color)",
+            "unit": "bundle",
+            "price": "170.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Glue gun (big) 60W Power heavy duty",
+            "unit": "pc",
+            "price": "550.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Index Letter tabbing (4 sheets)",
+            "unit": "sheets",
+            "price": "140.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Long-Arm Heavy Duty Stapler 240 Sheet Capacity",
+            "unit": "pc",
+            "price": "2500.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Laid Bond (85gsm),8.5x13, powder blue color,500 sheets",
+            "unit": "ream",
+            "price": "1350.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Lever Arch File Folder with Ring Binder, Legal size (Landscape)",
+            "unit": "pc",
+            "price": "145.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Lever Arch File Folder with Ring Binder, Legal size (Portrait)",
+            "unit": "pc",
+            "price": "145.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "MARKER, Flourescent",
+            "unit": "set",
+            "price": "85.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Note pad 3x4",
+            "unit": "pad",
+            "price": "60.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Note pad 2x3",
+            "unit": "pad",
+            "price": "55.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Note pad 3x3",
+            "unit": "pad",
+            "price": "47.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Notebook 90 leaves",
+            "unit": "pc",
+            "price": "45.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Nylon rope (3mm)",
+            "unit": "roll",
+            "price": "1000.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Paper Clip, vinly/plastic coated, jumbo, 50mm",
+            "unit": "box",
+            "price": "30.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "PENCIL, lead/graphite, with eraser (12pcs)",
+            "unit": "box",
+            "price": "160.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Permanent Marker Ink 30ml (Black)",
+            "unit": "bot",
+            "price": "65.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Permanent marker, broad (12 pcs)",
+            "unit": "box",
+            "price": "780.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Personalize Stamp 26x9MM",
+            "unit": "pc",
+            "price": "750.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Personalized Stamp 13x33mm",
+            "unit": "pc",
+            "price": "450.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Photopaper glossy A4 inkjet 180gsm or 230gsm (20pcs)",
+            "unit": "pack",
+            "price": "400.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Plastic Comb Binder Ring (10mm) (50pcs)",
+            "unit": "pcs",
+            "price": "230.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Plastic Comb Binder Ring (20mm) (50pcs)",
+            "unit": "pcs",
+            "price": "460.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Plastic Comb Binder Ring (50mm) (50pcs)",
+            "unit": "pcs",
+            "price": "1500.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Premium Paper Powder Blue, Short, 8 1/2 x 11 (85 gsm) 500 sheets",
+            "unit": "ream",
+            "price": "1300.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Premium Paper Powder Blue, Short, 8 1/2 x 13 (85 gsm) 500 sheets",
+            "unit": "ream",
+            "price": "1500.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Puncher heavy duty with ruler",
+            "unit": "pcs",
+            "price": "230.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Scissors 8\"",
+            "unit": "pc",
+            "price": "70.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Scotch Tape (1 size)",
+            "unit": "pcs",
+            "price": "18.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Scotch Tape (3/4 size)",
+            "unit": "pcs",
+            "price": "22.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Sign Pen (Black), 12's/box",
+            "unit": "box",
+            "price": "400.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Sign Pen (Blue), 12's/box",
+            "unit": "box",
+            "price": "400.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Sign Pen (Red), 12's/box",
+            "unit": "box",
+            "price": "400.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Specialty board paper A4 200gsm, 100sheets per pack",
+            "unit": "pack",
+            "price": "800.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Specialty board paper long 200gsm, 100sheets per pack",
+            "unit": "pack",
+            "price": "950.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Specialty Paper A4, 200gsm, 100sheets per pack",
+            "unit": "pack",
+            "price": "500.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Specialty paper long 200gsm, 100sheets per pack",
+            "unit": "pack",
+            "price": "600.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Stamp Pad",
+            "unit": "pcs",
+            "price": "300.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Stamp Pad Ink",
+            "unit": "pcs",
+            "price": "60.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Staple Remover, plier-type (metal)",
+            "unit": "pc",
+            "price": "65.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Sticky Notes (Sign Here)",
+            "unit": "pad",
+            "price": "67.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Sticky Notes 5\" x 8\"",
+            "unit": "pad",
+            "price": "85.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Storage Box Filer (Long)",
+            "unit": "pcs",
+            "price": "600.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Storage plastic box container (95L)",
+            "unit": "box",
+            "price": "1550.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Tape Dispenser heavy duty can fit small and big core tape",
+            "unit": "pcs",
+            "price": "250.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "Whiteboard Marker",
+            "unit": "pc",
+            "price": "67.0",
+            "is_procurable": "",
+            "procurement_object": "Office Supplies",
+            "budget_object": "Office Supplies Expenses"
+        },
+        {
+            "description": "PAPER MATERIALS AND PRODUCTS",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "PRINTER OR FACSIMILE OR PHOTOCOPIER SUPPLIES (CONSUMABLES)",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "Epson Ink 664, Black (Genuine)",
+            "unit": "bottle",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Epson Ink 664, Magenta (Genuine)",
+            "unit": "bottle",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Epson Ink 6642, Cyan (Genuine)",
+            "unit": "bottle",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Epson Ink 6644, Yellow (Genuine)",
+            "unit": "bottle",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Epson Refill Ink 003 (black)",
+            "unit": "bot",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Epson Refill Ink 003 (cyan)",
+            "unit": "bot",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Epson Refill Ink 003 (magenta)",
+            "unit": "bot",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Epson Refill Ink 003 (yellow)",
+            "unit": "bot",
+            "price": "336.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Toner Fuji",
+            "unit": "tube",
+            "price": "4000.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Toner Ineo 206",
+            "unit": "tube",
+            "price": "3800.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Drum Cartridge Fuji Film",
+            "unit": "unit",
+            "price": "15500.0",
+            "is_procurable": "",
+            "procurement_object": "ICT Office Supplies",
+            "budget_object": "ICT Office Supplies Expenses"
+        },
+        {
+            "description": "Medical Supplies (Drugs And Medicines)",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": "Drugs and Medicine Expenses"
+        },
+        {
+            "description": "Patries (Classic Brownies: 16 slices)",
+            "unit": "package",
+            "price": "500.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Personalized notebook with NEMSU logo",
+            "unit": "pc",
+            "price": "450.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Personalized pen with NEMSU logo",
+            "unit": "pc",
+            "price": "350.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Personalized notebook with NEMSU logo with pen",
+            "unit": "pc",
+            "price": "650.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Personalized tote bag with NEMSU logo",
+            "unit": "pc",
+            "price": "500.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Personalized pillow with NEMSU Logo 13x18",
+            "unit": "pc",
+            "price": "700.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Personalized mug with NEMSU Logo",
+            "unit": "pc",
+            "price": "270.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Customized Heavy Duty Double Canopy Umbrella with NEMSU Logo",
+            "unit": "pc",
+            "price": "580.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Personalize heavy duty umbrella automatic golf inches single canopy with print logo",
+            "unit": "pc",
+            "price": "650.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(token)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Dressmakers Pin (60 pins per pad)",
+            "unit": "pad",
+            "price": "22.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Garments)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Drifit Polo shirt with print",
+            "unit": "piece",
+            "price": "450.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Garments)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Drifit shirt with print",
+            "unit": "piece",
+            "price": "380.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Garments)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Fabric satin cloth",
+            "unit": "mtr",
+            "price": "140.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Garments)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Full sublimation Polo shirt",
+            "unit": "piece",
+            "price": "787.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Garments)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Full sublimation shirt",
+            "unit": "piece",
+            "price": "525.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Garments)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Polyester cloth",
+            "unit": "mtr",
+            "price": "90.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Garments)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Plaque 4\" x 5\" acrylic",
+            "unit": "pc",
+            "price": "500.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Plaque 4\" x 8\" acrylic",
+            "unit": "pc",
+            "price": "600.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Medals (3\" diameter and 4mm thickness; embossed type metal)",
+            "unit": "piece",
+            "price": "330.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Medals (2.5\" diameter and 4mm thickness; embossed type metal)",
+            "unit": "piece",
+            "price": "350.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Medals (2\" diameter and 4mm thickness; embossed type metal)",
+            "unit": "piece",
+            "price": "250.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Acrylic Frame with print 3mm",
+            "unit": "piece",
+            "price": "3300.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Acrylic Frame with print 22.5\" x 28.5\"",
+            "unit": "piece",
+            "price": "3300.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Tarp Media 10oz 3.3ft",
+            "unit": "roll",
+            "price": "645.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Tarp Media 10oz 4.2ft",
+            "unit": "roll",
+            "price": "485.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Tarp Media 10oz 6.1ft",
+            "unit": "roll",
+            "price": "888.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Tarp Media 10oz 10.5ft",
+            "unit": "roll",
+            "price": "955.0",
+            "is_procurable": "",
+            "procurement_object": "Other Supplies and Materials(Printing)",
+            "budget_object": "Other Supplies and Materials Expenses"
+        },
+        {
+            "description": "Fuel, Oil and Lubricant Expenses",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "Diesel",
+            "unit": "liter",
+            "price": "72.0",
+            "is_procurable": "",
+            "procurement_object": "Fuel, Oil and Lubricant Expenses",
+            "budget_object": "Fuel, Oil and Lubricant Expenses"
+        },
+        {
+            "description": "Gasoline",
+            "unit": "liter",
+            "price": "68.0",
+            "is_procurable": "",
+            "procurement_object": "Fuel, Oil and Lubricant Expenses",
+            "budget_object": "Fuel, Oil and Lubricant Expenses"
+        },
+        {
+            "description": "Representation Expense Meals and Snacks",
+            "unit": "",
+            "price": "",
+            "is_procurable": "",
+            "procurement_object": "",
+            "budget_object": ""
+        },
+        {
+            "description": "Snacks- Executive (CHED, other agencies)",
+            "unit": "pax",
+            "price": "180.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Snacks- Executive",
+            "unit": "pax",
+            "price": "100.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Snacks-Regular",
+            "unit": "pax",
+            "price": "80.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Snacks-Student",
+            "unit": "pax",
+            "price": "60.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Meals- Executive (CHED, other agencies)",
+            "unit": "pax",
+            "price": "450.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Meals - Executive",
+            "unit": "pax",
+            "price": "350.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Meals- Regular",
+            "unit": "pax",
+            "price": "250.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Meals- Student",
+            "unit": "pax",
+            "price": "200.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Meals - breakfast",
+            "unit": "pax",
+            "price": "200.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Meals - breakfast Executive (CHED, other agencies)",
+            "unit": "pax",
+            "price": "230.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "Heavy snacks no meals included",
+            "unit": "pax",
+            "price": "200.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        },
+        {
+            "description": "meals- breakfast student",
+            "unit": "pax",
+            "price": "180.0",
+            "is_procurable": "",
+            "procurement_object": "Representation Expenses",
+            "budget_object": "Representation Expense"
+        }
+    ]
+}

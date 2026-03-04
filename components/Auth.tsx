@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, UserRole } from '../types';
-import { Eye, EyeOff, Mail, Lock, Moon, Sun } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Moon, Sun, Sparkles, Shield } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
 
 interface AuthProps {
@@ -96,77 +96,129 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center p-6 transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col lg:flex-row transition-colors duration-500 overflow-hidden">
+      {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
-        className="absolute top-6 right-6 p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+        className="fixed top-6 right-6 z-50 p-2.5 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-lg border border-gray-100 dark:border-gray-700 transition-all active:scale-95"
         title="Toggle Theme"
       >
         {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </button>
 
-      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* LEFT SIDE: PRODUCT SHOWCASE */}
+      <div className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100/50 dark:from-gray-900 dark:to-indigo-950/30 p-6 lg:p-12 flex flex-col justify-center relative">
+        {/* Subtle Decorative Background Elements */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-400/10 dark:bg-blue-600/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-indigo-400/10 dark:bg-indigo-600/5 rounded-full blur-[100px]" />
 
-        {/* Branding (First on Mobile, Last on Desktop) */}
-        <div className="text-center lg:text-left flex flex-col items-center lg:items-center justify-center p-4 lg:order-last">
-          <h1 className="text-6xl md:text-7xl font-serif italic text-blue-900 dark:text-blue-400 mb-6 drop-shadow-sm transition-colors">
-            SmartDraft
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-serif max-w-lg leading-relaxed text-center transition-colors">
-            AI-Powered Document Automation System — simplify your workflow, boost productivity, and automate your document generation efficiently.
+        <div className="relative z-10 max-w-2xl">
+          {/* Logo Section */}
+          <div className="flex items-center gap-4 mb-8 group">
+            <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/20 group-hover:scale-110 transition-transform">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase">
+              SmartDraft
+            </h1>
+          </div>
+
+          <div className="space-y-2 mb-6">
+            <span className="text-sm font-black tracking-[0.2em] text-blue-600 dark:text-blue-400 uppercase">
+              AI Document Automation
+            </span>
+            <h2 className="text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white leading-[1.1]">
+              Documents that <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">
+                write themselves.
+              </span>
+            </h2>
+          </div>
+
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md leading-relaxed mb-10">
+            Automate your entire document workflow — from first draft to final output — powered by AI.
           </p>
+
+          {/* Feature Cards */}
+          <div className="space-y-3">
+            {[
+              {
+                icon: <Sparkles className="w-5 h-5" />,
+                title: "AI generation",
+                desc: "Documents in seconds",
+                color: "bg-blue-600"
+              },
+              {
+                icon: <div className="grid grid-cols-2 gap-0.5"><div className="w-2 h-2 bg-current opacity-40" /><div className="w-2 h-2 bg-current" /><div className="w-2 h-2 bg-current" /><div className="w-2 h-2 bg-current opacity-40" /></div>,
+                title: "Smart templates",
+                desc: "For every use case",
+                color: "bg-indigo-600"
+              },
+              {
+                icon: <Lock className="w-5 h-5" />,
+                title: "Secure",
+                desc: "Allows NEMSU emails only for security",
+                color: "bg-blue-500"
+              }
+            ].map((feature, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-4 p-4 bg-white/60 dark:bg-white/5 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-2xl transition hover:translate-x-2 shadow-sm"
+              >
+                <div className={`w-12 h-12 ${feature.color} text-white rounded-xl flex items-center justify-center`}>
+                  {feature.icon}
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 dark:text-white">{feature.title}</h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{feature.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
 
-        {/* Login Form (Second on Mobile, First on Desktop) */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 p-8 md:p-10 max-w-md w-full mx-auto transition-colors flex flex-col items-center justify-center">
-          <h2 className="text-3xl font-serif italic text-center text-blue-900 dark:text-white mb-8 transition-colors">
-            Welcome!
-          </h2>
-
-          <div className="w-full space-y-6">
-            <p className="text-center text-gray-600 dark:text-gray-400 text-sm mb-4">
-              Sign in with your university account to continue.
+      {/* RIGHT SIDE: AUTH CARD */}
+      <div className="flex-1 bg-white dark:bg-gray-950 flex items-center justify-center p-8 relative">
+        <div className="max-w-md w-full animate-fade-up">
+          <div className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] shadow-2xl border border-gray-100 dark:border-gray-800 flex flex-col items-center">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 text-center">
+              Welcome back
+            </h2>
+            <p className="text-gray-500 dark:text-gray-400 mb-6 text-center text-sm">
+              Sign in with your university account.
             </p>
 
             {error && (
-              <div className="text-red-500 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-100 animate-shake">
+              <div className="w-full text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/10 p-4 rounded-2xl border border-red-100 dark:border-red-900/20 mb-6 animate-shake">
                 {error}
               </div>
             )}
 
             <button
-              type="button"
               onClick={handleGoogleLogin}
-              className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-white font-bold py-4 rounded-xl transition flex items-center justify-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-lg transform active:scale-95 shadow-md"
+              className="group w-full bg-white dark:bg-gray-800 border-2 border-gray-900 dark:border-gray-100 text-gray-900 dark:text-white font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700 active:scale-95 mb-6"
             >
               <svg className="w-6 h-6" viewBox="0 0 24 24">
-                <path
-                  fill="currentColor"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  className="text-blue-600 dark:text-blue-400"
-                />
-                <path
-                  fill="currentColor"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  className="text-green-600"
-                />
-                <path
-                  fill="currentColor"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.26-.19-.58z"
-                  className="text-yellow-500"
-                />
-                <path
-                  fill="currentColor"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  className="text-red-500"
-                />
+                <path fill="#EA4335" d="M5.2662 9.76453C6.19903 6.93863 8.85469 4.90909 12 4.90909C13.6909 4.90909 15.2182 5.50909 16.4182 6.49091L19.9091 3C17.7818 1.14545 15.0545 0 12 0C7.27273 0 3.19091 2.69091 1.24091 6.65455L5.2662 9.76453Z" />
+                <path fill="#34A853" d="M16.0409 18.0136C14.8708 18.7115 13.486 19.0909 12 19.0909C8.85469 19.0909 6.19903 17.0614 5.2662 14.2355L1.24091 17.3455C3.19091 21.3091 7.27273 24 12 24C14.9395 24 17.6146 22.9568 19.6713 21.2189L16.0409 18.0136Z" />
+                <path fill="#4285F4" d="M11.9999 43.6364C17.6363 43.6364 22.3635 39.8182 23.6363 34.5455H12V39.0909H19.2272C18.4545 43.2727 15.3181 46.3636 12 46.3636" className="hidden" />
+                <path fill="#4285F4" d="M23.64 12.2182C23.64 11.4 23.57 10.6 23.44 9.81818H12V14.4545H18.5273C18.2455 15.9682 17.3955 17.2545 16.1182 18.1091L19.7486 21.3146C22.0494 19.2848 23.64 16.1518 23.64 12.2182Z" />
+                <path fill="#FBBC05" d="M5.2664 14.2355C5.0264 13.5155 4.8864 12.7555 4.8864 11.9636C4.8864 11.1717 5.0264 10.4117 5.2664 9.69176L1.24111 6.58179C0.43 8.20361 0 10.0363 0 11.9636C0 13.8909 0.43 15.7236 1.24111 17.3454L5.2664 14.2355Z" />
               </svg>
               Continue with Google
+              <span className="hidden lg:inline group-hover:translate-x-1 transition-transform">→</span>
             </button>
 
-            <p className="text-center text-[10px] text-gray-400 mt-8 uppercase tracking-widest font-bold">
-              Secure OAuth 2.0 Identity Verification
-            </p>
+            <div className="mb-4">
+              <span className="text-[10px] font-black tracking-[0.2em] text-gray-400 dark:text-gray-500 uppercase">
+                NEMSU EMAILS ONLY
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 text-[10px] font-black tracking-wider bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-full uppercase">
+              <Shield className="w-3 h-3" /> Secure OAuth 2.0 Identity Verification
+            </div>
           </div>
         </div>
       </div>

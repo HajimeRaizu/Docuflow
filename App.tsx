@@ -10,17 +10,20 @@ import { DocumentList } from './components/DocumentList';
 import { ArchiveView } from './components/dashboard/ArchiveView';
 import { Layout } from './components/Layout';
 import { User, DocumentType, UserRole } from './types';
-import { Settings, Moon, Sun, Sparkles, CheckCircle, Save, X, Loader, Clock, AlertTriangle } from 'lucide-react';
+import { Settings, Moon, Sun, Sparkles, CheckCircle, Save, X, Loader, Clock, AlertTriangle, Shield, ChevronDown } from 'lucide-react';
+import { NotificationProvider } from './components/NotificationProvider';
 
 // ... Keep SettingsModal (omitted for brevity, assume it's there or I should include it. The user has "Settings" in the Layout. I'll include it to be safe.)
 // Actually I'll include the SettingsModal code from the previous file to ensure no regression.
 interface SettingsModalProps {
   theme: 'light' | 'dark';
+  user: User;
+  onNavigate: (view: string) => void;
   toggleTheme: () => void;
   onClose: () => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ theme, toggleTheme, onClose }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ theme, user, onNavigate, toggleTheme, onClose }) => {
   const [aiSettings, setAiSettings] = useState({ tone: 'Formal', length: 'Standard' });
   const [saveStatus, setSaveStatus] = useState('');
 
@@ -87,6 +90,37 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ theme, toggleTheme, onClo
                 </button>
               </div>
             </section>
+
+            {/* Admin Section (Only for Admins) */}
+            {(user.user_type === UserRole.SUPER_ADMIN || (user.user_type === UserRole.ADMIN && user.specific_role !== 'University Staff' && user.specific_role !== 'University Official')) && (
+              <section>
+                <h3 className="text-xs font-bold uppercase text-gray-400 dark:text-gray-500 mb-3 tracking-wider flex items-center gap-2">
+                  <Shield className="w-3 h-3" /> Administration
+                </h3>
+                <button
+                  onClick={() => {
+                    onNavigate('admin-dashboard');
+                    onClose();
+                  }}
+                  className="w-full flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800 transition hover:bg-blue-100 dark:hover:bg-blue-900/40 group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-full bg-blue-600 text-white">
+                      <Shield className="w-5 h-5" />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-bold text-blue-900 dark:text-blue-300 text-sm">
+                        Admin Dashboard
+                      </p>
+                      <p className="text-xs text-blue-600 dark:text-blue-400 opacity-80">
+                        Manage users, files, and system settings.
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronDown className="w-5 h-5 text-blue-400 transform -rotate-90" />
+                </button>
+              </section>
+            )}
 
             {/* AI Configuration Section */}
             <section>
@@ -261,144 +295,122 @@ const App: React.FC = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col items-center justify-center">
-        <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-900 rounded-full animate-spin mb-4"></div>
-        <h2 className="text-xl font-serif italic text-blue-900 dark:text-blue-400 animate-pulse">SmartDraft</h2>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Auth onLogin={(u) => setUser(u)} theme={theme} toggleTheme={toggleTheme} />;
-  }
-
-  // 1. Role Selection (No Role ID)
-  if (!user.role_id && user.user_type !== UserRole.SUPER_ADMIN) {
-    return <RoleSelection user={user} onRequestSubmitted={reloadUser} />;
-  }
-
-  // 2. Pending Approval
-  if (user.status === 'pending') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Clock className="w-8 h-8" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Approval Pending</h2>
-          <p className="text-gray-600 mb-6">
-            Your request to join as <strong>{user?.specific_role?.replace('Staff', 'Official') || 'University Official'}</strong>
-            <br /> in <strong>NEMSU</strong> is currently under review.
-          </p>
-          <button
-            onClick={() => supabase.auth.signOut()}
-            className="text-gray-500 hover:text-gray-800 underline"
-          >
-            Sign Out
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // 3. Rejected
-  if (user.status === 'rejected') {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertTriangle className="w-8 h-8" />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Rejected</h2>
-          <p className="text-gray-600 mb-6">
-            Your request was rejected. Please contact the administrator.
-          </p>
-          <button
-            onClick={() => supabase.auth.signOut()}
-            className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition"
-          >
-            Sign Out
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // 4. Unified Routing
-  // University Staff and Regular Officers -> Standard Dashboard
-  // Governors/Presidents -> Governor Dashboard (only for default view)
-  const isGovernor = user.user_type === UserRole.ADMIN && user.specific_role !== 'University Staff';
+  const isGovernor = user?.user_type === UserRole.ADMIN && user?.specific_role !== 'University Staff';
 
   let content;
-  switch (currentView) {
-    case 'dashboard':
-      // Everyone sees the standard dashboard by default
-      content = <Dashboard user={user} onNavigate={handleNavigate} />;
-      break;
-
-    case 'admin-dashboard':
-      if (user.user_type === UserRole.SUPER_ADMIN) {
-        return <SuperAdminDashboard user={user} onNavigate={handleNavigate} onLogout={() => supabase.auth.signOut()} />;
-      }
-      if (isGovernor) {
-        return <GovernorDashboard user={user} onNavigate={handleNavigate} onLogout={() => supabase.auth.signOut()} />;
-      }
-      // Fallback
-      content = <Dashboard user={user} onNavigate={handleNavigate} />;
-      break;
-
-    case 'generate':
-      content = (
-        <DocumentGenerator
-          user={user}
-          initialType={viewParams.type || DocumentType.ACTIVITY_PROPOSAL}
-          initialDoc={viewParams.doc}
-          onBack={() => handleNavigate('dashboard')}
-        />
-      );
-      break;
-
-    case 'documents':
-      content = <DocumentList user={user} onNavigate={handleNavigate} />;
-      break;
-
-    case 'archives':
-      content = (
-        <ArchiveView
-          user={user}
-          onUseReference={(doc) => handleNavigate('generate', {
-            doc: { ...doc, id: '', title: `Copy of ${doc.title}` },
-            type: doc.type
-          })}
-        />
-      );
-      break;
-
-    default:
-      content = <Dashboard user={user} onNavigate={handleNavigate} />;
+  if (user) {
+    switch (currentView) {
+      case 'dashboard':
+        content = <Dashboard user={user} onNavigate={handleNavigate} />;
+        break;
+      case 'generate':
+        content = (
+          <DocumentGenerator
+            user={user}
+            initialType={viewParams.type || DocumentType.ACTIVITY_PROPOSAL}
+            initialDoc={viewParams.doc}
+            onBack={() => handleNavigate('dashboard')}
+          />
+        );
+        break;
+      case 'documents':
+        content = <DocumentList user={user} onNavigate={handleNavigate} />;
+        break;
+      case 'archives':
+        content = (
+          <ArchiveView
+            user={user}
+            onUseReference={(doc) => handleNavigate('generate', {
+              doc: { ...doc, id: '', title: `Copy of ${doc.title}` },
+              type: doc.type
+            })}
+          />
+        );
+        break;
+      default:
+        content = <Dashboard user={user} onNavigate={handleNavigate} />;
+    }
   }
 
   return (
-    <Layout
-      user={user}
-      currentView={currentView}
-      onNavigate={handleNavigate}
-      onLogout={() => {
-        supabase.auth.signOut();
-        setUser(null);
-      }}
-    >
-      {content}
-      {isSettingsOpen && (
-        <SettingsModal
-          theme={theme}
-          toggleTheme={toggleTheme}
-          onClose={() => setIsSettingsOpen(false)}
-        />
+    <NotificationProvider>
+      {loading ? (
+        <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col items-center justify-center">
+          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-900 rounded-full animate-spin mb-4"></div>
+          <h2 className="text-xl font-serif italic text-blue-900 dark:text-blue-400 animate-pulse">SmartDraft</h2>
+        </div>
+      ) : !user ? (
+        <Auth onLogin={(u) => setUser(u)} theme={theme} toggleTheme={toggleTheme} />
+      ) : !user.role_id && user.user_type !== UserRole.SUPER_ADMIN ? (
+        <RoleSelection user={user} onRequestSubmitted={reloadUser} />
+      ) : user.status === 'pending' ? (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
+            <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Clock className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Approval Pending</h2>
+            <p className="text-gray-600 mb-6">
+              Your request to join as <strong>{user?.specific_role?.replace('Staff', 'Official') || 'University Official'}</strong>
+              <br /> in <strong>NEMSU</strong> is currently under review.
+            </p>
+            <button
+              onClick={() => supabase.auth.signOut()}
+              className="text-gray-500 hover:text-gray-800 underline"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      ) : user.status === 'rejected' ? (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
+            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="w-8 h-8" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Request Rejected</h2>
+            <p className="text-gray-600 mb-6">
+              Your request was rejected. Please contact the administrator.
+            </p>
+            <button
+              onClick={() => supabase.auth.signOut()}
+              className="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          {currentView === 'admin-dashboard' && user.user_type === UserRole.SUPER_ADMIN ? (
+            <SuperAdminDashboard user={user} onNavigate={handleNavigate} onLogout={() => supabase.auth.signOut()} />
+          ) : currentView === 'admin-dashboard' && isGovernor ? (
+            <GovernorDashboard user={user} onNavigate={handleNavigate} onLogout={() => supabase.auth.signOut()} />
+          ) : (
+            <Layout
+              user={user}
+              currentView={currentView}
+              onNavigate={handleNavigate}
+              onLogout={() => {
+                supabase.auth.signOut();
+                setUser(null);
+              }}
+            >
+              {content}
+              {isSettingsOpen && (
+                <SettingsModal
+                  theme={theme}
+                  user={user}
+                  onNavigate={handleNavigate}
+                  toggleTheme={toggleTheme}
+                  onClose={() => setIsSettingsOpen(false)}
+                />
+              )}
+            </Layout>
+          )}
+        </>
       )}
-    </Layout>
+    </NotificationProvider>
   );
 };
 

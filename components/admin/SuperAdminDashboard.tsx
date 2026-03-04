@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { User, SpecificRole, Department, DocumentType } from '../../types';
 import { supabase } from '../../services/supabaseClient';
-import { UserCheck, Users, Power, LogOut, Loader, Check, X, ShieldAlert, School, Home, Database, FileText, Plus, Trash2, Upload, AlertCircle } from 'lucide-react';
+import { UserCheck, Users, Power, LogOut, Loader, Check, X, ShieldAlert, School, Home, Database, FileText, Plus, Trash2, Upload, AlertCircle, Settings } from 'lucide-react';
+import { useNotification } from '../NotificationProvider';
 import { parseFile } from '../../services/fileUtils';
 import { generateDatasetContext, generateEmbedding } from '../../services/geminiService';
 
@@ -18,7 +19,11 @@ interface SuperAdminDashboardProps {
 }
 
 export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, onNavigate, onLogout }) => {
-    const [activeTab, setActiveTab] = useState<'requests' | 'governors' | 'knowledge'>('requests');
+    const { showToast, confirm: confirmAction } = useNotification();
+    const [activeTab, setActiveTab] = useState<'requests' | 'governors' | 'knowledge' | 'settings'>('requests');
+    const [orgName, setOrgName] = useState('');
+    const [isSavingOrg, setIsSavingOrg] = useState(false);
+    const [isImportingPriceList, setIsImportingPriceList] = useState(false);
     const [pendingStaff, setPendingStaff] = useState<User[]>([]);
     const [activeGovernors, setActiveGovernors] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
@@ -114,6 +119,14 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                 .eq('department', 'System Administration');
             setDatasets(dsData || []);
 
+            // Fetch Organization Name
+            const { data: settingsData } = await supabase
+                .from('department_settings')
+                .select('organization_name')
+                .eq('department', user.department)
+                .maybeSingle();
+            if (settingsData) setOrgName(settingsData.organization_name);
+
         } catch (err) {
             console.error('Error fetching data:', err);
         } finally {
@@ -149,124 +162,124 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
         }
     };
 
-    const handleReject = async (roleId: string) => {
-        if (!confirm('Are you sure you want to reject this request?')) return;
-        setActionLoading(roleId);
-        try {
-            const { error } = await supabase
-                .from('user_roles')
-                .update({ status: 'rejected' })
-                .eq('id', roleId);
-            if (error) throw error;
-            fetchData();
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setActionLoading(null);
-        }
+    const handleReject = (roleId: string) => {
+        confirmAction({
+            title: "Reject Request",
+            message: "Are you sure you want to reject this request?",
+            variant: "warning",
+            onConfirm: async () => {
+                setActionLoading(roleId);
+                try {
+                    const { error } = await supabase
+                        .from('user_roles')
+                        .update({ status: 'rejected' })
+                        .eq('id', roleId);
+                    if (error) throw error;
+                    fetchData();
+                    showToast("Request rejected", "info");
+                } catch (err) {
+                    showToast("Failed to reject request", "error");
+                } finally {
+                    setActionLoading(null);
+                }
+            }
+        });
     };
 
-    const handleEndTerm = async (roleId: string) => {
-        if (!confirm('Are you sure you want to END THE TERM for this user? This will disable them and all their officers.')) return;
-        setActionLoading(roleId);
-        try {
-            // 1. Fetch the user details FIRST to ensure we have the academic year and department
-            const { data: userToDisable, error: fetchError } = await supabase
-                .from('user_roles')
-                .select('*')
-                .eq('id', roleId)
-                .single();
+    const handleEndTerm = (roleId: string) => {
+        confirmAction({
+            title: "End Term",
+            message: "Are you sure you want to END THE TERM for this user? This will disable them and all their officers.",
+            variant: "error",
+            confirmLabel: "End Term",
+            onConfirm: async () => {
+                setActionLoading(roleId);
+                try {
+                    const { data: userToDisable, error: fetchError } = await supabase
+                        .from('user_roles')
+                        .select('*')
+                        .eq('id', roleId)
+                        .single();
 
-            if (fetchError) throw fetchError;
-            if (!userToDisable) throw new Error("User not found");
+                    if (fetchError) throw fetchError;
+                    if (!userToDisable) throw new Error("User not found");
 
-            // 2. Disable the Governor
-            const { error: disableError } = await supabase
-                .from('user_roles')
-                .update({ status: 'disabled' })
-                .eq('id', roleId);
+                    const { error: disableError } = await supabase
+                        .from('user_roles')
+                        .update({ status: 'disabled' })
+                        .eq('id', roleId);
 
-            if (disableError) throw disableError;
+                    if (disableError) throw disableError;
 
-            // 3. ARCHIVE DOCUMENTS: Update documents to have the academic_year of the disabled term
-            // Using the fetched user details ensures we have the correct data even after disabling
-            console.log("Archiving documents for:", userToDisable.department, userToDisable.academic_year);
+                    const archiveYear = userToDisable.academic_year || '2025-2026';
+                    const { data: archivedCount, error: archiveError } = await supabase
+                        .rpc('archive_specific_term_documents', {
+                            target_role_id: roleId,
+                            archive_year: archiveYear
+                        });
 
-            const archiveYear = userToDisable.academic_year || '2025-2026'; // Fallback for legacy users
+                    if (archiveError) {
+                        showToast("Error archiving documents. Please check console.", "error");
+                    } else {
+                        showToast(`Successfully archived ${archivedCount} documents`, "success");
+                    }
 
-            // 3. ARCHIVE DOCUMENTS: Use RPC to bypass RLS and archive ONLY docs from this term
-            // This function targets the Governor and their Officers specifically
-            const { data: archivedCount, error: archiveError } = await supabase
-                .rpc('archive_specific_term_documents', {
-                    target_role_id: roleId, // Pass the Governor's Role ID
-                    archive_year: archiveYear
-                });
+                    await supabase
+                        .from('user_roles')
+                        .update({ status: 'disabled' })
+                        .eq('managed_by_role_id', roleId);
 
-            if (archiveError) {
-                console.error("Error archiving documents:", archiveError);
-                alert("Error archiving documents. Please check console.");
-            } else {
-                console.log(`Successfully archived ${archivedCount} documents for term ending ${archiveYear}`);
+                    fetchData();
+                } catch (err) {
+                    showToast("Failed to end term.", "error");
+                } finally {
+                    setActionLoading(null);
+                }
             }
-
-            // 4. Disable all officers managed by this role
-            await supabase
-                .from('user_roles')
-                .update({ status: 'disabled' })
-                .eq('managed_by_role_id', roleId);
-
-            fetchData();
-        } catch (err) {
-            console.error(err);
-            alert('Failed to end term. See console for details.');
-        } finally {
-            setActionLoading(null);
-        }
+        });
     };
 
+    const handleEnable = (roleId: string) => {
+        confirmAction({
+            title: "Enable User",
+            message: "Are you sure you want to ENABLE this user?",
+            onConfirm: async () => {
+                setActionLoading(roleId);
+                try {
+                    const { error: govError } = await supabase
+                        .from('user_roles')
+                        .update({
+                            status: 'active',
+                            academic_year: '2025-2026'
+                        })
+                        .eq('id', roleId);
 
-    const handleEnable = async (roleId: string) => {
-        if (!confirm('Are you sure you want to ENABLE this user?')) return;
-        setActionLoading(roleId);
-        try {
-            // 1. Enable the Governor
-            const { error: govError } = await supabase
-                .from('user_roles')
-                .update({
-                    status: 'active',
-                    academic_year: '2025-2026' // Ensure academic year is set/updated on enable
-                })
-                .eq('id', roleId);
+                    if (govError) throw govError;
 
-            if (govError) throw govError;
+                    await supabase
+                        .from('user_roles')
+                        .update({ status: 'active' })
+                        .eq('managed_by_role_id', roleId);
 
-            // 2. CASACADE ENABLE: Enable all officers managed by this governor
-            // This ensures they don't have to wait for the governor to login
-            const { error: cascadeError } = await supabase
-                .from('user_roles')
-                .update({ status: 'active' })
-                .eq('managed_by_role_id', roleId);
+                    const { data: unarchivedCount, error: unarchiveError } = await supabase
+                        .rpc('unarchive_specific_term_documents', {
+                            target_role_id: roleId
+                        });
 
-            if (cascadeError) console.error("Error re-enabling officers:", cascadeError);
+                    if (unarchiveError) {
+                        showToast("Error un-archiving documents", "error");
+                    } else {
+                        showToast(`Successfully restored ${unarchivedCount} documents`, "success");
+                    }
 
-            // 3. UN-ARCHIVE DOCUMENTS: Revert documents to Draft for this term
-            const { data: unarchivedCount, error: unarchiveError } = await supabase
-                .rpc('unarchive_specific_term_documents', {
-                    target_role_id: roleId
-                });
-
-            if (unarchiveError) {
-                console.error("Error un-archiving documents:", unarchiveError);
-            } else {
-                console.log(`Successfully restored ${unarchivedCount} documents to Draft`);
+                    fetchData();
+                } catch (err) {
+                    showToast("Failed to enable user", "error");
+                } finally {
+                    setActionLoading(null);
+                }
             }
-
-            fetchData();
-        } catch (err) {
-            console.error(err);
-        } finally {
-            setActionLoading(null);
-        }
+        });
     };
 
     const openUploadModal = (category: 'template' | 'dataset', type?: DocumentType) => {
@@ -289,7 +302,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                 setUploadContext(generatedContext);
             } catch (error) {
                 console.error("Failed to analyze dataset:", error);
-                alert("Failed to analyze file content for context. Please try another file.");
+                showToast("Failed to analyze file content. Please try another file.", "error");
             } finally {
                 setIsAnalyzing(false);
             }
@@ -310,7 +323,8 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
             if (uploadCategory === 'template') {
                 // Upload Template (Storage + DB)
                 const fileExt = uploadFile.name.split('.').pop();
-                const fileName = `${department}_${uploadType}.${fileExt}`;
+                const sanitizedType = uploadType.replace(/\s+/g, '_');
+                const fileName = `${department}_${sanitizedType}.${fileExt}`;
                 const filePath = `${department}/${fileName}`;
 
                 // 1. Upload to Storage
@@ -373,17 +387,90 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
 
         } catch (err) {
             console.error("Upload Error:", err);
-            alert(`Failed to upload ${uploadCategory}. ${(err as Error).message}`);
+            showToast(`Failed to upload ${uploadCategory}. ${(err as Error).message}`, "error");
         } finally {
             setIsUploading(false);
         }
     };
 
-    const handleDeleteDataset = async (id: string) => {
+    const handleDeleteDataset = (id: string) => {
+        confirmAction({
+            title: "Delete Dataset",
+            message: "Are you sure you want to delete this dataset? This action cannot be undone.",
+            variant: "error",
+            confirmLabel: "Delete",
+            onConfirm: async () => {
+                try {
+                    await supabase.from('department_datasets').delete().eq('id', id);
+                    fetchData();
+                    showToast("Dataset deleted successfully", "success");
+                } catch (e) {
+                    showToast("Failed to delete dataset", "error");
+                }
+            }
+        });
+    };
+
+    const handleSaveSettings = async () => {
+        setIsSavingOrg(true);
         try {
-            await supabase.from('department_datasets').delete().eq('id', id);
-            fetchData();
-        } catch (e) { console.error(e); }
+            const { error } = await supabase
+                .from('department_settings')
+                .upsert({
+                    department: user.department,
+                    organization_name: orgName,
+                    updated_at: new Date().toISOString(),
+                    updated_by: user.id
+                }, { onConflict: 'department' });
+
+            if (error) throw error;
+            showToast("Settings updated successfully!", "success");
+        } catch (err) {
+            console.error("Error saving settings:", err);
+            showToast("Failed to save settings.", "error");
+        } finally {
+            setIsSavingOrg(false);
+        }
+    };
+
+    const handleImportPriceList = async () => {
+        setIsImportingPriceList(true);
+        try {
+            const response = await fetch('/Basis PMPP Price list.json');
+            if (!response.ok) throw new Error('Failed to load JSON file');
+            const data = await response.json();
+
+            if (!data.items || !Array.isArray(data.items)) {
+                throw new Error('Invalid JSON format');
+            }
+
+            // Filter out empty items (categories)
+            const validItems = data.items
+                .filter((item: any) => item.description && item.description.trim() !== '')
+                .map((item: any) => ({
+                    description: item.description,
+                    unit: item.unit || null,
+                    price: item.price ? parseFloat(item.price) : null,
+                    is_procurable: item.is_procurable === '1.0' || item.is_procurable === '1',
+                    procurement_object: item.procurement_object || null,
+                    budget_object: item.budget_object || null
+                }));
+
+            // Chunk the insertion to avoid request size limits
+            const chunkSize = 100;
+            for (let i = 0; i < validItems.length; i += chunkSize) {
+                const chunk = validItems.slice(i, i + chunkSize);
+                const { error } = await supabase.from('price_list_items').insert(chunk);
+                if (error) throw error;
+            }
+
+            showToast(`Successfully imported ${validItems.length} items!`, 'success');
+        } catch (e) {
+            console.error("Import Error:", e);
+            showToast(`Failed to import price list: ${(e as Error).message}`, 'error');
+        } finally {
+            setIsImportingPriceList(false);
+        }
     };
 
     return (
@@ -425,6 +512,13 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     >
                         <Database className="w-5 h-5" />
                         Knowledge Base
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('settings')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'settings' ? 'bg-white/10 text-white dark:bg-gray-700' : 'text-blue-200 hover:bg-white/5 dark:text-gray-400 dark:hover:bg-gray-700'}`}
+                    >
+                        <Settings className="w-5 h-5" />
+                        Settings
                     </button>
                 </nav>
 
@@ -770,6 +864,63 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                 >
                                     {actionLoading ? <Loader className="w-5 h-5 animate-spin mx-auto" /> : 'Confirm Approval'}
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {activeTab === 'settings' && (
+                    <div className="max-w-2xl">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-6 dark:text-white">System Settings</h2>
+
+                        <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+                            <div className="mb-6">
+                                <label className="block text-sm font-bold text-gray-700 mb-2 dark:text-gray-300">Organization Name</label>
+                                <p className="text-xs text-gray-500 mb-3 dark:text-gray-400">This will be auto-filled in the Manual Drafting form for all members of the system administration.</p>
+                                <input
+                                    type="text"
+                                    value={orgName}
+                                    onChange={(e) => setOrgName(e.target.value)}
+                                    placeholder="e.g. Docuflow Administration"
+                                    className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                />
+                            </div>
+
+                            <button
+                                onClick={handleSaveSettings}
+                                disabled={isSavingOrg}
+                                className="px-6 py-2.5 bg-blue-900 text-white rounded-lg font-bold hover:bg-blue-800 transition disabled:opacity-50 flex items-center gap-2"
+                            >
+                                {isSavingOrg ? <Loader className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                Save Changes
+                            </button>
+
+                            <div className="pt-6 border-t border-gray-200 dark:border-gray-700 mt-6">
+                                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">System Maintenance</h3>
+                                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                                    <div className="flex items-start gap-3">
+                                        <Database className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                                        <div>
+                                            <h4 className="font-medium text-blue-900 dark:text-blue-100">Price List Ingestion</h4>
+                                            <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                                                Import the latest Basis PMPP Price List from the project JSON file into the database.
+                                                Make sure the <code>price_list_items</code> table exists.
+                                            </p>
+                                            <button
+                                                onClick={() => confirmAction({
+                                                    title: "Import Price List?",
+                                                    message: "This will add items from the JSON file to the database. Make sure you have run the migration first.",
+                                                    onConfirm: handleImportPriceList,
+                                                    variant: "info"
+                                                })}
+                                                disabled={isImportingPriceList}
+                                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2 text-sm"
+                                            >
+                                                {isImportingPriceList ? <Loader className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                                                {isImportingPriceList ? "Importing..." : "Start Import"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

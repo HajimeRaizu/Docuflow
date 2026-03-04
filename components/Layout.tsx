@@ -150,15 +150,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
 
               {/* Role Based Menu Items */}
               <div className="space-y-2">
-                {(user.user_type === UserRole.SUPER_ADMIN || (user.user_type === UserRole.ADMIN && user.specific_role !== 'University Staff' && user.specific_role !== 'University Official')) && (
-                  <button
-                    onClick={() => handleNavigate('admin-dashboard')}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 rounded-xl transition group"
-                  >
-                    <Shield className="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" />
-                    Admin Dashboard
-                  </button>
-                )}
+
 
                 <button
                   onClick={() => handleNavigate('settings')}

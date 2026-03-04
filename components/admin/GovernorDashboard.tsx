@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, SpecificRole, Department, DocumentType } from '../../types';
 import { supabase } from '../../services/supabaseClient';
 import { Users, FileText, Upload, Trash2, Check, X, Shield, Plus, LogOut, Settings, Database, Archive, Home, Loader, AlertCircle } from 'lucide-react';
+import { useNotification } from '../NotificationProvider';
 import { parseFile } from '../../services/fileUtils';
 import { generateDatasetContext, generateEmbedding } from '../../services/geminiService';
 
@@ -19,7 +20,10 @@ const getApiKey = () => {
 };
 
 export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNavigate, onLogout }) => {
-    const [activeTab, setActiveTab] = useState<'officers' | 'knowledge' | 'archives'>('officers');
+    const { showToast, confirm: confirmAction } = useNotification();
+    const [activeTab, setActiveTab] = useState<'officers' | 'knowledge' | 'settings'>('officers');
+    const [orgName, setOrgName] = useState('');
+    const [isSavingOrg, setIsSavingOrg] = useState(false);
     const [officers, setOfficers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -92,6 +96,14 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                 .eq('department', user.department);
             setDatasets(dsData || []);
 
+            // Fetch Organization Name
+            const { data: settingsData } = await supabase
+                .from('department_settings')
+                .select('organization_name')
+                .eq('department', user.department)
+                .maybeSingle();
+            if (settingsData) setOrgName(settingsData.organization_name);
+
         } catch (err) {
             console.error(err);
         } finally {
@@ -161,7 +173,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                 setUploadContext(generatedContext);
             } catch (error) {
                 console.error("Failed to analyze dataset:", error);
-                alert("Failed to analyze file content for context. Please try another file.");
+                showToast("Failed to analyze file content. Please try another file.", "error");
             } finally {
                 setIsAnalyzing(false);
             }
@@ -181,7 +193,8 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
             if (uploadCategory === 'template') {
                 // Upload Template (Storage + DB)
                 const fileExt = uploadFile.name.split('.').pop();
-                const fileName = `${user.department}_${uploadType}.${fileExt}`;
+                const sanitizedType = uploadType.replace(/\s+/g, '_');
+                const fileName = `${user.department}_${sanitizedType}.${fileExt}`;
                 const filePath = `${user.department}/${fileName}`;
 
                 // 1. Upload to Storage
@@ -244,17 +257,50 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
 
         } catch (err) {
             console.error("Upload Error:", err);
-            alert(`Failed to upload ${uploadCategory}. ${(err as Error).message}`);
+            showToast(`Failed to upload ${uploadCategory}. ${(err as Error).message}`, "error");
         } finally {
             setIsUploading(false);
         }
     };
 
-    const handleDeleteDataset = async (id: string) => {
+    const handleDeleteDataset = (id: string) => {
+        confirmAction({
+            title: "Delete Dataset",
+            message: "Are you sure you want to delete this dataset? This action cannot be undone.",
+            variant: "error",
+            confirmLabel: "Delete",
+            onConfirm: async () => {
+                try {
+                    await supabase.from('department_datasets').delete().eq('id', id);
+                    fetchData();
+                    showToast("Dataset deleted successfully", "success");
+                } catch (e) {
+                    showToast("Failed to delete dataset", "error");
+                }
+            }
+        });
+    };
+
+    const handleSaveSettings = async () => {
+        setIsSavingOrg(true);
         try {
-            await supabase.from('department_datasets').delete().eq('id', id);
-            fetchData();
-        } catch (e) { console.error(e); }
+            const { error } = await supabase
+                .from('department_settings')
+                .upsert({
+                    department: user.department,
+                    organization_name: orgName,
+                    updated_at: new Date().toISOString(),
+                    updated_by: user.id
+                }, { onConflict: 'department' });
+
+            if (error) throw error;
+            showToast("Settings updated successfully!", "success");
+        } catch (err) {
+            console.error("Error saving settings:", err);
+            showToast("Failed to save settings.", "error");
+        } finally {
+            setIsSavingOrg(false);
+        }
     };
 
     return (
@@ -291,6 +337,13 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                             Knowledge Base
                         </button>
                     )}
+                    <button
+                        onClick={() => setActiveTab('settings')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${activeTab === 'settings' ? 'bg-white/10 text-white dark:bg-gray-700' : 'text-blue-200 hover:bg-white/5 dark:text-gray-400 dark:hover:bg-gray-700'}`}
+                    >
+                        <Settings className="w-5 h-5" />
+                        Settings
+                    </button>
                 </nav>
 
                 <div className="p-4 border-t border-blue-800 dark:border-gray-700">
@@ -437,6 +490,34 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                     })}
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                )}
+                {activeTab === 'settings' && (
+                    <div className="max-w-2xl">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-6 dark:text-white">Department Settings</h2>
+
+                        <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
+                            <div className="mb-6">
+                                <label className="block text-sm font-bold text-gray-700 mb-2 dark:text-gray-300">Organization Name</label>
+                                <p className="text-xs text-gray-500 mb-3 dark:text-gray-400">This will be auto-filled in the Manual Drafting form for all members of your department.</p>
+                                <input
+                                    type="text"
+                                    value={orgName}
+                                    onChange={(e) => setOrgName(e.target.value)}
+                                    placeholder="e.g. CITE Student Organization"
+                                    className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                />
+                            </div>
+
+                            <button
+                                onClick={handleSaveSettings}
+                                disabled={isSavingOrg}
+                                className="px-6 py-2.5 bg-blue-900 text-white rounded-lg font-bold hover:bg-blue-800 transition disabled:opacity-50 flex items-center gap-2"
+                            >
+                                {isSavingOrg ? <Loader className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                                Save Changes
+                            </button>
                         </div>
                     </div>
                 )}
