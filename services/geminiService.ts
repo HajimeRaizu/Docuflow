@@ -143,9 +143,13 @@ class GeminiService {
         3. DO NOT output HTML or Markdown. DO NOT wrap the output in any markdown code blocks (like \`\`\`xml).
         4. Review the REFERENCE MATERIAL (if any provided in the prompt). 
         5. Identify the document from the reference that is most relevant to the user request.
-        6. Use the content and structure of that selected document as your primary guide/template.
+        6. STRICTLY CLONE the structure, headers, and formatting of that selected document. This is your MANDATORY template.
 
         STRUCTURAL MANDATES:
+        - **Font Styling**: You MUST use Arial 12 for ALL text.
+          - Apply this using <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr> within text runs.
+        - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY", "SIGNATORIES") MUST NOT be bulleted or numbered. Use bold text in a standard paragraph (<w:rPr><w:b/></w:rPr>).
+        - **Numbering**: For numbered lists (e.g., specific objectives), ALWAYS ensure the numbering resets to 1 for each new section. Do NOT continue numbering from a previous list.
         - **Signatories**: You MUST append a "Signatories" section at the bottom.
           - Use the "signatories" array from the formData if provided. Each signatory has a 'name' and 'position'.
           - Format this using OOXML tables (<w:tbl>) with invisible borders (<w:tcBorders> with val="nil" inside <w:tblBorders>) to ensure proper alignment.

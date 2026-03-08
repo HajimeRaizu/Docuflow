@@ -105,12 +105,28 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               const AIGeneratedContent = initialContent || `<w:p><w:r><w:t></w:t></w:r></w:p>`;
 
               // Replace the content but keep the structure
-              const cleanedXml = documentXml.replace(
+              let cleanedXml = documentXml.replace(
                 /(<w:body>)([\s\S]*?)(<w:sectPr[\s\S]*?<\/w:sectPr>)([\s\S]*?)(<\/w:body>)/,
                 `$1${AIGeneratedContent}$3$5`
               );
 
+              // Force Arial 12 (sz val=24) globally in the document XML
+              // This is a broad replacement for common font/size tags
+              cleanedXml = cleanedXml.replace(/<w:rFonts\b[^>]*\/>/g, '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>');
+              cleanedXml = cleanedXml.replace(/<w:sz\b[^>]*\/>/g, '<w:sz w:val="24"/>');
+              cleanedXml = cleanedXml.replace(/<w:szCs\b[^>]*\/>/g, '<w:szCs w:val="24"/>');
+
               zip.file('word/document.xml', cleanedXml);
+
+              // Also try to modify styles.xml if it exists to set the default
+              const stylesFile = zip.file('word/styles.xml');
+              if (stylesFile) {
+                let stylesXml = await stylesFile.async('string');
+                stylesXml = stylesXml.replace(/<w:rFonts\b[^>]*\/>/g, '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>');
+                stylesXml = stylesXml.replace(/<w:sz\b[^>]*\/>/g, '<w:sz w:val="24"/>');
+                stylesXml = stylesXml.replace(/<w:szCs\b[^>]*\/>/g, '<w:szCs w:val="24"/>');
+                zip.file('word/styles.xml', stylesXml);
+              }
 
               // Generate the modified blob
               const modifiedBlob = await zip.generateAsync({
@@ -437,9 +453,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               background: #D1D5DB;
             }
 
-            .superdoc-document-editor {
-              font-family: "Times New Roman", serif;
-              font-size: 12pt;
+            .superdoc-document-editor, 
+            .superdoc-document-editor * {
+              font-family: Arial, sans-serif !important;
+              font-size: 12pt !important;
             }
           `}
         </style>
