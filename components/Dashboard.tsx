@@ -83,7 +83,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                 w-full py-4 px-6 rounded-full font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-500 dark:hover:text-white transition-all duration-300 flex items-center justify-center gap-2 group/btn
               `}
             >
-              {tile.enabled ? 'Start drafting' : 'View Documents'}
+              {tile.enabled ? 'Start draft' : 'View Documents'}
               <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
             </button>
           </div>
