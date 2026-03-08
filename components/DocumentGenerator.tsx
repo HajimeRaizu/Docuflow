@@ -4,7 +4,7 @@ import { DocumentType, GeneratedDocument, DocumentVersion, User, DocumentTypePer
 import { ConfirmModal } from './ConfirmModal';
 import { generateDocument, LiveSession, generateDocumentTitle } from '../services/geminiService';
 import { supabase } from '../services/supabaseClient';
-import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical, Eye, CheckCircle, Info, AlertTriangle, Plus, Trash2, UserPlus } from 'lucide-react';
+import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical, Eye, CheckCircle, Info, AlertTriangle, Plus, Trash2, UserPlus, ChevronDown } from 'lucide-react';
 import { useNotification } from './NotificationProvider';
 import { RichTextEditor } from './RichTextEditor';
 import * as THREE from 'three';
@@ -23,6 +23,62 @@ interface DocumentGeneratorProps {
   initialDoc?: GeneratedDocument;
   onBack: () => void;
 }
+
+const CustomSelect: React.FC<{
+  options: { label: string; value: string }[];
+  value: string;
+  onChange: (value: string) => void;
+  className?: string;
+  placeholder?: string;
+}> = ({ options, value, onChange, className = "", placeholder = "Select..." }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const selectedOption = options.find(o => o.value === value);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div ref={containerRef} className={`relative ${className}`}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 bg-transparent flex items-center justify-between gap-2 transition-all hover:bg-gray-50 dark:hover:bg-gray-650"
+      >
+        <span className="truncate text-left flex-1">
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-lg shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-100 max-h-60 overflow-y-auto w-full">
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                onChange(opt.value);
+                setIsOpen(false);
+              }}
+              className={`w-full p-2 text-left text-sm hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors truncate ${value === opt.value ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-bold' : ''}`}
+              title={opt.label}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const vertexShader = `
 varying vec2 vUv;
@@ -562,61 +618,73 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                   <input name="orgName" value={formData.orgName} placeholder="Organization Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                   <input name="title" value={formData.title} placeholder="Activity Title" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div className="space-y-1">
-                      <select
-                        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 text-sm"
+                    <div className={`flex gap-2 ${customVenue ? 'sm:col-span-2' : ''}`}>
+                      <CustomSelect
+                        className={`${customVenue ? 'w-20' : 'w-full'} transition-all`}
                         value={customVenue ? "Others" : formData.venue}
-                        onChange={(e) => {
-                          if (e.target.value === "Others") {
+                        options={[
+                          { label: "North Eastern Mindanao State University – Tandag, Main Campus", value: "North Eastern Mindanao State University – Tandag, Main Campus" },
+                          { label: "Others", value: "Others" }
+                        ]}
+                        onChange={(val) => {
+                          if (val === "Others") {
                             setCustomVenue(true);
                             setFormData(prev => ({ ...prev, venue: '' }));
                           } else {
                             setCustomVenue(false);
-                            setFormData(prev => ({ ...prev, venue: e.target.value }));
+                            setFormData(prev => ({ ...prev, venue: val }));
                           }
                         }}
-                      >
-                        <option value="North Eastern Mindanao State University – Tandag, Main Campus">North Eastern Mindanao State University – Tandag, Main Campus</option>
-                        <option value="Others">Others</option>
-                      </select>
+                      />
                       {customVenue && (
-                        <input name="venue" placeholder="Specify Venue" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-top-1" />
+                        <input name="venue" placeholder="Specify Venue" onChange={handleChange} className="flex-1 min-w-0 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-left-1" />
                       )}
                     </div>
-                    <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                    {!customVenue && <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />}
                   </div>
+                  {customVenue && <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 mt-2" />}
                   <input name="proponent" value={formData.proponent} placeholder="Proponent (Your Name)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <div className="space-y-1">
-                      <select
-                        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 text-sm"
+                    <div className={`flex gap-2 ${customBudget ? 'sm:col-span-2' : ''}`}>
+                      <CustomSelect
+                        className={`${customBudget ? 'w-20' : 'w-full'} transition-all`}
                         value={customBudget ? "Others" : (["0-5000", "5001-10000", "10001-20000", "20001-30000"].includes(formData.budget) ? formData.budget : (formData.budget === '' ? '' : "Others"))}
-                        onChange={(e) => {
-                          if (e.target.value === "Others") {
+                        options={[
+                          { label: "Select Budget Range", value: "" },
+                          { label: "0-5000", value: "0-5000" },
+                          { label: "5001-10000", value: "5001-10000" },
+                          { label: "10001-20000", value: "10001-20000" },
+                          { label: "20001-30000", value: "20001-30000" },
+                          { label: "Others", value: "Others" }
+                        ]}
+                        onChange={(val) => {
+                          if (val === "Others") {
                             setCustomBudget(true);
                             setFormData(prev => ({ ...prev, budget: '' }));
                           } else {
                             setCustomBudget(false);
-                            setFormData(prev => ({ ...prev, budget: e.target.value }));
+                            setFormData(prev => ({ ...prev, budget: val }));
                           }
                         }}
-                      >
-                        <option value="">Select Budget Range</option>
-                        <option value="0-5000">0-5000</option>
-                        <option value="5001-10000">5001-10000</option>
-                        <option value="10001-20000">10001-20000</option>
-                        <option value="20001-30000">20001-30000</option>
-                        <option value="Others">Others</option>
-                      </select>
+                        placeholder="Select Budget Range"
+                      />
                       {customBudget && (
-                        <input name="budget" placeholder="Specify Budget" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-top-1" />
+                        <input name="budget" placeholder="Specify Budget" onChange={handleChange} className="flex-1 min-w-0 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-left-1" />
                       )}
                     </div>
-                    <select name="source" value={formData.source} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                    {!customBudget && (
+                      <select name="source" value={formData.source} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                        <option value="STF">STF</option>
+                        <option value="GAA">GAA</option>
+                      </select>
+                    )}
+                  </div>
+                  {customBudget && (
+                    <select name="source" value={formData.source} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 mt-2">
                       <option value="STF">STF</option>
                       <option value="GAA">GAA</option>
                     </select>
-                  </div>
+                  )}
                   <textarea name="objectives" value={formData.objectives} placeholder="Objectives" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
 
                   {/* Signatories Section for Activity Proposal */}
