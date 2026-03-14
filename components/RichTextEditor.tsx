@@ -19,6 +19,7 @@ interface RichTextEditorProps {
   readOnly?: boolean;
   templateUrl?: string | null;
   documentType?: DocumentType;
+  initialEstimate?: any[];
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -29,7 +30,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onSave,
   readOnly = false,
   templateUrl,
-  documentType
+  documentType,
+  initialEstimate
 }) => {
   const { showToast } = useNotification();
   const [isMaximized, setIsMaximized] = useState(false);
@@ -384,6 +386,66 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
     }
   }, [isPriceListOpen]);
+
+  // Handle AI Initial Estimate Injection
+  useEffect(() => {
+    if (initialEstimate && initialEstimate.length > 0) {
+      console.log("Processing AI Budget Estimate:", initialEstimate);
+      
+      const processEstimates = async () => {
+        let itemsList = priceListItems;
+        // Fetch price list if it isn't loaded yet
+        if (itemsList.length === 0) {
+          try {
+            const { data } = await supabase
+              .from('price_list')
+              .select('*')
+              .order('item_name');
+            if (data) Object.freeze(data);
+            itemsList = data || [];
+            if (data) setPriceListItems(data);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        const newSelectedIds = new Set<string>();
+        const newQuantities: Record<string, number> = {};
+        const newManualEntries: any[] = [];
+
+        initialEstimate.forEach((estItem) => {
+          // Attempt string match against DB
+          const dbMatch = itemsList.find(item => 
+            item.item_name?.toLowerCase() === estItem.item_name?.toLowerCase()
+          );
+
+          if (dbMatch) {
+            newSelectedIds.add(dbMatch.id);
+            newQuantities[dbMatch.id] = (newQuantities[dbMatch.id] || 0) + (estItem.quantity || 1);
+          } else {
+            // Unrecognized item goes to manual entries
+            newManualEntries.push({
+              description: estItem.item_name || 'Unnamed Item',
+              unit: estItem.unit || '',
+              quantity: estItem.quantity || 1,
+              price: estItem.price || 0
+            });
+          }
+        });
+
+        // Update state to reflect the AI's selection
+        setSelectedItemIds(newSelectedIds);
+        setItemQuantities(newQuantities);
+        setManualEntries(newManualEntries);
+        
+        // Auto-open modal to step 2 (Quantities/Totals) so the user can verify the AI's math
+        setIsPriceListOpen(true);
+        setPriceListStep(2);
+      };
+
+      processEstimates();
+    }
+  }, [initialEstimate]);
 
   // Handle Table Insertion
   const handleInsertPriceTable = async () => {

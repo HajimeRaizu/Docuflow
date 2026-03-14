@@ -131,7 +131,7 @@ class GeminiService {
         type: DocumentType,
         formData: Record<string, any>,
         userDepartment?: string
-    ): Promise<string> {
+    ): Promise<{ content: string; referenceMaterial: string }> {
         const ai = this.getAI();
         const aiSettings = this.getAISettings();
 
@@ -148,8 +148,8 @@ class GeminiService {
         STRUCTURAL MANDATES:
         - **Font Styling**: You MUST use Arial 12 for ALL text.
           - Apply this using <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr> within text runs.
-        - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY", "SIGNATORIES") MUST NOT be bulleted or numbered. Use bold text in a standard paragraph (<w:rPr><w:b/></w:rPr>).
-        - **Numbering**: For numbered lists (e.g., specific objectives), ALWAYS ensure the numbering resets to 1 for each new section. Do NOT continue numbering from a previous list.
+        - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY", "SIGNATORIES") MUST NOT be bulleted or numbered or lettered. Use bold text in a standard paragraph (<w:rPr><w:b/></w:rPr>).
+        - **Numbering**: For numbered or lettered lists beneath a header (e.g., specific objectives), ALWAYS ensure the numbering or lettering resets to 1 or A for each new section/heading. Do NOT continue numbering from a previous list.
         - **Signatories**: You MUST append a "Signatories" section at the bottom.
           - Use the "signatories" array from the formData if provided. Each signatory has a 'name' and 'position'.
           - Format this using OOXML tables (<w:tbl>) with invisible borders (<w:tcBorders> with val="nil" inside <w:tblBorders>) to ensure proper alignment.
@@ -274,7 +274,12 @@ class GeminiService {
                 });
 
                 // @ts-ignore
-                return response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                const generatedText = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                
+                return {
+                    content: generatedText,
+                    referenceMaterial: referenceMaterial || ""
+                };
             } catch (error) {
                 console.error("AI Generation Error Detailed:", error);
                 throw new Error(`Failed to generate document: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -346,6 +351,81 @@ class GeminiService {
             }
         });
     }
+
+    public async estimateBudget(referenceMaterial: string, generatedDocument: string, budget: string): Promise<any[]> {
+        // Fetch price list from database to pass to AI
+        let priceListContext = "No specific price list available. Generate standard estimates and invent reasonable items.";
+        try {
+            const { data } = await supabase.from('price_list').select('item_name, unit, price');
+            if (data && data.length > 0) {
+                priceListContext = "AVAILABLE PRICE LIST ITEMS:\n" + data.map(i => `- ${i.item_name} (${i.unit}) : ₱${i.price}`).join("\n");
+            }
+        } catch(e) {
+            console.warn("Failed to fetch price list for estimation context", e);
+        }
+
+        return this.withRetry(async () => {
+            const ai = this.getAI();
+            const prompt = `
+            Analyze the following generated document and the reference material it was based on to create a budget estimate.
+            
+            The user has requested an estimated budget of roughly: ${budget}.
+            Your task is to identify the logical items (materials, services, venue, food, etc.) needed to fulfill this activity.
+            
+            Provide a realistic estimate matching the total budget limit constraint provided above.
+            
+            IMPORTANT:
+            Please strongly prefer using items from the following AVAILABLE PRICE LIST ITEMS if they match the logical needs of the document. Use their exact names, units, and prices. If an item is needed but not in the list, you may invent a reasonable one.
+            
+            ${priceListContext}
+
+            OUTPUT FORMAT:
+            You MUST output a raw JSON array of objects and NOTHING ELSE. No markdown formatting (\`\`\`json), no introductory text.
+            Each object must strictly match this schema:
+            {
+              "item_name": "string (name of item)",
+              "unit": "string (e.g. pcs, pax, set)",
+              "quantity": number (integer),
+              "price": number (unit price)
+            }
+            
+            --- REFERENCE MATERIAL ---
+            ${referenceMaterial.substring(0, 5000)}
+            
+            --- GENERATED DOCUMENT ---
+            ${generatedDocument.substring(0, 5000)}
+            `;
+
+            try {
+                const response = await ai.models.generateContent({
+                    model: "gemini-2.5-flash",
+                    contents: [{
+                        role: "user",
+                        parts: [{ text: prompt }]
+                    }]
+                });
+                
+                // @ts-ignore
+                let rawText = response.text?.trim() || (response.candidates?.[0]?.content?.parts?.[0]?.text?.trim()) || "[]";
+                
+                // Strip markdown blocks if the AI accidentally adds them
+                rawText = rawText.replace(/^```json/mi, '').replace(/```$/m, '').trim();
+
+                let parsed;
+                try {
+                    parsed = JSON.parse(rawText);
+                } catch (jsonErr) {
+                    console.error("Failed to parse estimate out of AI response:", rawText);
+                    parsed = [];
+                }
+                
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                console.error("Budget Estimation Error:", error);
+                return [];
+            }
+        });
+    }
 }
 
 export const geminiService = new GeminiService();
@@ -356,6 +436,7 @@ export const generateEmbedding = (text: string) => geminiService.generateEmbeddi
 export const generateDocument = (type: DocumentType, formData: Record<string, any>, userDepartment?: string) => geminiService.generateDocument(type, formData, userDepartment);
 export const generateDatasetContext = (content: string) => geminiService.generateDatasetContext(content);
 export const generateDocumentTitle = (content: string, type: DocumentType) => geminiService.generateDocumentTitle(content, type);
+export const estimateBudget = (referenceMaterial: string, generatedDocument: string, budget: string) => geminiService.estimateBudget(referenceMaterial, generatedDocument, budget);
 
 const activityProposalTool: FunctionDeclaration = {
     name: 'submit_activity_proposal',

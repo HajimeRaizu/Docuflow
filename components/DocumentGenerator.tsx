@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DocumentType, GeneratedDocument, DocumentVersion, User, DocumentTypePermissionKey } from '../types';
 import { ConfirmModal } from './ConfirmModal';
-import { generateDocument, LiveSession, generateDocumentTitle } from '../services/geminiService';
+import { generateDocument, LiveSession, generateDocumentTitle, estimateBudget } from '../services/geminiService';
 import { supabase } from '../services/supabaseClient';
 import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical, Eye, CheckCircle, Info, AlertTriangle, Plus, Trash2, UserPlus, ChevronDown } from 'lucide-react';
 import { useNotification } from './NotificationProvider';
@@ -132,7 +132,9 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   const { showToast, confirm: confirmAction } = useNotification();
   const [docType, setDocType] = useState<DocumentType>(initialDoc ? initialDoc.type : initialType);
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Drafting your document...');
   const [result, setResult] = useState(initialDoc ? initialDoc.content : '');
+  const [budgetEstimate, setBudgetEstimate] = useState<any[] | undefined>(undefined);
   const [templateUrl, setTemplateUrl] = useState<string | null>(initialDoc?.templateUrl || null);
 
   useEffect(() => {
@@ -408,10 +410,21 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
 
   const handleGenerate = async (overrideData?: Record<string, string>) => {
     setLoading(true);
+    setLoadingMessage('Drafting your document...');
     const dataToUse = overrideData || formData;
     try {
-      const generatedContent = await generateDocument(docType, dataToUse, user?.department);
-      setResult(generatedContent);
+      const { content, referenceMaterial } = await generateDocument(docType, dataToUse, user?.department);
+      
+      // Attempt Budget Estimation if applicable
+      if (docType === DocumentType.ACTIVITY_PROPOSAL && dataToUse.budget) {
+        setLoadingMessage('Creating table for Budgetary requirements...');
+        const estimate = await estimateBudget(referenceMaterial, content, dataToUse.budget);
+        if (estimate && estimate.length > 0) {
+          setBudgetEstimate(estimate);
+        }
+      }
+      
+      setResult(content);
     } catch (error) {
       console.error("Generation failed", error);
       showToast("Failed to generate document. Please try again.", "error");
@@ -899,7 +912,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
         {loading ? (
           <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-gray-400">
             <Bot className="w-16 h-16 mb-4 text-blue-500 animate-bounce" />
-            <p className="text-lg font-medium text-gray-600 dark:text-gray-300">Drafting your document...</p>
+            <p className="text-lg font-medium text-gray-600 dark:text-gray-300">{loadingMessage}</p>
             <p className="text-sm">Please wait while AI generates the content.</p>
           </div>
         ) : (
@@ -914,6 +927,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                 onSave={handleSaveToStorage}
                 readOnly={!canEdit}
                 documentType={docType}
+                initialEstimate={budgetEstimate}
               />
             </div>
           </div>
