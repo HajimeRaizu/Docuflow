@@ -1,0 +1,5481 @@
+[
+  [
+    null,
+    "BASIS FOR PPMP PRICING OF ITEMS"
+  ],
+  [
+    null,
+    null,
+    "UNIT",
+    "PRICE"
+  ],
+  [
+    null,
+    "ALCOHOL OR ACETONE BASED ANTISEPTICS"
+  ],
+  [
+    null,
+    "ALCOHOL, Ethyl, 500 mL",
+    "bottle",
+    95
+  ],
+  [
+    null,
+    "ALCOHOL, Ethyl,  1 Gallon",
+    "gallon",
+    435
+  ],
+  [
+    null,
+    "ARTS AND CRAFTS EQUIPMENT AND ACCESSORIES AND SUPPLIES"
+  ],
+  [
+    null,
+    "CLEARBOOK, A4 size",
+    "piece",
+    45
+  ],
+  [
+    null,
+    "CLEARBOOK, Legal size",
+    "piece",
+    48
+  ],
+  [
+    null,
+    null,
+    " piece ",
+    17
+  ],
+  [
+    null,
+    "STICKER PAPER ",
+    " pack ",
+    180
+  ],
+  [
+    null,
+    "DOUBLE SIDED TAPE",
+    " roll ",
+    110
+  ],
+  [
+    null,
+    "PHOTO PAPER",
+    " pack ",
+    135
+  ],
+  [
+    null,
+    "CERTIFICATE FRAME",
+    " piece ",
+    165
+  ],
+  [
+    null,
+    "CERTIFICATE HOLDER",
+    " piece ",
+    115
+  ],
+  [
+    null,
+    "PLASTIC FASTENER",
+    " box ",
+    75
+  ],
+  [
+    null,
+    "VELLUM BOARD PAPER",
+    " pack ",
+    145
+  ],
+  [
+    null,
+    "COLORED PAPER",
+    " pack ",
+    135
+  ],
+  [
+    null,
+    "BOND PAPER, A4, 70 GSM",
+    "ream",
+    280
+  ],
+  [
+    null,
+    "BOND PAPER, A4, 80 GSM",
+    "ream",
+    310
+  ],
+  [
+    null,
+    "BOND PAPER, LONG, 70 GSM",
+    "ream",
+    325
+  ],
+  [
+    null,
+    "BOND PAPER, LONG, 80 GSM",
+    "ream",
+    375
+  ],
+  [
+    null,
+    "BOND PAPER, SHORT, 70 GSM",
+    "ream",
+    290
+  ],
+  [
+    null,
+    "BOND PAPER, SHORT, 80 GSM",
+    "ream",
+    295
+  ],
+  [
+    null,
+    "PUSH PIN",
+    " pack ",
+    70
+  ],
+  [
+    null,
+    "GLUE STICK (PASTE)",
+    " piece ",
+    60
+  ],
+  [
+    null,
+    "GLUE STICK (FOR GLUE GUN)",
+    " pack ",
+    23
+  ],
+  [
+    null,
+    "MANILA PAPER",
+    "piece",
+    15
+  ],
+  [
+    null,
+    "Plastic box storage container (70L)",
+    " piece ",
+    1560
+  ],
+  [
+    null,
+    "PLASTIC ENVELOPE (long)",
+    " piece ",
+    45
+  ],
+  [
+    null,
+    "ERASER, plastic/rubber",
+    "piece",
+    19
+  ],
+  [
+    null,
+    "SIGN PEN, Extra Fine Tip, Black ",
+    "piece",
+    40
+  ],
+  [
+    null,
+    "SIGN PEN, Fine Tip, Black ",
+    "piece",
+    57
+  ],
+  [
+    null,
+    "SIGN PEN, Medium Tip, Black ",
+    "piece",
+    67
+  ],
+  [
+    null,
+    "SIGN PEN, Extra Fine Tip, Blue",
+    "piece",
+    30
+  ],
+  [
+    null,
+    "SIGN PEN, Fine Tip, Blue",
+    "piece",
+    57
+  ],
+  [
+    null,
+    "SIGN PEN, Medium Tip, Blue",
+    "piece",
+    70
+  ],
+  [
+    null,
+    "SIGN PEN, Extra Fine Tip, Red",
+    "piece",
+    52
+  ],
+  [
+    null,
+    "SIGN PEN, Fine Tip, Red",
+    "piece",
+    52
+  ],
+  [
+    null,
+    "SIGN PEN, Medium Tip, Red",
+    "piece",
+    52
+  ],
+  [
+    null,
+    "WRAPPING PAPER",
+    "pack",
+    173
+  ],
+  [
+    null,
+    "3-4 Layer Desk File Organizer Document Paper Tray, Magazine Case",
+    "pc",
+    385
+  ],
+  [
+    null,
+    "Acetate Plastic Folder A4",
+    "box",
+    2000
+  ],
+  [
+    null,
+    "Ballpen (black)",
+    "pc ",
+    10
+  ],
+  [
+    null,
+    "Binder clip 1 1/4”",
+    "box",
+    65
+  ],
+  [
+    null,
+    "Binder clip 2”",
+    "box",
+    70
+  ],
+  [
+    null,
+    "Brown Folder, Long",
+    "pc",
+    9
+  ],
+  [
+    null,
+    "Battery, dry cell, size AA",
+    "pack",
+    70
+  ],
+  [
+    null,
+    "Battery, dry cell, size AAA",
+    "pack",
+    83
+  ],
+  [
+    null,
+    "Calculator, Scientific",
+    "pc",
+    450
+  ],
+  [
+    null,
+    "Certificate frame A4",
+    " piece ",
+    165
+  ],
+  [
+    null,
+    "Certificate Holder A4",
+    " piece ",
+    115
+  ],
+  [
+    null,
+    "Clear Folder, Long",
+    "pc",
+    20
+  ],
+  [
+    null,
+    "Clearbook, A4 size",
+    "piece",
+    45
+  ],
+  [
+    null,
+    "Clearbook, legal size",
+    "piece",
+    48
+  ],
+  [
+    null,
+    "Colored paper",
+    " pack ",
+    135
+  ],
+  [
+    null,
+    "Correction Tape (10m*5mm)",
+    "pcs",
+    115
+  ],
+  [
+    null,
+    "Data File Box made of Chipboard",
+    "pc",
+    280
+  ],
+  [
+    null,
+    "Data File storage box with cover ",
+    "pc",
+    450
+  ],
+  [
+    null,
+    "Data filer-long (landscape)with finger ring",
+    "pcs",
+    320
+  ],
+  [
+    null,
+    "Date stamp with received/ dater stamp",
+    "pc",
+    480
+  ],
+  [
+    null,
+    "Dater stamp",
+    "pc",
+    450
+  ],
+  [
+    null,
+    "Double Sided Tape (1 inch)",
+    " roll ",
+    75
+  ],
+  [
+    null,
+    "Double Sided Tape (3/4 inch)",
+    " roll ",
+    98
+  ],
+  [
+    null,
+    "Double sided tape 2\"",
+    " roll ",
+    90
+  ],
+  [
+    null,
+    "Envelope, Documentary, Legal",
+    "box",
+    1150
+  ],
+  [
+    null,
+    "ERASER, plastic/rubber",
+    "piece",
+    19
+  ],
+  [
+    null,
+    "Expanded Envelope, Long, with Garter",
+    "pcs",
+    20
+  ],
+  [
+    null,
+    "Expanded Long Folder (Green)",
+    "pcs",
+    16
+  ],
+  [
+    null,
+    "Fastener ",
+    "box",
+    110
+  ],
+  [
+    null,
+    "Folder (A4 )",
+    "pcs",
+    12
+  ],
+  [
+    null,
+    "Folder (Long )",
+    "pcs",
+    12
+  ],
+  [
+    null,
+    "Folder with Tab, legal (50's/pack)",
+    "pack",
+    500
+  ],
+  [
+    null,
+    "Folder, Fancy w/ slide, A4 (Assorted color)",
+    "bundle",
+    160
+  ],
+  [
+    null,
+    "Folder, Fancy w/ slide, Legal (Assorted color)",
+    "bundle",
+    170
+  ],
+  [
+    null,
+    "Glue gun (big) 60W Power heavy duty",
+    "pc",
+    550
+  ],
+  [
+    null,
+    "Glue Stick (for glue gun)",
+    "pc",
+    10
+  ],
+  [
+    null,
+    "Glue, all-purpose 130g",
+    "bottle",
+    95
+  ],
+  [
+    null,
+    "Index Letter tabbing (4 sheets)",
+    "sheets",
+    140
+  ],
+  [
+    null,
+    "L-Type Clear Folder, Plastic",
+    "pc ",
+    30
+  ],
+  [
+    null,
+    "Long-Arm Heavy Duty Stapler 240 Sheet Capacity",
+    "pc",
+    2500
+  ],
+  [
+    null,
+    "Laid Bond (85gsm),8.5x13, powder blue color,500 sheets ",
+    "ream",
+    1350
+  ],
+  [
+    null,
+    "Lever Arch File Folder with Ring Binder, Legal size (Landscape)",
+    "pc",
+    145
+  ],
+  [
+    null,
+    "Lever Arch File Folder with Ring Binder, Legal size (Portrait)",
+    "pc",
+    145
+  ],
+  [
+    null,
+    "Manila paper",
+    "piece",
+    15
+  ],
+  [
+    null,
+    "MARKER, Flourescent",
+    "set",
+    85
+  ],
+  [
+    null,
+    "Note pad  3x4",
+    "pad",
+    60
+  ],
+  [
+    null,
+    "Note pad 2x3",
+    "pad",
+    55
+  ],
+  [
+    null,
+    "Note pad 3x3",
+    "pad",
+    47
+  ],
+  [
+    null,
+    "Notebook 90 leaves",
+    "pc",
+    45
+  ],
+  [
+    null,
+    "Nylon rope (3mm)",
+    "roll",
+    1000
+  ],
+  [
+    null,
+    "Paper Clip, vinly/plastic coated, jumbo, 50mm",
+    "box",
+    30
+  ],
+  [
+    null,
+    "Paper Multi Purpose -Short 70gsm",
+    "ream",
+    240
+  ],
+  [
+    null,
+    "Paper Multi Purpose -Short 80gsm",
+    "ream",
+    260
+  ],
+  [
+    null,
+    "Paper Multi Purpose A4 70gsm",
+    "ream",
+    250
+  ],
+  [
+    null,
+    "Paper Multi Purpose A4 80gsm",
+    "ream",
+    280
+  ],
+  [
+    null,
+    "Paper Multi Purpose Folio (8*13) 70 gsm",
+    "ream",
+    280
+  ],
+  [
+    null,
+    "Paper Multi Purpose Folio (8*13) 80 gsm",
+    "ream",
+    300
+  ],
+  [
+    null,
+    "PENCIL, lead/graphite, with eraser (12pcs)",
+    "box",
+    160
+  ],
+  [
+    null,
+    "Permanent Marker Ink 30ml (Black)",
+    "bot",
+    65
+  ],
+  [
+    null,
+    "Permanent marker, broad (12 pcs)",
+    "box",
+    780
+  ],
+  [
+    null,
+    "Personalize Stamp 26x9MM",
+    "pc",
+    750
+  ],
+  [
+    null,
+    "Personalized Stamp 13x33mm",
+    "pc",
+    450
+  ],
+  [
+    null,
+    "Photopaper glossy A4 inkjet 180gsm or 230gsm (20pcs)",
+    "pack",
+    400
+  ],
+  [
+    null,
+    "Photopaper glossy A4 inkjet 230gsm (20pcs)",
+    " pack ",
+    400
+  ],
+  [
+    null,
+    "Plastic Comb Binder Ring (10mm) (50pcs)",
+    "pcs",
+    230
+  ],
+  [
+    null,
+    "Plastic Comb Binder Ring (20mm) (50pcs)",
+    "pcs",
+    460
+  ],
+  [
+    null,
+    "Plastic Comb Binder Ring (50mm) (50pcs)",
+    "pcs",
+    1500
+  ],
+  [
+    null,
+    "PLASTIC ENVELOPE (long)",
+    " piece ",
+    45
+  ],
+  [
+    null,
+    "Plastic Fastener",
+    " box ",
+    75
+  ],
+  [
+    null,
+    "Premium Paper Powder Blue, Short, 8 1/2 x 11 (85 gsm) 500 sheets",
+    "ream",
+    1300
+  ],
+  [
+    null,
+    "Premium Paper Powder Blue, Short, 8 1/2 x 13 (85 gsm) 500 sheets",
+    "ream",
+    1500
+  ],
+  [
+    null,
+    "Puncher heavy duty with ruler",
+    "pcs",
+    230
+  ],
+  [
+    null,
+    "push pin",
+    "box",
+    70
+  ],
+  [
+    null,
+    "Scissors 8\"",
+    "pc",
+    70
+  ],
+  [
+    null,
+    "Scotch Tape (1 size)",
+    "pcs",
+    18
+  ],
+  [
+    null,
+    "Scotch Tape (3/4 size)",
+    "pcs",
+    22
+  ],
+  [
+    null,
+    "Sign Pen (Black), 12's/box",
+    "box",
+    400
+  ],
+  [
+    null,
+    "Sign Pen (Blue), 12's/box",
+    "box",
+    400
+  ],
+  [
+    null,
+    "Sign Pen (Red), 12's/box",
+    "box",
+    400
+  ],
+  [
+    null,
+    "Specialty board paper A4 200gsm, 100sheets per pack",
+    " pack ",
+    800
+  ],
+  [
+    null,
+    "Specialty board paper long 200gsm, 100sheets per pack",
+    " pack ",
+    950
+  ],
+  [
+    null,
+    "Specialty Paper A4, 200gsm, 100sheets per pack",
+    "pack",
+    500
+  ],
+  [
+    null,
+    "Specialty paper long 200gsm, 100sheets per pack",
+    "pack",
+    600
+  ],
+  [
+    null,
+    "Stamp Pad",
+    "pcs",
+    300
+  ],
+  [
+    null,
+    "Stamp Pad Ink",
+    "pcs",
+    60
+  ],
+  [
+    null,
+    "Staple Remover, plier-type (metal)",
+    "pc",
+    65
+  ],
+  [
+    null,
+    "Staple wire # 35, standard",
+    "box",
+    40
+  ],
+  [
+    null,
+    "Staple wire, heavy duty (binder type), 23/13",
+    "box",
+    85
+  ],
+  [
+    null,
+    "Sticky Notes (Sign Here)",
+    "pad",
+    67
+  ],
+  [
+    null,
+    "Sticky Notes 4\" x 6\"",
+    "pad",
+    "per"
+  ],
+  [
+    null,
+    "Sticky Notes 5\" x 8\"",
+    "pad",
+    85
+  ],
+  [
+    null,
+    "Storage Box Filer ( Long)",
+    "pcs",
+    600
+  ],
+  [
+    null,
+    "Storage plastic box  container (70L)",
+    "box",
+    1350
+  ],
+  [
+    null,
+    "Storage plastic box  container (95L)",
+    "box",
+    1550
+  ],
+  [
+    null,
+    "Tape Dispenser heavy duty can fit small and big core tape",
+    "pcs",
+    250
+  ],
+  [
+    null,
+    "TAPE, electrical",
+    "roll",
+    35
+  ],
+  [
+    null,
+    "TAPE, masking, 24mm",
+    "roll",
+    65
+  ],
+  [
+    null,
+    "TAPE, masking, 48 mm",
+    "roll",
+    135
+  ],
+  [
+    null,
+    "TAPE, packaging, 48 mm",
+    "roll",
+    30
+  ],
+  [
+    null,
+    "TAPE, transparent, 24mm",
+    "roll",
+    25
+  ],
+  [
+    null,
+    "TAPE, transparent, 48 mm",
+    "roll",
+    28
+  ],
+  [
+    null,
+    "TWINE, plastic",
+    "roll",
+    75
+  ],
+  [
+    null,
+    "Vellum Board Paper, Legal 20pcs",
+    "pck",
+    145
+  ],
+  [
+    null,
+    "Vellum Specialty Board Paper, A4 220gsm 20 pcs",
+    "pck",
+    140
+  ],
+  [
+    null,
+    "White Folder, Long",
+    "pc",
+    9
+  ],
+  [
+    null,
+    "Whiteboard Marker",
+    "pc",
+    67
+  ],
+  [
+    null,
+    "Wrapping paper",
+    "pack",
+    173
+  ],
+  [],
+  [],
+  [],
+  [
+    null,
+    "BATTERIES AND CELLS AND ACCESSORIES"
+  ],
+  [
+    null,
+    "BATTERY, dry cell, size AA",
+    " pack  ",
+    70
+  ],
+  [
+    null,
+    "BATTERY, dry cell, size AAA",
+    " pack  ",
+    83
+  ],
+  [
+    null,
+    "CLEANING EQUIPMENT AND SUPPLIES"
+  ],
+  [
+    null,
+    "Air freshener 320ml",
+    "bot",
+    300
+  ],
+  [
+    null,
+    "Alcohol 500ml",
+    "bot",
+    135
+  ],
+  [
+    null,
+    "Bleaching Solution",
+    "galloon",
+    220
+  ],
+  [
+    null,
+    "Broom (Walis Tambo)",
+    "piece",
+    145
+  ],
+  [
+    null,
+    "Broom (Walis Ting-ting)",
+    "piece",
+    65
+  ],
+  [
+    null,
+    "Cleaner, Toilet Bowl and Urinal",
+    "bottle",
+    70
+  ],
+  [
+    null,
+    "Cleanser, Scouring Powder",
+    "pc",
+    43
+  ],
+  [
+    null,
+    "Detergent Bar",
+    "piece",
+    19
+  ],
+  [
+    null,
+    "Detergent Powder 1kg",
+    "kls",
+    165
+  ],
+  [
+    null,
+    "Detergent powder, all purpose",
+    "dozen",
+    180
+  ],
+  [
+    null,
+    "Disinfectant Spray",
+    "can",
+    157
+  ],
+  [
+    null,
+    "Disposable gloves",
+    " box ",
+    83
+  ],
+  [
+    null,
+    "Diswashing Liquid 500ml",
+    "bot",
+    140
+  ],
+  [
+    null,
+    "Dust Pan",
+    "piece",
+    120
+  ],
+  [
+    null,
+    "Fabric Conditioner 1.5L",
+    "pc",
+    500
+  ],
+  [
+    null,
+    "Floor wax, paste type, red",
+    "can",
+    340
+  ],
+  [
+    null,
+    "Furniture Cleaner",
+    "can",
+    160
+  ],
+  [
+    null,
+    "Garbage Bin with swing cover, 20L",
+    "pc",
+    550
+  ],
+  [
+    null,
+    "Glass Cleaner 500ml",
+    "bot",
+    270
+  ],
+  [
+    null,
+    "Hand Soap, liquid, 500mL",
+    "bottle",
+    85
+  ],
+  [
+    null,
+    "Heavy Duty Plastic Trash Bin 20L",
+    "piece",
+    580
+  ],
+  [
+    null,
+    "Heavy Duty Plastic Trash Bin 30L",
+    "piece",
+    700
+  ],
+  [
+    null,
+    "Heavy Duty Plastic Trash Bin 50L",
+    "piece",
+    900
+  ],
+  [
+    null,
+    "Mop Bucket (Tornado Mop)",
+    "unit",
+    900
+  ],
+  [
+    null,
+    "Multi-Insect Killer Refill, 500g",
+    "bot",
+    350
+  ],
+  [
+    null,
+    "Rags",
+    "kilo",
+    85
+  ],
+  [
+    null,
+    "Scouring pad",
+    "pack",
+    93
+  ],
+  [
+    null,
+    "Tissue Roll, 3 ply",
+    "roll",
+    30
+  ],
+  [
+    null,
+    "Toilet Bowl Cleaner, 500ml",
+    "bot",
+    300
+  ],
+  [
+    null,
+    "Trashbag, Large size",
+    "roll/pack",
+    135
+  ],
+  [
+    null,
+    "Trashbag, XL size",
+    "roll/pack",
+    85
+  ],
+  [
+    null,
+    "Trashbag, XXL size",
+    "roll/pack",
+    145
+  ],
+  [],
+  [
+    null,
+    "FURNITURE AND FURNISHINGS"
+  ],
+  [
+    null,
+    "MONOBLOC CHAIR, beige",
+    "piece",
+    420
+  ],
+  [
+    null,
+    "MONOBLOC CHAIR, white",
+    "piece",
+    420
+  ],
+  [
+    null,
+    "Executive Table",
+    "set",
+    12000
+  ],
+  [
+    null,
+    "L-Shape Presidential Table",
+    "set",
+    27000
+  ],
+  [
+    null,
+    "Executive Chair High-back with armrest and headrest",
+    "set",
+    11500
+  ],
+  [
+    null,
+    "Executive Chair High-back with armrest ",
+    "set",
+    9000
+  ],
+  [
+    null,
+    "Swivel Chair",
+    "set",
+    7000
+  ],
+  [
+    null,
+    "HEATING AND VENTILATION AND AIR CIRCULATION"
+  ],
+  [
+    null,
+    "ELECTRIC FAN, ceiling mount, orbit type",
+    "unit",
+    2300
+  ],
+  [
+    null,
+    "ELECTRIC FAN, industrial, ground type",
+    "unit",
+    1300
+  ],
+  [
+    null,
+    "ELECTRIC FAN, stand type",
+    "unit",
+    1800
+  ],
+  [
+    null,
+    "ELECTRIC FAN, wall mount",
+    "unit",
+    1500
+  ],
+  [
+    null,
+    "INFORMATION AND COMMUNICATION TECHNOLOGY (ICT) EQUIPMENT AND DEVICES AND ACCESSORIES"
+  ],
+  [
+    null,
+    "DESKTOP, for Basic Users",
+    "unit",
+    35000
+  ],
+  [
+    null,
+    "DESKTOP, for Mid-Range Users",
+    "unit",
+    48000
+  ],
+  [
+    null,
+    "EXTERNAL HARD DRIVE 1TB",
+    "unit",
+    3200
+  ],
+  [
+    null,
+    "FLASH DRIVE",
+    "piece",
+    400
+  ],
+  [
+    null,
+    "LAPTOP COMPUTER, for Mid-range Users (for graphics design)",
+    "unit",
+    63000
+  ],
+  [
+    null,
+    "LAPTOP COMPUTER, Lightweight",
+    "unit",
+    45000
+  ],
+  [
+    null,
+    "COMPUTER MOUSE, Wireless",
+    "unit",
+    380
+  ],
+  [
+    null,
+    "PRINTER 3 IN 1",
+    "unit",
+    16000
+  ],
+  [
+    null,
+    "PRINTER, Laser, Monochrome",
+    "unit",
+    3000
+  ],
+  [
+    null,
+    "UPS 1000 watts",
+    "unit",
+    5400
+  ],
+  [
+    null,
+    "Photocopier machine ",
+    "unit",
+    55000
+  ],
+  [
+    null,
+    "LIGHTING AND FIXTURES AND ACCESSORIES"
+  ],
+  [
+    null,
+    "LIGHT-EMITTING DIODE (LED) LIGHT BULB, 7 watts",
+    "piece",
+    84
+  ],
+  [
+    null,
+    "LIGHT-EMITTING DIODE (LED) LINEAR TUBE, 18 watts",
+    "piece",
+    230
+  ],
+  [
+    null,
+    "MANUFACTURING COMPONENTS AND SUPPLIES"
+  ],
+  [
+    null,
+    "GLUE, all-purpose 130g",
+    "bottle",
+    95
+  ],
+  [
+    null,
+    "STAPLE WIRE, heavy duty (binder type), 23/13",
+    "box",
+    45
+  ],
+  [
+    null,
+    "STAPLE WIRE, standard",
+    "box",
+    35
+  ],
+  [
+    null,
+    "TAPE, electrical",
+    "roll",
+    35
+  ],
+  [
+    null,
+    "TAPE, masking, 24mm",
+    "roll",
+    65
+  ],
+  [
+    null,
+    "TAPE, masking, 48 mm",
+    "roll",
+    135
+  ],
+  [
+    null,
+    "TAPE, packaging, 48 mm",
+    "roll",
+    30
+  ],
+  [
+    null,
+    "TAPE, transparent, 24mm",
+    "roll",
+    25
+  ],
+  [
+    null,
+    "TAPE, transparent, 48 mm",
+    "roll",
+    28
+  ],
+  [
+    null,
+    "TWINE, plastic",
+    "roll",
+    75
+  ],
+  [
+    null,
+    "MEASURING AND OBSERVING AND TESTING EQUIPMENT"
+  ],
+  [
+    null,
+    "RULER, plastic, 450mm",
+    "piece",
+    30
+  ],
+  [
+    null,
+    "OFFICE EQUIPMENT AND ACCESSORIES AND SUPPLIES"
+  ],
+  [
+    null,
+    "BLADE, for general purpose cutter/utility knife",
+    "tube",
+    65
+  ],
+  [
+    null,
+    "BINDING AND PUNCHING MACHINE",
+    "unit",
+    10500
+  ],
+  [
+    null,
+    "BINDING RING/COMB, plastic, 32 mm",
+    "bundle",
+    285
+  ],
+  [
+    null,
+    "CALCULATOR, Compact",
+    "unit",
+    560
+  ],
+  [
+    null,
+    "CALCULATOR, Scientific",
+    "unit",
+    1700
+  ],
+  [
+    null,
+    "CHALK, white enamel",
+    "box",
+    40
+  ],
+  [
+    null,
+    "CLIP, backfold, 19mm",
+    "box",
+    60
+  ],
+  [
+    null,
+    "CLIP, backfold, 25mm",
+    "box",
+    70
+  ],
+  [
+    null,
+    "CLIP, backfold, 32mm",
+    "box",
+    80
+  ],
+  [
+    null,
+    "CLIP, backfold, 50mm",
+    "box",
+    85
+  ],
+  [
+    null,
+    "CORRECTION TAPE",
+    "piece",
+    30
+  ],
+  [
+    null,
+    "CUTTER/UTILITY KNIFE, for general purpose",
+    "piece",
+    40
+  ],
+  [
+    null,
+    "DATA FILE BOX",
+    "piece",
+    230
+  ],
+  [
+    null,
+    "DATA FOLDER",
+    "piece",
+    95
+  ],
+  [
+    null,
+    "DATER STAMP",
+    "piece",
+    490
+  ],
+  [
+    null,
+    "ENVELOPE, Documentary, A4",
+    "box",
+    890
+  ],
+  [
+    null,
+    "ENVELOPE, Documentary, legal, ",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "ENVELOPE, Expanding, Kraft",
+    "box",
+    1000
+  ],
+  [
+    null,
+    "ENVELOPE, Expanding, Plastic",
+    "box",
+    45
+  ],
+  [
+    null,
+    "ENVELOPE, Mailing",
+    "box",
+    460
+  ],
+  [
+    null,
+    "ENVELOPE, Mailing, with window",
+    "box",
+    550
+  ],
+  [
+    null,
+    "ERASER, felt, for blackboard/whiteboard",
+    "piece",
+    35
+  ],
+  [
+    null,
+    "FASTENER",
+    "box",
+    110
+  ],
+  [
+    null,
+    "FILE ORGANIZER, expanding, plastic, legal",
+    "piece",
+    135
+  ],
+  [
+    null,
+    "FILE TAB DIVIDER, A4",
+    "set",
+    45
+  ],
+  [
+    null,
+    "FILE TAB DIVIDER, Legal",
+    "set",
+    65
+  ],
+  [
+    null,
+    "FOLDER, Fancy with slide, A4",
+    "bundle",
+    300
+  ],
+  [
+    null,
+    "FOLDER, Fancy with slide, legal",
+    "bundle",
+    320
+  ],
+  [
+    null,
+    "FOLDER, L-type, A4",
+    "pack",
+    235
+  ],
+  [
+    null,
+    "FOLDER, L-type, Legal",
+    "pack",
+    280
+  ],
+  [
+    null,
+    "FOLDER, pressboard",
+    "box",
+    1000
+  ],
+  [
+    null,
+    "FOLDER with tab, A4",
+    "pack",
+    420
+  ],
+  [
+    null,
+    "FOLDER with tab, Legal",
+    "pack",
+    450
+  ],
+  [
+    null,
+    "INDEX TAB",
+    "box",
+    85
+  ],
+  [
+    null,
+    "MARKER, Flourescent",
+    "set",
+    85
+  ],
+  [
+    null,
+    "MARKER, Permanent, Black",
+    "piece",
+    35
+  ],
+  [
+    null,
+    "MARKER, Permanent, Blue",
+    "piece",
+    35
+  ],
+  [
+    null,
+    "MARKER, Permanent, Red",
+    "piece",
+    35
+  ],
+  [
+    null,
+    "MARKER, Whiteboard, Black",
+    "piece",
+    45
+  ],
+  [
+    null,
+    "MARKER, Whiteboard, Blue",
+    "piece",
+    45
+  ],
+  [
+    null,
+    "MARKER, Whiteboard, Red",
+    "piece",
+    45
+  ],
+  [
+    null,
+    "PAPER CLIP, vinly/plastic coated, 33mm",
+    "box",
+    20
+  ],
+  [
+    null,
+    "PAPER CLIP, vinly/plastic coated, jumbo, 50mm",
+    "box",
+    30
+  ],
+  [
+    null,
+    "PAPER SHREDDER",
+    "unit",
+    20500
+  ],
+  [
+    null,
+    "PAPER TRIMMER/CUTTING MACHINE",
+    "unit",
+    10200
+  ],
+  [
+    null,
+    "PENCIL, lead/graphite, with eraser",
+    "box",
+    70
+  ],
+  [
+    null,
+    "PENCIL SHARPENER",
+    "piece",
+    14
+  ],
+  [
+    null,
+    "PUNCHER, paper, heavy duty",
+    "piece",
+    180
+  ],
+  [
+    null,
+    "RUBBER BAND No. 18",
+    "box",
+    160
+  ],
+  [
+    null,
+    "STAMP PAD, felt",
+    "piece",
+    65
+  ],
+  [
+    null,
+    "SCISSORS, symmetrical/asymmetrical",
+    "pair",
+    75
+  ],
+  [
+    null,
+    "STAPLER, standard type",
+    "piece",
+    235
+  ],
+  [
+    null,
+    "STAPLER, heavy duty (binder)",
+    "unit",
+    950
+  ],
+  [
+    null,
+    "STAPLE REMOVER, plier-type",
+    "piece",
+    65
+  ],
+  [
+    null,
+    "TAPE DISPENSER, table top",
+    "piece",
+    95
+  ],
+  [
+    null,
+    "PAPER MATERIALS AND PRODUCTS"
+  ],
+  [
+    null,
+    "CARTOLINA, assorted colors",
+    "pack",
+    95
+  ],
+  [
+    null,
+    "COMPUTER CONTINUOUS FORM, 1 ply, 280mm x 241mm",
+    "box",
+    1000
+  ],
+  [
+    null,
+    "COMPUTER CONTINUOUS FORM, 1 ply, 280mm x 378mm",
+    "box",
+    2100
+  ],
+  [
+    null,
+    "NOTEPAD, stick-on, 50mm x 76mm",
+    "pad",
+    45
+  ],
+  [
+    null,
+    "NOTEPAD, stick-on, 76mm x 100mm",
+    "pad",
+    75
+  ],
+  [
+    null,
+    "NOTEPAD, stick-on, 76mm x 76mm",
+    "pad",
+    65
+  ],
+  [
+    null,
+    "STENO NOTEBOOK",
+    "piece",
+    30
+  ],
+  [
+    null,
+    "PAPER, MULTICOPY A4",
+    "ream",
+    260
+  ],
+  [
+    null,
+    "PAPER, MULTICOPY LEGAL",
+    "ream",
+    290
+  ],
+  [
+    null,
+    "PAPER, MULTIPURPOSE A4",
+    "ream",
+    160
+  ],
+  [
+    null,
+    "PAPER, MULTIPURPOSE LEGAL",
+    "ream",
+    180
+  ],
+  [
+    null,
+    "PAD PAPER, ruled",
+    "pad",
+    45
+  ],
+  [
+    null,
+    "PAPER, parchment",
+    "box",
+    180
+  ],
+  [
+    null,
+    "RECORD BOOK, 300 PAGES",
+    "book",
+    120
+  ],
+  [
+    " ",
+    "RECORD BOOK, 500 PAGES",
+    "book",
+    150
+  ],
+  [
+    null,
+    "TISSUE, INTERFOLDED PAPER TOWEL",
+    "pack",
+    45
+  ],
+  [
+    null,
+    "TOILET TISSUE PAPER, 2 ply",
+    "pack",
+    120
+  ],
+  [
+    null,
+    "PERFUMES OR COLOGNES OR FRAGRANCES"
+  ],
+  [
+    null,
+    "HAND SANITIZER",
+    "bottle",
+    95
+  ],
+  [
+    null,
+    "PESTICIDES OR PEST REPELLENTS"
+  ],
+  [
+    null,
+    "INSECTICIDE",
+    "can",
+    180
+  ],
+  [
+    null,
+    "PRINTED PUBLICATIONS"
+  ],
+  [
+    null,
+    "HANDBOOK ON PHILIPPINE GOVERNMENT PROCUREMENT (RA 9184 and its IRR)",
+    "book",
+    45
+  ],
+  [
+    null,
+    "PRINTER OR FACSIMILE OR PHOTOCOPIER SUPPLIES (CONSUMABLES)"
+  ],
+  [
+    null,
+    "DRUM CARTRIDGE, BROTHER DR-3455, Black",
+    "cart",
+    7800
+  ],
+  [
+    null,
+    "INK CARTRIDGE, CANON CL-741, Colored",
+    "cart",
+    1300
+  ],
+  [
+    null,
+    "INK CARTRIDGE, CANON CL-811, Colored",
+    "cart",
+    1300
+  ],
+  [
+    null,
+    "INK CARTRIDGE, CANON PG-740, Black",
+    "cart",
+    990
+  ],
+  [
+    null,
+    "INK CARTRIDGE, CANON PG-810, Black",
+    "cart",
+    1000
+  ],
+  [
+    null,
+    "INK CARTRIDGE, EPSON C13T664100 (T6641), Black",
+    "cart",
+    285
+  ],
+  [
+    null,
+    "INK CARTRIDGE, EPSON C13T664200 (T6642), Cyan",
+    "cart",
+    300
+  ],
+  [
+    null,
+    "INK CARTRIDGE, EPSON C13T664300 (T6643), Magenta",
+    "cart",
+    300
+  ],
+  [
+    null,
+    "INK CARTRIDGE, EPSON C13T664400 (T6644), Yellow",
+    "cart",
+    300
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP C2P04AA (HP62), Black",
+    "cart",
+    1100
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP C2P06AA (HP62), Tri-color",
+    "cart",
+    2300
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP C9351AA (HP21), Black",
+    "cart",
+    980
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP C9352AA (HP22), Tri-color",
+    "cart",
+    1150
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CC640WA (HP60), Black",
+    "cart",
+    980
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CC643WA (HP60), Tri-color",
+    "cart",
+    1300
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CD972AA (HP920XL), Cyan",
+    "cart",
+    900
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CD973AA (HP920XL), Magenta",
+    "cart",
+    900
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CD974AA (HP920XL), Yellow",
+    "cart",
+    900
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CD975AA (HP920XL), Black",
+    "cart",
+    1680
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CH561WA (HP61), Black",
+    "cart",
+    1000
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CH562WA (HP61), Tri-color",
+    "cart",
+    1200
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CN045AA (HP950XL), Black",
+    "cart",
+    2200
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CN046AA (HP951XL), Cyan",
+    "cart",
+    1700
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CN047AA (HP951XL), Magenta",
+    "cart",
+    1700
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CN048AA (HP951XL), Yellow",
+    "cart",
+    1700
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CN692AA (HP704), Black",
+    "cart",
+    480
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CN693AA (HP704), Tri-color",
+    "cart",
+    490
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CZ107AA (HP678), Black",
+    "cart",
+    490
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP CZ108AA (HP678), Tri-color",
+    "cart",
+    490
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP F6V26AA (HP680), Tri-color",
+    "cart",
+    490
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP F6V27AA (HP680), Black",
+    "cart",
+    495
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S51AA (HP955), Cyan Original",
+    "cart",
+    1150
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S54AA (HP955), Magenta Original",
+    "cart",
+    1150
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S57AA (HP955), Yellow Original",
+    "cart",
+    1150
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S60AA (HP955), Black Original",
+    "cart",
+    1480
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S63AA (HP955XL), Cyan Original",
+    "cart",
+    1485
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S66AA (HP955XL), Magenta",
+    "cart",
+    1485
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S69AA (HP955XL), Yellow",
+    "cart",
+    1485
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP L0S72AA (HP955XL), Black Original",
+    "cart",
+    1980
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP T6L89AA (HP905), Cyan Original",
+    "cart",
+    498
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP T6L93AA (HP905), Magenta Original",
+    "cart",
+    498
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP T6L97AA (HP905), Yellow Original",
+    "cart",
+    498
+  ],
+  [
+    null,
+    "INK CARTRIDGE, HP T6M01AA (HP905), Black Original",
+    "cart",
+    820
+  ],
+  [
+    null,
+    "RIBBON CARTRIDGE, EPSON C13S015516 (#8750), Black",
+    "cart",
+    95
+  ],
+  [
+    null,
+    "RIBBON CARTRIDGE, EPSON C13S015632, Black",
+    "cart",
+    95
+  ],
+  [
+    null,
+    "RIBBON CARTRIDGE, EPSON C13S015531 (S015086)",
+    "cart",
+    880
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, BROTHER TN-3320, Black",
+    "cart",
+    3800
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, BROTHER TN-3350, Black",
+    "cart",
+    5300
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, BROTHER TN-3478, Black",
+    "cart",
+    5900
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, BROTHER TN-456 Black, High Yield",
+    "cart",
+    4950
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, BROTHER TN-456 Cyan, High Yield",
+    "cart",
+    8110
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, BROTHER TN-456 Magenta, High Yield",
+    "cart",
+    8110
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, BROTHER TN-456 Yellow, High Yield",
+    "cart",
+    8110
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, CANON CRG-324 II",
+    "cart",
+    14100
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CB435A, Black",
+    "cart",
+    3700
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE255A, Black",
+    "cart",
+    8300
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE278A, Black",
+    "cart",
+    4450
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE285A (HP85A), Black",
+    "cart",
+    3800
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE310A, Black",
+    "cart",
+    2800
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE311A, Cyan",
+    "cart",
+    3100
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE312A, Yellow",
+    "cart",
+    3100
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE313A, Magenta",
+    "cart",
+    3100
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CE505A, Black",
+    "cart",
+    4800
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF217A (HP17A), Black LaserJet",
+    "cart",
+    3400
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF226A (HP26A), Black LaserJet",
+    "cart",
+    6200
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF281A (HP81A), Black LaserJet",
+    "cart",
+    10000
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF283A (HP83A), LaserJet Black",
+    "cart",
+    3600
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF287A (HP87), Black",
+    "cart",
+    11800
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF350A, Black Laserjet",
+    "cart",
+    3200
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF351A, Cyan Laserjet",
+    "cart",
+    3200
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF352A, Yellow Laserjet",
+    "cart",
+    3200
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF353A, Magenta Laserjet",
+    "cart",
+    3200
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF360A (HP508A), Black LaserJet",
+    "cart",
+    8300
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF361A (HP508A), Cyan LaserJet",
+    "cart",
+    10500
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF362A (HP508A), Yellow LaserJet",
+    "cart",
+    10500
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF363A (HP508A), Magenta LaserJet",
+    "cart",
+    10500
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF400A (HP201A), Black LaserJet",
+    "cart",
+    3800
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF401A (HP201A), Cyan LaserJet",
+    "cart",
+    4500
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF402A (HP201A), Yellow LaserJet",
+    "cart",
+    4500
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF403A (HP201A), Magenta LaserJet",
+    "cart",
+    4500
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF410A (HP410A), Black",
+    "cart",
+    4800
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF411A (HP410A), Cyan",
+    "cart",
+    6000
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF412A (HP410A), Yellow",
+    "cart",
+    6000
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP CF413A (HP410A), Magenta",
+    "cart",
+    6000
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP Q2612A, Black",
+    "cart",
+    4450
+  ],
+  [
+    null,
+    "TONER CARTRIDGE, HP Q7553A, Black",
+    "cart",
+    5100
+  ],
+  [
+    null,
+    "EPSON INK 003 CYAN",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "EPSON INK 003 BLACK",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "EPSON INK 003 YELLOW",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "EPSON INK 003 MAGENTA",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "EPSON INK 664 CYAN",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "EPSON INK 664 BLACK",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "EPSON INK 664 YELLOW",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "EPSON INK 664 MAGENTA",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Ink 664, Black (Genuine)",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Ink 664, Magenta (Genuine)",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Ink 6642, Cyan (Genuine)",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Ink 6644, Yellow (Genuine)",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Refill Ink 003 (black)",
+    "bot",
+    336
+  ],
+  [
+    null,
+    "Epson Refill Ink 003 (cyan)",
+    "bot",
+    336
+  ],
+  [
+    null,
+    "Epson Refill Ink 003 (magenta)",
+    "bot",
+    336
+  ],
+  [
+    null,
+    "Epson Refill Ink 003 (yellow)",
+    "bot",
+    336
+  ],
+  [
+    null,
+    "Toner Fuji",
+    "tube",
+    4000
+  ],
+  [
+    null,
+    "Toner Ineo 206",
+    "tube",
+    3800
+  ],
+  [
+    null,
+    "Drum Cartridge Fuji Film",
+    "unit",
+    15500
+  ],
+  [
+    null,
+    "Epson Genuine Refill Ink, (black) T6641",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Genuine Refill Ink, (cyan) T6642",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Genuine Refill Ink, (magenta) T6643",
+    "bottle",
+    336
+  ],
+  [
+    null,
+    "Epson Genuine Refill Ink, (yellow) T6644",
+    "bottle",
+    336
+  ],
+  [],
+  [
+    null,
+    "Medical Supplies ( Drugs And Medicines )"
+  ],
+  [
+    null,
+    "Ibuprofen/Paracetamol 200mg/325mg ",
+    "caps",
+    10
+  ],
+  [
+    null,
+    "Chlorphenamine Maleate 4mg",
+    "tabs",
+    9
+  ],
+  [
+    null,
+    "Ambroxol 30 mg. tab. (mucosolvan)",
+    "tab",
+    12
+  ],
+  [
+    null,
+    "Amlodipine 10mg tab",
+    "tabs",
+    9
+  ],
+  [
+    null,
+    "Amoxycilin 500 mg (generics)",
+    "caps",
+    9
+  ],
+  [
+    null,
+    "Ascorbic Acid 500mg + Zinc",
+    "tabs",
+    15
+  ],
+  [
+    null,
+    "Atorvastatin 20 mg",
+    "tab",
+    23
+  ],
+  [
+    null,
+    "ATS Injection 1,500 \"u\"",
+    "amp",
+    230
+  ],
+  [
+    null,
+    "Bactidol Mouth Wash 60 ml",
+    "bot",
+    140
+  ],
+  [
+    null,
+    "Band Aid",
+    "box",
+    80
+  ],
+  [
+    null,
+    "Betadine 10% Solution 60ML",
+    "bot",
+    140
+  ],
+  [
+    null,
+    "Betahistine 8 mg.",
+    "tabs",
+    70
+  ],
+  [
+    null,
+    "Paracetamol 500mg ",
+    "tab",
+    9
+  ],
+  [
+    null,
+    "Burn Ointment",
+    "tube",
+    230
+  ],
+  [
+    null,
+    "Calamine + zinc oxide ",
+    "sachet",
+    60
+  ],
+  [
+    null,
+    "Captopril 25 mg",
+    "tab",
+    7
+  ],
+  [
+    null,
+    "Carbocysteine 500mg capsule",
+    "caps",
+    17
+  ],
+  [
+    null,
+    "Cefalexin 500mg capsule",
+    "caps",
+    7
+  ],
+  [
+    null,
+    "Cefuroxime 500 mg ",
+    "caps",
+    55
+  ],
+  [
+    null,
+    "Cetirizine Dihydrocholoride 10mg",
+    "tablet",
+    35
+  ],
+  [
+    null,
+    "Ciprofloxacin 500mg. Caps.",
+    "caps",
+    8
+  ],
+  [
+    null,
+    "Clarithromycin 500 mg",
+    "tabs",
+    50
+  ],
+  [
+    null,
+    "Co-Amoxiclav 625 mg",
+    "tabs",
+    30
+  ],
+  [
+    null,
+    "Cotrimoxazole 800mg caps",
+    "caps",
+    7
+  ],
+  [
+    null,
+    "Colchicine 500mcg tab",
+    "tabs",
+    14
+  ],
+  [
+    null,
+    "Cotton 60gms",
+    "pcs",
+    165
+  ],
+  [
+    null,
+    "Celecoxib 200mg",
+    "caps",
+    20
+  ],
+  [
+    null,
+    "Covid19 Test Kit ",
+    "pcs",
+    1000
+  ],
+  [
+    null,
+    "Cotton swab/ Buds 100 tips",
+    "pack",
+    40
+  ],
+  [
+    null,
+    "D5LR 1000 ml.",
+    "bot",
+    200
+  ],
+  [
+    null,
+    "D5NSS 1 L ",
+    "bot",
+    230
+  ],
+  [
+    null,
+    "Dengue NS1 AG Test KIT",
+    "box",
+    580
+  ],
+  [
+    null,
+    "Dental Needle (long) gauge 27",
+    "box",
+    500
+  ],
+  [
+    null,
+    "Dental Needle (short) gauge 27",
+    "box",
+    510
+  ],
+  [
+    null,
+    "Loperamide",
+    "caps",
+    10
+  ],
+  [
+    null,
+    "Dicycloverine tablet 20mg",
+    "tabs",
+    5
+  ],
+  [
+    null,
+    "Diphenhydramine 25 mg ",
+    "tab",
+    12
+  ],
+  [
+    null,
+    "disposable gloves",
+    "box",
+    540
+  ],
+  [
+    null,
+    "Disposable Dental Bib 2 Ply Paper + 1 Polyethylene  Clean Pad Sheet  ",
+    "pack/ 100's",
+    210
+  ],
+  [
+    null,
+    "Disposable Examination Gloves size 7 (sterile)",
+    "pcs",
+    40
+  ],
+  [
+    null,
+    "Disposable Face Masks",
+    "box",
+    115
+  ],
+  [
+    null,
+    "Doxycycline 100 mg",
+    "caps",
+    55
+  ],
+  [
+    null,
+    "Dycal & Fermin for Tempory Filling",
+    "box",
+    1380
+  ],
+  [
+    null,
+    "Efficascent Oil extra Strength 50ml",
+    "bot",
+    90
+  ],
+  [
+    null,
+    "Elastic Bandage 4x5yards x 1",
+    "roll",
+    75
+  ],
+  [
+    null,
+    "Erythromycin 500mg capsule",
+    "caps",
+    7
+  ],
+  [
+    null,
+    "Phospholipids 300mg hard capsule",
+    "caps",
+    45
+  ],
+  [
+    null,
+    "Facial tissue",
+    "box",
+    110
+  ],
+  [
+    null,
+    "Ferrous Sulfate",
+    "tabs",
+    5
+  ],
+  [
+    null,
+    "Folic Acid 400 mcg",
+    "tabs",
+    7
+  ],
+  [
+    null,
+    "Gauze Swab 4x4 8 ply unsterile",
+    "pack",
+    195
+  ],
+  [
+    null,
+    "Gliclazide 30 mg",
+    "tabs",
+    12
+  ],
+  [
+    null,
+    "Tranexamic Acid 500mg",
+    "caps",
+    25
+  ],
+  [
+    null,
+    "Hyoscine Butylbromide 10mg",
+    "tabs",
+    15
+  ],
+  [
+    null,
+    "Ibuprofen 200 mg ",
+    "caps",
+    12
+  ],
+  [
+    null,
+    "Injection syringe size 3ml. G-23",
+    "pcs",
+    7
+  ],
+  [
+    null,
+    "Injection syringe size 5ml. G-23",
+    "pcs",
+    7
+  ],
+  [
+    null,
+    "IV Cannula G23",
+    "pcs",
+    60
+  ],
+  [
+    null,
+    "Macro Set",
+    "pcs",
+    80
+  ],
+  [
+    null,
+    "Lagundi 500 mg ",
+    "caps",
+    15
+  ],
+  [
+    null,
+    "Aluminum hydroxide, Magnesium Hydroxide (Kremil-S) 500mg tablet",
+    "tabs",
+    25
+  ],
+  [
+    null,
+    "Leukoplast Plaster white surgical tape  10 pcs assorted sizes (4x1.25cm,2x5cm, 1x7cm",
+    "tube",
+    2500
+  ],
+  [
+    null,
+    "Lidocaine HCL+ Epinephrine 20mg/ml 2% DENTAL Anesthesia Carpule ",
+    "pcs",
+    50
+  ],
+  [
+    null,
+    "Lorvazine- Silver Sulphadiazine 1 % Cream-USP 50G",
+    "tube",
+    340
+  ],
+  [
+    null,
+    "Losartan 50 mg tablet",
+    "tabs",
+    10
+  ],
+  [
+    null,
+    "Mefenamic Acid 500 mg. ",
+    "caps",
+    10
+  ],
+  [
+    null,
+    "Metformin Glumet",
+    "tabs",
+    15
+  ],
+  [
+    null,
+    "Metoclopromide 10 mg",
+    "tabs",
+    22
+  ],
+  [
+    null,
+    "Metronidazole 500 mg. Tablet",
+    "tabs",
+    15
+  ],
+  [
+    null,
+    "Mupirocin Ointment 2 % 15mg",
+    "tube",
+    245
+  ],
+  [
+    null,
+    "Methyldopa 250 mg ",
+    "tab",
+    27
+  ],
+  [
+    null,
+    "Nasal O2 Cannula",
+    "pcs",
+    280
+  ],
+  [
+    null,
+    "Nebulizer Kit  hose",
+    "pcs",
+    190
+  ],
+  [
+    null,
+    "NaCl  for Wound Irrigation 1L",
+    "bot",
+    180
+  ],
+  [
+    null,
+    "Naproxen 500 mg. ",
+    "caps",
+    35
+  ],
+  [
+    null,
+    "Phenyllephrine HCI , chorlorphenamine maleate and paracetamol 500mg",
+    "tabs",
+    12
+  ],
+  [
+    null,
+    "Glucometer Test Strips ",
+    "box",
+    500
+  ],
+  [
+    null,
+    "Omeprazole 20 mg",
+    "caps",
+    33
+  ],
+  [
+    null,
+    "Oral Rehydration Salt (ORS)",
+    "sachet",
+    25
+  ],
+  [
+    null,
+    "Prophylaxis Paste 200g  abrasive w/ bleaching agent (for dental prophylaxis)",
+    "jar",
+    310
+  ],
+  [
+    null,
+    "Prophylaxis Dental  Brush ",
+    "100's",
+    580
+  ],
+  [
+    null,
+    "Pregnancy Test Tab",
+    "set",
+    130
+  ],
+  [
+    null,
+    "Vit.B-complex ",
+    "tabs",
+    7
+  ],
+  [
+    null,
+    "Salbutamol/ Ventolin nebule",
+    "nebule",
+    90
+  ],
+  [
+    null,
+    "Salbutamol + Guafenisin",
+    "tab",
+    12
+  ],
+  [
+    null,
+    "Sambong 500 mg ",
+    "caps",
+    10
+  ],
+  [
+    null,
+    "Sterile Gauze 4x4 8 ply /100's",
+    "box",
+    320
+  ],
+  [
+    null,
+    "Sterile Water (Parenteral) 10ml. VIAL",
+    "bottle",
+    80
+  ],
+  [
+    null,
+    " Multi-Vitamins 500 mg with Iron (Sttresstab)",
+    "tabs",
+    14
+  ],
+  [
+    null,
+    "Tetanus Toxoid Vial",
+    "amp",
+    125
+  ],
+  [
+    null,
+    "Sphygmomanometer Set",
+    "set",
+    750
+  ],
+  [
+    null,
+    "Tuberculin syringe (For Skin test)",
+    "pcs",
+    12
+  ],
+  [
+    null,
+    "Visine Eyedrop (For red eyes)",
+    "bot",
+    165
+  ],
+  [
+    null,
+    "Oxygen Refill",
+    "tank",
+    1200
+  ],
+  [
+    null,
+    "Examination  Gloves Latex Medium Size Non-sterile ",
+    "box",
+    230
+  ],
+  [
+    null,
+    "Activated Glutaraldehyde Solution for sterilization (5 liters)",
+    "gal",
+    1500
+  ],
+  [
+    null,
+    "Xylocaine 5% Lidocaine 35mg Ointment",
+    "tube",
+    550
+  ],
+  [
+    null,
+    "Hemoglobin  Microcuvette (Spectrophotometry) Code 50",
+    "box'50s",
+    2680
+  ],
+  [
+    null,
+    "Urinalysis Reagent Strips(insight)",
+    "pack/ 100's",
+    450
+  ],
+  [
+    null,
+    "4 in 1 Multi-Monitoring Test  Strips (CHO, BGHGBUric) TopCare",
+    "set/50's",
+    2300
+  ],
+  [
+    null,
+    "Medical equipment "
+  ],
+  [
+    null,
+    "Dental Mouth Mirror",
+    "pc",
+    1200
+  ],
+  [
+    null,
+    "Tooth Foreps  # 16",
+    "pcs",
+    1620
+  ],
+  [
+    null,
+    "Tooth Foreps  # 17",
+    "pcs",
+    1620
+  ],
+  [
+    null,
+    "Tooth Foreps  # 150",
+    "pcs",
+    1630
+  ],
+  [
+    null,
+    "Tooth Foreps  # 151",
+    "pcs",
+    1640
+  ],
+  [
+    null,
+    "Tooth Luxators",
+    "set",
+    2300
+  ],
+  [
+    null,
+    "Cotton plier",
+    "pcs",
+    1100
+  ],
+  [
+    null,
+    "Medical Penlight",
+    "set",
+    1100
+  ],
+  [
+    null,
+    "Bl0od Pressure Apparatus  TopCare Sphygmomanometer Clock Model ",
+    "set",
+    4800
+  ],
+  [
+    null,
+    "Hot water Bag ( small)",
+    "set",
+    1100
+  ],
+  [
+    null,
+    "Surgical Scissors",
+    "pcs",
+    800
+  ],
+  [
+    null,
+    "Forceps",
+    "pcs",
+    800
+  ],
+  [
+    null,
+    "Digital BP Apparatus",
+    "set",
+    2200
+  ],
+  [
+    null,
+    "Medical Trolley Stainless Steel Treatment Cart with wheel",
+    "set",
+    5400
+  ],
+  [
+    null,
+    "Heavy Duty Foldable Emergency Stretcher with strap",
+    "set",
+    5400
+  ],
+  [
+    null,
+    "Oximeter ",
+    "set",
+    3300
+  ],
+  [
+    null,
+    "Big Steel Basin",
+    "pcs",
+    170
+  ],
+  [
+    null,
+    "Steel Trays with Cover Big",
+    "pcs",
+    170
+  ],
+  [
+    null,
+    "Infant Weighing Scale Manual",
+    "pc",
+    2700
+  ],
+  [
+    null,
+    "Surgical Gloves s. 7.5",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "Surgical Gloves s. 7.0",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "Surgical Gloves s. 6.5",
+    "boxes",
+    1200
+  ],
+  [
+    null,
+    "Surgical Gloves s. 6.0",
+    "boxes",
+    1200
+  ],
+  [
+    null,
+    "Disposable Latex Gloves s. XL",
+    "boxes",
+    600
+  ],
+  [
+    null,
+    "Disposable Latex Gloves s. L",
+    "boxes",
+    600
+  ],
+  [
+    null,
+    "Disposable Latex Gloves s. M",
+    "boxes",
+    600
+  ],
+  [
+    null,
+    "Disposable Latex Gloves s. S",
+    "boxes",
+    600
+  ],
+  [
+    null,
+    "IV Cannula G. 18 100s/box",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "IV Cannula G. 20",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "IV Cannula G. 22",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "IV Cannula G. 24",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "IV Cannula G. 26",
+    "box",
+    1200
+  ],
+  [
+    null,
+    "Absorbent Gauze Sponge 4x4 Sterile 100s per box",
+    "boxes",
+    250
+  ],
+  [
+    null,
+    "Cotton Balls 300pcs/pack",
+    "pcks",
+    65
+  ],
+  [
+    null,
+    "Alcohol Swabs 100s/box",
+    "boxes",
+    240
+  ],
+  [
+    null,
+    "Isopropyl Alcohol 70% Soultion with Moisturizer Pump 1000ml",
+    "bot",
+    280
+  ],
+  [
+    null,
+    "Chromic Surgical Sutures Round & Cutting 2.0",
+    "boxes",
+    1200
+  ],
+  [
+    null,
+    "Disposable Syringes 5cc 100s/box",
+    "boxes",
+    1200
+  ],
+  [
+    null,
+    "Disposable Syringes 3cc 100s/box",
+    "boxes",
+    1200
+  ],
+  [
+    null,
+    "Disposable Syringes 1cc 100s/box",
+    "boxes",
+    1200
+  ],
+  [
+    null,
+    "Oral thermometer",
+    "pcs",
+    65
+  ],
+  [
+    null,
+    "Stethoscope Teaching",
+    "pcs",
+    2700
+  ],
+  [
+    null,
+    "Hospital Pillows 26x16\"",
+    "pcs",
+    280
+  ],
+  [
+    null,
+    "Pitchwell Cloth #White",
+    "roll",
+    2700
+  ],
+  [
+    null,
+    "Rubber Suction Bulb",
+    "pcs",
+    60
+  ],
+  [
+    null,
+    "Sharps Disposal SafeBox 5L",
+    "pcs",
+    1200
+  ],
+  [
+    null,
+    "Baby Bath Tub Round Shape Plastic",
+    "pcs",
+    250
+  ],
+  [
+    null,
+    "Childbirth Model Mannequin",
+    "pc",
+    9500
+  ],
+  [
+    null,
+    "Medical Stool",
+    "pcs",
+    540
+  ],
+  [
+    null,
+    "Hospital Folding Screen 4 panels",
+    "pcs",
+    1600
+  ],
+  [
+    null,
+    "6 ft Folding Half Table with Foldable Steel Legs  White",
+    "pcs",
+    2700
+  ],
+  [
+    null,
+    "Other Supplies and Materials (Electrical Materials and Supplies)"
+  ],
+  [
+    null,
+    "100mm² THW Copper Wire",
+    "mtrs",
+    1200
+  ],
+  [
+    null,
+    "Flat cord #16, 150meters",
+    "roll",
+    4500
+  ],
+  [
+    null,
+    "Flat cord #14, 150meters",
+    "roll",
+    7900
+  ],
+  [
+    null,
+    "PDX # 14, 75 meters",
+    "box",
+    3800
+  ],
+  [
+    null,
+    "PDX # 12, 75 meters",
+    "box",
+    4700
+  ],
+  [
+    null,
+    "THHN wire #14",
+    "box",
+    3650
+  ],
+  [
+    null,
+    "THHN wire #12",
+    "box",
+    4200
+  ],
+  [
+    null,
+    "THHN wire #10",
+    "box",
+    6200
+  ],
+  [
+    null,
+    "THHN wire #8",
+    "box",
+    10000
+  ],
+  [
+    null,
+    "THHN wire #6",
+    "box",
+    21200
+  ],
+  [
+    null,
+    "THHN wire #4",
+    "roll",
+    35900
+  ],
+  [
+    null,
+    "THHN wire #2",
+    "roll",
+    50600
+  ],
+  [
+    null,
+    "Circuit Breaker Bolt on 20 AMP",
+    "pcs",
+    480
+  ],
+  [
+    null,
+    "Circuit Breaker Bolt on 30 AMP",
+    "pcs",
+    485
+  ],
+  [
+    null,
+    "Circuit Breaker Bolt on 60 AMP",
+    "pcs",
+    620
+  ],
+  [
+    null,
+    "Circuit Breaker Bolt on 100 AMP",
+    "pcs",
+    800
+  ],
+  [
+    null,
+    "Circuit Breaker Plug in 20 AMP",
+    "pcs",
+    350
+  ],
+  [
+    null,
+    "Circuit Breaker Plug in 30 AMP",
+    "pcs",
+    350
+  ],
+  [
+    null,
+    "Circuit Breaker Plug in 60 AMP",
+    "pcs",
+    520
+  ],
+  [
+    null,
+    "Circuit Breaker Plug in 100 AMP",
+    "pcs",
+    700
+  ],
+  [
+    null,
+    "Switch Leso w/ led indicator",
+    "pcs",
+    115
+  ],
+  [
+    null,
+    "Plate 3gang",
+    "pcs",
+    60
+  ],
+  [
+    null,
+    "Plate 2gang",
+    "pcs",
+    60
+  ],
+  [
+    null,
+    "Plate 1gang",
+    "pcs",
+    60
+  ],
+  [
+    null,
+    "Blank Plate",
+    "pcs",
+    50
+  ],
+  [
+    null,
+    "Convenience Outlet leso",
+    "pcs",
+    85
+  ],
+  [
+    null,
+    "Surface type convenience outlet  3 gang",
+    "pcs",
+    110
+  ],
+  [
+    null,
+    "Surface type Utility box",
+    "pcs",
+    180
+  ],
+  [
+    null,
+    "Thumbler switch",
+    "pcs",
+    65
+  ],
+  [
+    null,
+    "Flush Type Outlet, 3 Gang",
+    "pcs",
+    170
+  ],
+  [
+    null,
+    "Flush Type Outlet, 2 Gang",
+    "pcs",
+    240
+  ],
+  [
+    null,
+    "Flush Type Switch, 3 Gang",
+    "pcs",
+    240
+  ],
+  [
+    null,
+    "Flush Type Switch, 2 Gang",
+    "pcs",
+    170
+  ],
+  [
+    null,
+    "Receptacle, 2x2",
+    "pcs",
+    55
+  ],
+  [
+    null,
+    "Receptacle, 4x4",
+    "pcs",
+    85
+  ],
+  [
+    null,
+    "Rubber Socket",
+    "pcs",
+    55
+  ],
+  [
+    null,
+    "Plastic Molding, 1/2",
+    "pcs",
+    120
+  ],
+  [
+    null,
+    "Plastic Molding, 3/4",
+    "pcs",
+    150
+  ],
+  [
+    null,
+    "Compression Tap, #150",
+    "pcs",
+    120
+  ],
+  [
+    null,
+    "Compression Tap, #250",
+    "pcs",
+    170
+  ],
+  [
+    null,
+    "Steeple wire#1",
+    "pcs",
+    85
+  ],
+  [
+    null,
+    "PVC clip 1/2",
+    "bags",
+    350
+  ],
+  [
+    null,
+    "PVC clip 3/4",
+    "bags",
+    380
+  ],
+  [
+    null,
+    "PVC Pipe, Electrical 1/2",
+    "pcs",
+    120
+  ],
+  [
+    null,
+    "PVC Pipe, Electrical 3/4",
+    "pcs",
+    140
+  ],
+  [
+    null,
+    "Flexible Hose 1/2, 100m",
+    "roll",
+    1300
+  ],
+  [
+    null,
+    "Flexible Hose 3/4, 100m",
+    "roll",
+    1450
+  ],
+  [
+    null,
+    "Utility box",
+    "pcs",
+    80
+  ],
+  [
+    null,
+    "Junction box",
+    "pcs",
+    80
+  ],
+  [
+    null,
+    "Square box",
+    "pcs",
+    125
+  ],
+  [
+    null,
+    "Recessed Pinlight Housing, 6\"",
+    "pcs",
+    280
+  ],
+  [
+    null,
+    "Recessed Pinlight Housing, 4\"",
+    "pcs",
+    230
+  ],
+  [
+    null,
+    "Led bulb 21W",
+    "pcs",
+    230
+  ],
+  [
+    null,
+    "led bulb 16W",
+    "pcs",
+    360
+  ],
+  [
+    null,
+    "T8 LED Tube Holder",
+    "pcs",
+    250
+  ],
+  [
+    null,
+    "T8 LED 15 Watts",
+    "pcs",
+    320
+  ],
+  [
+    null,
+    "T8 LED 7 Watts",
+    "pcs",
+    220
+  ],
+  [
+    null,
+    "Electrical Type big",
+    "pcs",
+    280
+  ],
+  [
+    null,
+    "Duct Tape #2",
+    "pcs",
+    170
+  ],
+  [
+    null,
+    "Male Plug",
+    "pcs",
+    65
+  ],
+  [
+    null,
+    "Service drop wire #6",
+    "roll",
+    6500
+  ],
+  [
+    null,
+    "Rubber Tape, Big",
+    "pcs",
+    230
+  ],
+  [
+    null,
+    "Terminal Lug",
+    "pcs",
+    145
+  ],
+  [
+    null,
+    "Lineman Plier, 9\"",
+    "pcs",
+    1200
+  ],
+  [
+    null,
+    "Fuse Link, 24K ",
+    "pcs",
+    870
+  ],
+  [
+    null,
+    "Fuse Link, 18K ",
+    "pcs",
+    780
+  ],
+  [
+    null,
+    "No More Nails,100 grams",
+    "pcs",
+    120
+  ],
+  [
+    null,
+    "Time Lag Renewable Fuse, 200 A",
+    "pcs",
+    945
+  ],
+  [
+    null,
+    "Manual Transfer Switch (MTS) 60AT 2P renewable fuse 240V",
+    "set/s",
+    13650
+  ],
+  [
+    null,
+    "Consumables",
+    "lot",
+    17011
+  ],
+  [
+    null,
+    "Other Supplies and Materials (Carpentry Materials and Supplies)"
+  ],
+  [
+    null,
+    "Trowel",
+    "pcs",
+    262
+  ],
+  [
+    null,
+    "Working Gloves with Rubber grip",
+    "pairs",
+    78
+  ],
+  [
+    null,
+    "Heavy duty door knob ",
+    "pcs",
+    682
+  ],
+  [
+    null,
+    "Stainless welding rod #12",
+    "kg",
+    105
+  ],
+  [
+    null,
+    "Mason/H-Frame Extendable Scaffolding, Galvanized Sched.20**",
+    "sets",
+    3675
+  ],
+  [
+    null,
+    "Silicone Sealant, 1L",
+    "Cartridge",
+    210
+  ],
+  [
+    null,
+    "CHB #4",
+    "pcs",
+    19
+  ],
+  [
+    null,
+    "Screened Gravel 3/4",
+    "cu.m",
+    1134
+  ],
+  [
+    null,
+    "Screened Sand ",
+    "cu.m",
+    1134
+  ],
+  [
+    null,
+    "Washed Fine Sand ",
+    "cu.m",
+    1134
+  ],
+  [
+    null,
+    "Leveling Bar (big)",
+    "pcs",
+    420
+  ],
+  [
+    null,
+    "Cement ",
+    "bags",
+    309
+  ],
+  [
+    null,
+    "Skim Coat",
+    "bags",
+    525
+  ],
+  [
+    null,
+    "Grinder",
+    "pcs",
+    5250
+  ],
+  [
+    null,
+    "Cordless Electric Hand/Impact Drill, 48V",
+    "pcs",
+    5250
+  ],
+  [
+    null,
+    "Jack Hammer",
+    "pcs",
+    14700
+  ],
+  [
+    null,
+    "Heavy Duty Impact Drill with wire",
+    "pcs",
+    5250
+  ],
+  [
+    null,
+    "Hammer ",
+    "pcs",
+    525
+  ],
+  [
+    null,
+    "Handsaw wood cutting",
+    "pcs",
+    525
+  ],
+  [
+    null,
+    "hack saw",
+    "pcs",
+    525
+  ],
+  [
+    null,
+    "Quick Dry Enamel (Chocolate brown)",
+    "gals",
+    892
+  ],
+  [
+    null,
+    "2x2x16",
+    "pcs",
+    189
+  ],
+  [
+    null,
+    "2x3x16",
+    "pcs",
+    252
+  ],
+  [
+    null,
+    "2x4x16",
+    "pcs",
+    577
+  ],
+  [
+    null,
+    "1/4 thick Marine plywood ",
+    "pcs ",
+    472
+  ],
+  [
+    null,
+    "RSB 10mm",
+    "pcs",
+    210
+  ],
+  [
+    null,
+    "Hardie Nails ",
+    "kg",
+    126
+  ],
+  [
+    null,
+    "1/2 thick Marine Plywood",
+    "pcs",
+    708
+  ],
+  [
+    null,
+    "Epoxy floor coating Brick red",
+    "gals",
+    1890
+  ],
+  [
+    null,
+    "Epoxy Metal Primer",
+    "gals",
+    1470
+  ],
+  [
+    null,
+    "Circular Saw",
+    "pcs",
+    3711
+  ],
+  [
+    null,
+    "Circular Saw Blade 10''",
+    "pcs",
+    840
+  ],
+  [
+    null,
+    "Expansion Bolt 3/8\"",
+    "pcs",
+    42
+  ],
+  [
+    null,
+    "Container 20L (For Fuel Storage)",
+    "pcs",
+    472
+  ],
+  [
+    null,
+    "Plumb Bob",
+    "pcs",
+    315
+  ],
+  [
+    null,
+    "Digging Bar ",
+    "pcs",
+    1050
+  ],
+  [
+    null,
+    "Bara de Cabra (Crow Bar) ",
+    "pcs",
+    735
+  ],
+  [
+    null,
+    "Roller Paint 6\"",
+    "pcs",
+    262
+  ],
+  [
+    null,
+    "Baby Paint Roller  4\"",
+    "pcs",
+    84
+  ],
+  [
+    null,
+    "Diamond Cutting Disk",
+    "pcs",
+    577
+  ],
+  [
+    null,
+    "Hand Saw (Big)",
+    "pcs",
+    315
+  ],
+  [
+    null,
+    "Other Supplies and Materials (Plumbing Materials and Supplies)"
+  ],
+  [
+    null,
+    "Grinder",
+    "pcs",
+    5250
+  ],
+  [
+    null,
+    "Jack Hammer",
+    "pcs",
+    14700
+  ],
+  [
+    null,
+    "Hammer",
+    "pcs",
+    525
+  ],
+  [
+    null,
+    "Hack saw blade",
+    "pcs",
+    63
+  ],
+  [
+    null,
+    "Shovel",
+    "pcs",
+    525
+  ],
+  [
+    null,
+    "Impact Drill",
+    "pcs",
+    5250
+  ],
+  [
+    null,
+    "Pipe Range #10",
+    "pcs",
+    630
+  ],
+  [
+    null,
+    "Pipe Range #12",
+    "pcs",
+    840
+  ],
+  [
+    null,
+    "PPR Heater",
+    "pcs",
+    1636
+  ],
+  [
+    null,
+    "Heat Gun",
+    "pcs",
+    1575
+  ],
+  [
+    null,
+    "Stand/Duck Faucet",
+    "pcs",
+    630
+  ],
+  [
+    null,
+    "Lavatory Faucet",
+    "pcs",
+    472
+  ],
+  [
+    null,
+    "Brass Faucet",
+    "pcs",
+    577
+  ],
+  [
+    null,
+    "Water Proofing Paint (Cementitous Water Proofing)",
+    "gals",
+    997
+  ],
+  [
+    null,
+    "PE Hose 1/2 - 300m (Blue)",
+    "roll",
+    5250
+  ],
+  [
+    null,
+    "PE Hose 1 1/2 - 300m ",
+    "roll",
+    11550
+  ],
+  [
+    null,
+    "Brass Gate Valve 2 ",
+    "pcs",
+    1050
+  ],
+  [
+    null,
+    "Brass Gate Valve 2 1/2",
+    "pcs",
+    2100
+  ],
+  [
+    null,
+    "Brass Gate Valve 3",
+    "pcs",
+    3150
+  ],
+  [
+    null,
+    "Full Body Safety Harness",
+    "sets",
+    1575
+  ],
+  [
+    null,
+    "PPR Pipe 1/2",
+    "pcs",
+    241
+  ],
+  [
+    null,
+    "PVC Female Elbow 1/2",
+    "pcs",
+    26
+  ],
+  [
+    null,
+    "PVC MALE ADAPTOR 1/2",
+    "pcs",
+    89
+  ],
+  [
+    null,
+    "PVC FEMALE ADAPTOR 1/2",
+    "pcs",
+    89
+  ],
+  [
+    null,
+    "PVC EQUAL TEE 1/2",
+    "pcs",
+    47
+  ],
+  [
+    null,
+    "PVC Pipe 1/2",
+    "pcs",
+    136
+  ],
+  [
+    null,
+    "Tapelon",
+    "roll",
+    52
+  ],
+  [
+    null,
+    "Nylon #45",
+    "roll",
+    63
+  ],
+  [
+    null,
+    "High Quality Rain coat (Upper and lower Set)",
+    "pcs",
+    420
+  ],
+  [
+    null,
+    "Chisel",
+    "pcs",
+    210
+  ],
+  [
+    null,
+    "High quality rubber material men's long rain boots",
+    "sets",
+    630
+  ],
+  [
+    null,
+    "Hard hat (Yellow)",
+    "sets",
+    840
+  ],
+  [
+    null,
+    "Hard hat (white)",
+    "sets",
+    840
+  ],
+  [
+    null,
+    "Hard hat (blue)",
+    "sets",
+    840
+  ],
+  [
+    null,
+    "Water Tank Fittings for Toilet Flush Repair Kit Flush Set For Toilet",
+    "sets",
+    315
+  ],
+  [
+    null,
+    "Multi-Purpose Faucet (2 way) - Stainless Steel 304",
+    "pcs",
+    630
+  ],
+  [
+    null,
+    "Long Faucet 4\" - Stainless Steel 304",
+    "pcs",
+    630
+  ],
+  [
+    null,
+    "High quality rubber material men's long rain boots #10",
+    "sets",
+    630
+  ],
+  [
+    null,
+    "PE Male Adaptor 1\"",
+    "pcs",
+    105
+  ],
+  [
+    null,
+    "PE Hose 1\" (300m)",
+    "roll",
+    8400
+  ],
+  [
+    null,
+    "Concrete Epoxy (4L)",
+    "gals",
+    4200
+  ],
+  [
+    null,
+    "High Quality Tapelon (1/2\" x 10m, 60pcs)",
+    "box",
+    840
+  ],
+  [
+    null,
+    "Sosa 1liter",
+    "liter",
+    315
+  ],
+  [
+    null,
+    "ACCOMMODATION"
+  ],
+  [
+    null,
+    "WITHIN TANDAG CITY",
+    null,
+    735
+  ],
+  [
+    null,
+    "OUTSIDE TANDAG BUT WITHIN SURIGAO DEL SUR",
+    null,
+    840
+  ],
+  [
+    null,
+    "OUTSIDE SURIGAO DEL SUR",
+    null,
+    1260
+  ],
+  [
+    null,
+    "LEASE OF REAL PROPERTY AND VENUE/HOTEL \r\nAND MEETING FACILITIES"
+  ],
+  [
+    null,
+    "FOR 20-50 PAX",
+    null,
+    8400
+  ],
+  [
+    null,
+    "FOR 51-100 PAX",
+    null,
+    12600
+  ],
+  [
+    null,
+    "FOR MORE THAN 100 PAX",
+    null,
+    15750
+  ],
+  [
+    null,
+    "VAN RENTALS"
+  ],
+  [
+    null,
+    "NEMSU Tandag - Cortes and vice versa",
+    null,
+    3150
+  ],
+  [
+    null,
+    "NEMSU Tandag - Cagwait and vice versa",
+    null,
+    3150
+  ],
+  [
+    null,
+    "NEMSU Tandag - Cantilan and vice versa",
+    null,
+    5250
+  ],
+  [
+    null,
+    "NEMSU Tandag - Carrascal and vice versa",
+    null,
+    6300
+  ],
+  [
+    null,
+    "NEMSU Tandag - San Miguel and vice versa",
+    null,
+    3150
+  ],
+  [
+    null,
+    "NEMSU Tandag - San Agustin and vice versa",
+    null,
+    5250
+  ],
+  [
+    null,
+    "NEMSU Tandag - Lianga and vice versa",
+    null,
+    6300
+  ],
+  [
+    null,
+    "NEMSU Tandag - Tagbina and vice versa",
+    null,
+    8400
+  ],
+  [
+    null,
+    "NEMSU Tandag - Hinatuan and vice versa",
+    null,
+    12600
+  ],
+  [
+    null,
+    "NEMSU Tandag - Bislig and vice versa",
+    null,
+    16800
+  ],
+  [
+    null,
+    "NEMSU Tandag - Lingig and vice versa",
+    null,
+    18900
+  ],
+  [
+    null,
+    "NEMSU Tandag - Butuan and vice versa",
+    null,
+    16800
+  ],
+  [
+    null,
+    "NEMSU Tandag - Surigao and vice versa",
+    null,
+    16800
+  ],
+  [
+    null,
+    "NEMSU Tandag - Davao and vice versa",
+    null,
+    29400
+  ],
+  [
+    null,
+    "NEMSU Tandag - Cagayan and vice versa",
+    null,
+    31500
+  ],
+  [
+    null,
+    "NEMSU Tandag - Bukidnon and vice versa",
+    null,
+    36750
+  ],
+  [
+    null,
+    "GARMENTS"
+  ],
+  [
+    null,
+    "Dressmakers Pin (60 pins per pad)",
+    "pad",
+    22
+  ],
+  [
+    null,
+    "Drifit Polo shirt with print",
+    "piece",
+    450
+  ],
+  [
+    null,
+    "Drifit shirt with print",
+    "piece",
+    380
+  ],
+  [
+    null,
+    "Fabric satin cloth",
+    "mtr",
+    140
+  ],
+  [
+    null,
+    "Full sublimation Polo shirt ",
+    "piece",
+    787
+  ],
+  [
+    null,
+    "Full sublimation shirt ",
+    "piece",
+    525
+  ],
+  [
+    null,
+    "Polyester cloth",
+    "mtr",
+    90
+  ],
+  [
+    null,
+    "LIGHTS & SOUNDS RENTAL",
+    "package",
+    26250
+  ],
+  [],
+  [
+    null,
+    "AIRCON"
+  ],
+  [
+    null,
+    "FLOOR MOUNTED AIRCON, 3TR ",
+    "unit",
+    157500
+  ],
+  [
+    null,
+    "SPLIT TYPE AIRCON, 2.5 HP, INVERTER ",
+    "unit",
+    73500
+  ],
+  [
+    null,
+    "SPLIT TYPE AIRCON, 2.0 HP, INVERTER ",
+    "unit",
+    68250
+  ],
+  [
+    null,
+    "SPLIT TYPE AIRCON, 1.5 HP, INVERTER",
+    "unit",
+    52500
+  ],
+  [
+    null,
+    "SPLIT TYPE AIRCON, 1.0 HP, INVERTER ",
+    "unit",
+    47250
+  ],
+  [
+    null,
+    "WINDOW TYPE, 2.5 HP, MANUAL ",
+    "unit",
+    47250
+  ],
+  [
+    null,
+    "WINDOW TYPE, 2.0 HP, MANUAL ",
+    "unit",
+    36750
+  ],
+  [
+    null,
+    "WINDOW TYPE, 1.5 HP, MANUAL ",
+    "unit",
+    26250
+  ],
+  [
+    null,
+    "WINDOW TYPE, 1.0 HP, MANUAL",
+    null,
+    21000
+  ],
+  [
+    null,
+    "TARPAULIN"
+  ],
+  [
+    null,
+    "TARPAULIN, 3x5",
+    "piece",
+    393
+  ],
+  [
+    null,
+    "TARPAULIN, 4x8",
+    "piece",
+    840
+  ],
+  [
+    null,
+    "TARPAULIN, 5x7",
+    "piece",
+    918
+  ],
+  [
+    null,
+    "TARPAULIN, 10x16",
+    "piece",
+    4200
+  ],
+  [
+    "TOKEN/PLAQUES"
+  ],
+  [
+    null,
+    "SMALL",
+    "piece",
+    735
+  ],
+  [
+    null,
+    "MEDIUM ",
+    "piece",
+    1050
+  ],
+  [
+    null,
+    "LARGE",
+    "piece",
+    1575
+  ],
+  [
+    null,
+    "MEDALS"
+  ],
+  [
+    null,
+    "Medals (3\" diameter and 4mm thickness; embossed type metal)",
+    "piece",
+    304
+  ],
+  [
+    null,
+    "Medals (2.5\" diameter and 4mm thickness; embossed type metal)",
+    "piece",
+    294
+  ],
+  [
+    null,
+    "Medals (2\" diameter and 4mm thickness; embossed type metal)",
+    "piece",
+    241
+  ],
+  [
+    "OTHER ITEMS NOT AVAILABLE AT PS-DBM BUT ARE REGULARLY PURCHASED FROM OTHER SOURCES (Note: Please indicate price of items)"
+  ],
+  [
+    null,
+    "MULTIFUNCTION PRINTER",
+    " unit ",
+    19425
+  ],
+  [
+    null,
+    "LAMINATING FILM",
+    " pack ",
+    1575
+  ],
+  [
+    null,
+    "UNINTERRUPTIBLE POWER SUPPLY",
+    " unit ",
+    5229
+  ],
+  [
+    null,
+    "SMART TELEVISION",
+    " unit ",
+    51450
+  ],
+  [
+    null,
+    "WHITE BOARD",
+    " piece ",
+    12967
+  ],
+  [
+    null,
+    "MICROPHONE",
+    " unit ",
+    3984
+  ],
+  [
+    null,
+    "STEEL FILING CABINET",
+    " piece ",
+    12390
+  ],
+  [
+    null,
+    "EXTENSION CORD (5 Mtrs)",
+    " piece ",
+    840
+  ],
+  [
+    null,
+    "PAINT",
+    " gallon ",
+    575
+  ],
+  [
+    null,
+    "DOOR MAT",
+    " piece ",
+    262
+  ],
+  [
+    null,
+    "OFFICE CHAIR",
+    " piece ",
+    10500
+  ],
+  [
+    null,
+    "AUTOMOTIVE BATTERIES",
+    " piece ",
+    9975
+  ],
+  [
+    null,
+    "PADLOCK",
+    " piece ",
+    525
+  ],
+  [
+    null,
+    "MOBILE PHONE",
+    " unit ",
+    28980
+  ],
+  [
+    null,
+    "AMPLIFIER",
+    " unit ",
+    21000
+  ],
+  [
+    null,
+    "DOCUMENT SCANNER",
+    " unit ",
+    42000
+  ],
+  [
+    null,
+    "WATER DISPENSER",
+    " unit ",
+    17745
+  ],
+  [
+    null,
+    "GLUE GUN",
+    " unit ",
+    472
+  ],
+  [
+    null,
+    "INKJET PRINTER",
+    " unit ",
+    23814
+  ],
+  [
+    null,
+    "SPEAKERS",
+    " unit ",
+    682
+  ],
+  [
+    null,
+    "KEYBOARD",
+    " unit ",
+    561
+  ],
+  [
+    null,
+    "DSLR CAMERA",
+    " unit ",
+    51959
+  ],
+  [
+    null,
+    "STEEL RACK",
+    " set ",
+    3990
+  ],
+  [
+    null,
+    "MOTORCYCLE",
+    " unit ",
+    89250
+  ],
+  [
+    null,
+    "FUEL"
+  ],
+  [
+    null,
+    "Diesel",
+    "liter",
+    72
+  ],
+  [
+    null,
+    "Gasoline",
+    "liter",
+    68
+  ],
+  [
+    null,
+    "MEALS & SNACKS"
+  ],
+  [
+    null,
+    "Snacks- Executive ( CHED, other agencies)",
+    "pax",
+    180
+  ],
+  [
+    null,
+    "Snacks- Executive",
+    "pax",
+    100
+  ],
+  [
+    null,
+    "Snacks-Regular",
+    "pax",
+    80
+  ],
+  [
+    null,
+    "Snacks-Student",
+    "pax",
+    60
+  ],
+  [
+    null,
+    "Meals- Executive ( CHED, other agencies)",
+    "pax",
+    450
+  ],
+  [
+    null,
+    "Meals - Executive",
+    "pax",
+    350
+  ],
+  [
+    null,
+    "Meals- Regular",
+    "pax",
+    250
+  ],
+  [
+    null,
+    "Meals- Student",
+    "pax",
+    200
+  ],
+  [
+    null,
+    "Meals - breakfast",
+    "pax",
+    200
+  ],
+  [
+    null,
+    "Meals - breakfast Executive (CHED, other agencies)",
+    "pax",
+    230
+  ],
+  [
+    null,
+    "Heavy snacks no meals included",
+    "pax",
+    200
+  ],
+  [
+    null,
+    "meals- breakfast student",
+    "pax",
+    180
+  ],
+  [
+    null,
+    "OTHER SUPPLIES AND MATERIALS (TOKEN)"
+  ],
+  [
+    null,
+    "Patries ((Classic Brownies: 16 slices of moist, velvet, and chocolatey bars)",
+    "package",
+    500
+  ],
+  [
+    null,
+    "Personalized notebook with NEMSU logo",
+    "pc",
+    450
+  ],
+  [
+    null,
+    "Personalized pen with NEMSU logo",
+    "pc",
+    350
+  ],
+  [
+    null,
+    "Personalized notebook with NEMSU logo with pen",
+    "pc",
+    650
+  ],
+  [
+    null,
+    "Personalized tote bag with NEMSU logo",
+    "pc",
+    500
+  ],
+  [
+    null,
+    "Personalized pillow with NEMSU Logo 13x18",
+    "pc",
+    700
+  ],
+  [
+    null,
+    "Personalized mug with NEMSU Logo",
+    "pc",
+    270
+  ],
+  [
+    null,
+    "Customized Heavy Duty Double Canopy  Umbrella with NEMSU Logo",
+    "pc",
+    580
+  ],
+  [
+    null,
+    "Personalize heavy duty umbrella automatic golf inches single canopy with print logo",
+    "pc",
+    650
+  ],
+  [
+    null,
+    "                              OTHER SUPPLIES AND MATERIALS (PRINTING)"
+  ],
+  [
+    null,
+    "Plaque 4\" x 5\" acrylic",
+    "pc",
+    500
+  ],
+  [
+    null,
+    "Plaque 4\" x 8\" acrylic",
+    "pc",
+    600
+  ],
+  [
+    null,
+    "Medals (3\" diameter and 4mm thickness; embossed type metal)",
+    "piece",
+    330
+  ],
+  [
+    null,
+    "Medals (2.5\" diameter and 4mm thickness; embossed type metal)",
+    "piece",
+    350
+  ],
+  [
+    null,
+    "Medals (2\" diameter and 4mm thickness; embossed type metal)",
+    "piece",
+    250
+  ],
+  [
+    null,
+    "Acrylic Frame with print 3mm",
+    "piece",
+    3300
+  ],
+  [
+    null,
+    "Acrylic Frame with print 22.5\" x 28.5\"",
+    "piece",
+    3300
+  ],
+  [
+    null,
+    "Tarp Media 10oz 3.3ft",
+    "roll",
+    645
+  ],
+  [
+    null,
+    "Tarp Media 10oz 4.2ft",
+    null,
+    485
+  ],
+  [
+    null,
+    "Tarp Media 10oz 6.1ft",
+    "roll",
+    888
+  ],
+  [
+    null,
+    "Tarp Media 10oz 10.5ft",
+    "roll",
+    955
+  ],
+  [
+    null,
+    "OTHER SUPPLIES AND MATERIALS"
+  ],
+  [
+    null,
+    "FIRE EXTINGUISHER, dry chemical 10lbs",
+    "pc",
+    2800
+  ],
+  [
+    null,
+    "Fire Extinguisher - 10 Lbs. Chemical (Green) Refillable ",
+    "pc",
+    4200
+  ],
+  [
+    null,
+    "SEMI-EXPENDABLE OFFICE EQUIPMENT"
+  ],
+  [
+    null,
+    "Comb Binding Machine Legal / Long / F4 Size Heavy Duty Binding Machine",
+    "unit",
+    7000
+  ],
+  [
+    null,
+    "Floor mounted aircon, 3TR, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    157500
+  ],
+  [
+    null,
+    "High Quality Heavy-Duty Sliding Paper Cutter A4, Long & A3 Size",
+    "unit",
+    3200
+  ],
+  [
+    null,
+    "Split type aircon, 1.0 HP, Inverter, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    47250
+  ],
+  [
+    null,
+    "Split type aircon, 1.5 HP, Inverter, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    52500
+  ],
+  [
+    null,
+    "Split type aircon, 2.0 HP, Inverter, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    68250
+  ],
+  [
+    null,
+    "Split type aircon, 2.5 HP, Inverter, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    73500
+  ],
+  [
+    null,
+    "Water Dispenser: Free-Standing Water Dispenser (Top loading), Transparent Front Cover – Purpose of the front Cover is to protect against insects, virus and bacteria from reaching the water faucet, 3 Options: Hot, Cold, and Warm, Double Safety Device to prevent overheating",
+    "pcs",
+    8500
+  ],
+  [
+    null,
+    "Window Type, 1.0 HP, Manual, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    21000
+  ],
+  [
+    null,
+    "Window Type, 1.5 HP, Manual, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    26250
+  ],
+  [
+    null,
+    "Window Type, 2.0 HP, Manual, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    36750
+  ],
+  [
+    null,
+    "Window Type, 2.5 HP, Manual, 1 Year Warranty for parts and services, free installation, free delivery",
+    "unit",
+    47250
+  ],
+  [
+    null,
+    "SEMI-EXPENDABLE ICT EQUIPMENT"
+  ],
+  [
+    null,
+    "Computer Set, Processor: 6 cores and 8 Threads, 19-inch monitor, Memory: 8GB, Storage: 512GB (with inclusion speaker, camera, mouse), Warranty: 1 Year Warranty for parts and services",
+    "unit",
+    35000
+  ],
+  [
+    null,
+    "Document Scanner with ADF\r\n• Warranty: 1 Year Warranty for Parts and Service",
+    "unit",
+    26000
+  ],
+  [
+    null,
+    "Full HD CCTV Camera Atleast 4 megapixels night vision, 128GB micros SD Card, 350-360 PA coverage, Connect via Wi-Fi or Ethernet, with 1 yr warranty ",
+    "unit",
+    2800
+  ],
+  [
+    null,
+    "Inkjet Printer single function",
+    "unit",
+    7000
+  ],
+  [
+    null,
+    "Laptop 12th Gen Intel Core i5-1235U (12 MB cache, 10 cores, 12 threads, up to 4.40 GHz Turbo), Windows 11 Home Single Language, English, Intel UHD Graphics, 15.6″ FHD 1920 x 1080, 120Hz, WVA, Non-Touch, Anti-Glare, 250 nit, Narrow Border, LED-Backlit, 8 GB, 1 x 8 GB, DDR4, 2666 MHz, 512 GB, M.2, PCIe NVMe, SSD, 1 USB 3.2 Gen 1 Type-C port with DisplayPort 1.4 (on 12th Gen Processor configured with Type-C),  USB 3.2 Gen 1 port (on systems configured with Type-C), HDMI 1.4 (Maximum resolution supported over HDMI is 1920×1080 @60Hz. No 4K/2K output), 1 M.2 2230 slot for WiFi and Bluetooth card, Plastic: 720p at 30 fps HD camera Single integrated microphone, Aluminium: 1080p at 30 fps FHD RGB camera Dual-array microphones, Stereo speakers, 2 W x 2 = 4 W total, Intel Wi-Fi 6 AX201 (2×2) Wi-Fi + Bluetooth, 3 Cell, 41 Wh, integrated, 65 Watt AC Adapter, 1 Year on Parts and Labor, free inclusion: laptop bag, mouse, mouse pad, speaker",
+    "unit",
+    40000
+  ],
+  [
+    null,
+    "Office Mobile Phone, * 8GBRAM + 256GB Storage,  Up to 8GB Dynamic memory expansion, Super-clear 108MP triple camera,  at least 6.67\" FHD + AMOLED display 120Hz, Secure in-screen fingerprint sensor, dual sim with free simcard globe & TNT ",
+    "unit",
+    15000
+  ],
+  [
+    null,
+    "Photocopier Machine with Feeder, System Speed: 40 ppm (letter) / 38 ppm (A4) / 36 ppm (Legal), System Memory: 512 MB,Print Resolution: 1200 x 1200 dpi, Scan Resolution: 600 x 600 dpi, Printable Paper size: A4, Legal (8.5\" x 14\"), Letter, Printable Paper Weight: 60-163 gsm, Paper Input Capacity: 250 sheets + 1 sheet bypass tray, Features: automatic two-sided printing, with free toner, with 1 year warranty,f free check up, free delivery",
+    "unit",
+    60000
+  ],
+  [
+    null,
+    "Printer (3 in 1) Scan, Print, Copy:  Printer Type: Print, Scan, and Copy (Support Borderless), with WIFI, Can Scan/Copy in legal size paper",
+    "unit",
+    15000
+  ],
+  [
+    null,
+    "Printer only Print speed of up to 9.0 ipm (black) and 4.8 ipm (colour), Ultra-high page yield of 4,500 pages (black) and 7,500 pages (colour)",
+    "unit",
+    10500
+  ],
+  [
+    null,
+    "Wireless HDMI, Transmitter and Receiver, Wireless frequency：5GHz,  Resolution：1080p@60Hz, Min distance：30m.,  Material：ABS,  Interface：USB-C,  Power supply：5V-2A, Warranty：1 year, Packaging：Color box, Accessory：USB-C power cord (1 m) x 2; HDMI extension cable (0.2 m) x 1, free delivery",
+    "unit",
+    4800
+  ],
+  [
+    null,
+    "Heavy duty extension wire (10 meters) (3 gang)",
+    "pc",
+    1000
+  ],
+  [
+    null,
+    "XGA RESOLUTION/3300 LUMENS/3LCD PROJECTOR, 3LCD technology for equal white & colour light output, Native XGA resolution and 4:3 performance, Long lamp life up to 12,000 hours in ECO Mode, Easy setup and positioning flexibility, HDMI connectivity , Features, Projectors Facets: Quick Corner, Laser / Lamp, Projectors Facets: Lamp, Resolution, Projectors Facets: XGA, Contrast Ratio, Projectors Facets: 15,000:1, Brightness Range Lumens, Projectors Facets: 2000, Native Resolution: XGA (1024 x 768), Size: 0.55” (C2fine)",
+    "unit",
+    32000
+  ],
+  [
+    null,
+    "SSD HP 16TB External Hard Disk 8TB USB 3.0 Portable External Hard Disk 4TB Portable Hard Drive 2TB One Touch External HDD 1TB",
+    "unit",
+    780
+  ],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  [],
+  []
+]

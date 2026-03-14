@@ -304,7 +304,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           const qty = parseInt(qtyText) || 0;
 
           // Match with price list - prioritize exact description match
-          const matchedItem = itemsList.find(item => item.description?.trim() === description);
+          const matchedItem = itemsList.find(item => item.item_name?.trim() === description);
           if (matchedItem) {
             newSelectedIds.add(matchedItem.id);
             newQuantities[matchedItem.id] = qty;
@@ -357,9 +357,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     setIsLoadingPriceItems(true);
     try {
       const { data, error } = await supabase
-        .from('price_list_items')
+        .from('price_list')
         .select('*')
-        .order('description', { ascending: true });
+        .order('item_name', { ascending: true });
 
       if (error) throw error;
       const items = data || [];
@@ -424,7 +424,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
         tableRows += `
           <w:tr>
-            <w:tc><w:p><w:r><w:t>${item.description}</w:t></w:r></w:p></w:tc>
+            <w:tc><w:p><w:r><w:t>${item.item_name}</w:t></w:r></w:p></w:tc>
             <w:tc><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>${item.unit || ''}</w:t></w:r></w:p></w:tc>
             <w:tc><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>${qty}</w:t></w:r></w:p></w:tc>
             <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:t>₱${(item.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</w:t></w:r></w:p></w:tc>
@@ -513,9 +513,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (!searchQuery) return priceListItems;
     const lowerQuery = searchQuery.toLowerCase();
     return priceListItems.filter(item =>
-      item.description?.toLowerCase().includes(lowerQuery) ||
-      item.procurement_object?.toLowerCase().includes(lowerQuery) ||
-      item.budget_object?.toLowerCase().includes(lowerQuery)
+      item.item_name?.toLowerCase().includes(lowerQuery) ||
+      item.category?.toLowerCase().includes(lowerQuery)
     );
   }, [priceListItems, searchQuery]);
 
@@ -821,10 +820,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                                   />
                                 </td>
                                 <td className="px-4 py-3 whitespace-normal">
-                                  <span className="text-sm font-medium text-gray-900 dark:text-white">{item.description}</span>
-                                  {item.budget_object && (
+                                  <span className="text-sm font-medium text-gray-900 dark:text-white">{item.item_name}</span>
+                                  {item.category && (
                                     <div className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
-                                      <Tag className="w-2.5 h-2.5" /> {item.budget_object}
+                                      <Tag className="w-2.5 h-2.5" /> {item.category}
                                     </div>
                                   )}
                                 </td>
@@ -868,7 +867,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
                         {priceListItems.filter(item => selectedItemIds.has(item.id)).map(item => (
                           <tr key={item.id}>
-                            <td className="px-4 py-4 text-sm font-medium text-gray-900 dark:text-white max-w-xs">{item.description}</td>
+                            <td className="px-4 py-4 text-sm font-medium text-gray-900 dark:text-white max-w-xs">{item.item_name}</td>
                             <td className="px-4 py-4 w-32">
                               <input
                                 type="number"

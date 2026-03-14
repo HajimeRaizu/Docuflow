@@ -435,43 +435,86 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
         }
     };
 
-    const handleImportPriceList = async () => {
+    const handleImportPriceList = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
         setIsImportingPriceList(true);
         try {
-            const response = await fetch('/Basis PMPP Price list.json');
-            if (!response.ok) throw new Error('Failed to load JSON file');
-            const data = await response.json();
+            const data = await file.arrayBuffer();
+            // Dynamically import xlsx to avoid huge bundle
+            const xlsx = await import('xlsx');
+            
+            const workbook = xlsx.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const rows: any[][] = xlsx.utils.sheet_to_json(worksheet, { header: 1 });
 
-            if (!data.items || !Array.isArray(data.items)) {
-                throw new Error('Invalid JSON format');
+            let currentCategory = 'Uncategorized';
+            const validItems: any[] = [];
+
+            // Example rows strategy from the previous read_excel output:
+            // Column 1 is Item Name, Column 2 is Unit, Column 3 is Price
+            for (let i = 2; i < rows.length; i++) {
+                const row = rows[i];
+                
+                // If it's a category row (only one string in the 2nd column index 1)
+                if (row.length === 2 && typeof row[1] === 'string' && !row[2] && !row[3]) {
+                    currentCategory = row[1];
+                    continue;
+                }
+
+                const itemName = row[1]?.toString().trim();
+                const unit = row[2]?.toString().trim() || null;
+                const priceMatch = row[3]?.toString().replace(/[^0-9.]/g, '');
+                const price = priceMatch ? parseFloat(priceMatch) : null;
+
+                // User requested to SKIP items if ANY field (name, unit, price) is missing
+                if (!itemName || !unit || price === null || isNaN(price)) {
+                    continue;
+                }
+
+                validItems.push({
+                    category: currentCategory,
+                    item_name: itemName,
+                    unit: unit,
+                    price: price
+                });
             }
 
-            // Filter out empty items (categories)
-            const validItems = data.items
-                .filter((item: any) => item.description && item.description.trim() !== '')
-                .map((item: any) => ({
-                    description: item.description,
-                    unit: item.unit || null,
-                    price: item.price ? parseFloat(item.price) : null,
-                    is_procurable: item.is_procurable === '1.0' || item.is_procurable === '1',
-                    procurement_object: item.procurement_object || null,
-                    budget_object: item.budget_object || null
-                }));
+            if (validItems.length === 0) {
+                showToast("No valid items found in the Excel file.", "error");
+                setIsImportingPriceList(false);
+                return;
+            }
 
-            // Chunk the insertion to avoid request size limits
+            // Wipe existing table
+            const { error: deleteError } = await supabase
+                .from('price_list')
+                .delete()
+                .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all rows
+            
+            if (deleteError) {
+                console.error("Failed to clear old price list:", deleteError);
+                throw new Error("Failed to clear old price list");
+            }
+
+            // Chunk the insertion
             const chunkSize = 100;
             for (let i = 0; i < validItems.length; i += chunkSize) {
                 const chunk = validItems.slice(i, i + chunkSize);
-                const { error } = await supabase.from('price_list_items').insert(chunk);
+                const { error } = await supabase.from('price_list').insert(chunk);
                 if (error) throw error;
             }
 
-            showToast(`Successfully imported ${validItems.length} items!`, 'success');
+            showToast(`Successfully imported ${validItems.length} items from Excel!`, 'success');
         } catch (e) {
             console.error("Import Error:", e);
             showToast(`Failed to import price list: ${(e as Error).message}`, 'error');
         } finally {
             setIsImportingPriceList(false);
+            // Reset input file value
+            e.target.value = '';
         }
     };
 
@@ -968,22 +1011,26 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                         <div>
                                             <h4 className="font-medium text-blue-900 dark:text-blue-100">Price List Ingestion</h4>
                                             <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                                                Import the latest Basis PMPP Price List from the project JSON file into the database.
-                                                Make sure the <code>price_list_items</code> table exists.
+                                                Upload the latest Basis PMPP Price List Excel file (.xlsx) into the database.
+                                                Empty or improperly formatted rows will be skipped.
                                             </p>
-                                            <button
-                                                onClick={() => confirmAction({
-                                                    title: "Import Price List?",
-                                                    message: "This will add items from the JSON file to the database. Make sure you have run the migration first.",
-                                                    onConfirm: handleImportPriceList,
-                                                    variant: "info"
-                                                })}
-                                                disabled={isImportingPriceList}
-                                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 flex items-center gap-2 text-sm"
-                                            >
-                                                {isImportingPriceList ? <Loader className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
-                                                {isImportingPriceList ? "Importing..." : "Start Import"}
-                                            </button>
+                                            <div className="mt-4">
+                                                <input
+                                                    type="file"
+                                                    accept=".xlsx"
+                                                    onChange={handleImportPriceList}
+                                                    disabled={isImportingPriceList}
+                                                    className="hidden"
+                                                    id="price-list-upload"
+                                                />
+                                                <label
+                                                    htmlFor="price-list-upload"
+                                                    className={`inline-flex px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm cursor-pointer ${isImportingPriceList ? 'opacity-50 pointer-events-none' : ''}`}
+                                                >
+                                                    {isImportingPriceList ? <Loader className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                                                    {isImportingPriceList ? "Importing..." : "Upload Price List (.xlsx)"}
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
