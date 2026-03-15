@@ -391,7 +391,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   useEffect(() => {
     if (initialEstimate && initialEstimate.length > 0) {
       console.log("Processing AI Budget Estimate:", initialEstimate);
-      
+
       const processEstimates = async () => {
         let itemsList = priceListItems;
         // Fetch price list if it isn't loaded yet
@@ -415,7 +415,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
         initialEstimate.forEach((estItem) => {
           // Attempt string match against DB
-          const dbMatch = itemsList.find(item => 
+          const dbMatch = itemsList.find(item =>
             item.item_name?.toLowerCase() === estItem.item_name?.toLowerCase()
           );
 
@@ -437,7 +437,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         setSelectedItemIds(newSelectedIds);
         setItemQuantities(newQuantities);
         setManualEntries(newManualEntries);
-        
+
         // Auto-open modal to step 2 (Quantities/Totals) so the user can verify the AI's math
         setIsPriceListOpen(true);
         setPriceListStep(2);
