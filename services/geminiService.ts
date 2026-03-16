@@ -176,7 +176,6 @@ class GeminiService {
             });
             // @ts-ignore
             searchContext = analysisResult.text?.trim() || analysisResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-            console.log("Extracted Search Query:", searchContext);
         } catch (e) {
             console.warn("Failed to extract search context, falling back to basic metadata.", e);
             searchContext = `${type} ${formData.title || formData.subject || ''}`;
@@ -295,7 +294,7 @@ class GeminiService {
 
     private enforceOOXMLRules(content: string): string {
         if (!content) return content;
-        
+
         // 1 & 3: Strip markdown blocks and HTML wrappers
         let cleaned = content.replace(/^```(xml)?/mi, '').replace(/```$/m, '').trim();
 
@@ -314,7 +313,7 @@ class GeminiService {
         cleaned = cleaned.replace(/<w:p(?:\s[^>]*>|>)[\s\S]*?<\/w:p>/g, (pMatch) => {
             const textMatch = pMatch.match(/<w:t[^>]*>(.*?)<\/w:t>/g);
             const textContent = textMatch ? textMatch.map(t => t.replace(/<[^>]*>/g, '')).join('').trim() : '';
-            
+
             const isAllUppercase = textContent && textContent === textContent.toUpperCase() && textContent.length > 3 && textContent.length < 100;
             const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "SIGNATORIES", "RATIONALE", "BUDGET"].some(h => textContent.toUpperCase().includes(h));
             const isHeader = isAllUppercase || isKnownHeader;
@@ -322,22 +321,22 @@ class GeminiService {
             if (isHeader) {
                 // Clear the numId tracking so the next list gets new IDs (restarting at 1)
                 numIdMap.clear();
-                
+
                 // Remove numbering from headers
                 if (pMatch.includes('<w:numPr>')) {
                     pMatch = pMatch.replace(/<w:numPr>[\s\S]*?<\/w:numPr>/g, '');
                 }
-                
+
                 // Remove any accidental right/both alignment on headers (ensure left/standard)
                 if (pMatch.includes('<w:jc')) {
                     pMatch = pMatch.replace(/<w:jc\s+w:val="[^"]*"[^>]*\/>/g, '<w:jc w:val="left"/>');
                 }
-                
+
                 return pMatch;
             }
 
             // For non-headers:
-            
+
             // Apply text justification (w:val="both")
             if (!pMatch.includes('<w:jc') && pMatch.includes('<w:pPr>')) {
                 // Inject justification into existing pPr
@@ -346,7 +345,7 @@ class GeminiService {
                 // Change existing justification to both (unless it's explicitly centered/right for something else, but user asked for justified texts)
                 // Let's replace left/right with both, keep center if intended (often used for titles, though titles are headers)
                 if (!pMatch.includes('w:val="center"')) {
-                     pMatch = pMatch.replace(/<w:jc\s+w:val="[^"]*"([^>]*)>/g, '<w:jc w:val="both"$1>');
+                    pMatch = pMatch.replace(/<w:jc\s+w:val="[^"]*"([^>]*)>/g, '<w:jc w:val="both"$1>');
                 }
             } else {
                 // No pPr exists, inject it
@@ -368,7 +367,7 @@ class GeminiService {
 
         // 5. Enforce Budget Table rules
         cleaned = cleaned.replace(/GRAND\s*TOTAL/gi, 'Total Estimated Expenses');
-        
+
         // Ensure "Total Estimated Expenses" is left-aligned in table cells
         cleaned = cleaned.replace(/<w:tc(?:\s[^>]*>|>)[\s\S]*?<\/w:tc>/g, (tcMatch) => {
             if (tcMatch.includes('Total Estimated Expenses')) {
@@ -611,7 +610,6 @@ export class LiveSession {
             if (this.audioSourceNodes.size === 0 && this.pendingToolData) {
                 const data = this.pendingToolData;
                 this.pendingToolData = null;
-                console.log("LiveSession: Final audio completed. Proceeding to generation UI callback.");
                 this.onDocumentGenerated(data);
             }
         }, 1500); // Give 1.5s grace period for trailing chunks
@@ -640,7 +638,6 @@ export class LiveSession {
         }
 
         try {
-            console.log("LiveSession: Requesting microphone access...");
             this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         } catch (e) {
             console.error("Microphone access failed:", e);
@@ -650,7 +647,6 @@ export class LiveSession {
         // Fetch Reference Material for RAG BEFORE connecting
         let referenceContent = "";
         if (this.department && this.documentType) {
-            console.log("Fetching reference templates for Voice Agent...");
             try {
                 // 1. Fetch Similar Datasets
                 const searchResults = await geminiService.searchSimilarDatasets(this.department, `${this.documentType} template`, this.documentType, 3);
@@ -680,8 +676,6 @@ ${tmplData[0].content}
 --------------------------
 `;
                 }
-
-                console.log("Successfully fetched dual-reference content for Voice Agent.");
             } catch (e) {
                 console.warn("Failed to fetch RAG context for voice session:", e);
             }
@@ -782,7 +776,6 @@ ${expectedKeys}
 
 Do NOT generate the document content yourself. Just pass the raw facts into the JSON and the main application pipeline will generate the OOXML safely.`;
 
-        console.log("LiveSession: Connecting to Gemini WebSockets...");
         const ai = geminiService['getAI']();
 
         const config = {
@@ -790,12 +783,10 @@ Do NOT generate the document content yourself. Just pass the raw facts into the 
             callbacks: {
                 onopen: () => {
                     this.isConnected = true;
-                    console.log("WebSocket Connection opened");
                 },
                 onmessage: this.onMessage.bind(this),
                 onclose: () => {
                     this.isConnected = false;
-                    console.log('WebSocket Session closed');
                 },
                 onerror: (e: any) => {
                     this.isConnected = false;
@@ -823,7 +814,6 @@ Do NOT generate the document content yourself. Just pass the raw facts into the 
 
             this.isConnected = true;
             this.startAudioInput();
-            console.log("Voice Agent WebSockets connected successfully.");
 
             // TRIGGER: Send a silent audio frame to wake it up
             try {
@@ -879,7 +869,6 @@ Do NOT generate the document content yourself. Just pass the raw facts into the 
                         this.sessionPromise.then((session: any) => {
                             try {
                                 session.send({ clientContent: { turnComplete: true } });
-                                console.log("LiveSession VAD: 1.5s silence detected, emitting turnComplete.");
                             } catch (err) { }
                         }).catch(() => { });
                     }
@@ -934,7 +923,6 @@ Do NOT generate the document content yourself. Just pass the raw facts into the 
         if (toolCall) {
             for (const call of toolCall.functionCalls) {
                 if (['submit_activity_proposal', 'submit_official_letter', 'submit_constitution'].includes(call.name)) {
-                    console.log(`Tool invoked: ${call.name} `, call.args);
 
                     // Immediate feedback to UI
                     if (this.onProcessing) this.onProcessing();
@@ -1043,7 +1031,6 @@ Do NOT generate the document content yourself. Just pass the raw facts into the 
     }
 
     disconnect() {
-        console.log("LiveSession: Disconnecting...");
         this.isConnected = false;
         if (this.finalizeTimeout) {
             clearTimeout(this.finalizeTimeout);

@@ -455,7 +455,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
               <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-white dark:bg-gray-800 sticky top-0 z-10">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <Database className="w-6 h-6 text-sky-600 dark:text-sky-400" /> Knowledge Base
+                    <Database className="w-6 h-6 text-sky-600 dark:text-sky-400" /> Archive
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Manage reference datasets for AI generation</p>
                 </div>

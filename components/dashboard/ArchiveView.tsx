@@ -24,13 +24,6 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
     );
 
     useEffect(() => {
-        console.log("ArchiveView mounted. User:", user);
-        console.log("isSuperAdmin:", isSuperAdmin);
-        console.log("Initial selectedDepartment:", selectedDepartment);
-        fetchYears();
-    }, []);
-
-    useEffect(() => {
         fetchYears();
     }, [selectedDepartment]); // Refetch years when department changes
 
@@ -43,7 +36,6 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
 
     const fetchYears = async () => {
         try {
-            console.log("Fetching years for department:", selectedDepartment);
             // Fetch distinct school_years
             const { data, error } = await supabase
                 .from('documents')
@@ -54,10 +46,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
 
             if (error) throw error;
 
-            console.log("Raw years data:", data);
-
             const distinctYears = Array.from(new Set(data.map(d => d.school_year))).sort().reverse();
-            console.log("Distinct years:", distinctYears);
 
             setYears(distinctYears);
             if (distinctYears.length > 0) setSelectedYear(distinctYears[0]);
@@ -83,8 +72,6 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-
-            console.log("Fetched documents for archive:", data); // Debugging
 
             // Transform to GeneratedDocument type
             const docs: (GeneratedDocument & { author?: string })[] = data.map((d: any) => ({
@@ -115,7 +102,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
     return (
         <div className="p-8">
             <header className="mb-8">
-                <h1 className="text-3xl font-serif italic text-blue-900 dark:text-blue-400 mb-2">Knowledge Base</h1>
+                <h1 className="text-3xl font-serif italic text-blue-900 dark:text-blue-400 mb-2">Archive</h1>
                 <p className="text-gray-600 dark:text-gray-300">Browse and reference documents from previous academic years.</p>
             </header>
 
@@ -126,7 +113,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
                     <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
                     <input
                         type="text"
-                        placeholder="Search knowledge base by title, type, or author..."
+                        placeholder="Search archive by title, type, or author..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:focus:ring-blue-500"

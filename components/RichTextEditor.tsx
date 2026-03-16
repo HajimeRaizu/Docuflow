@@ -88,7 +88,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
 
       try {
-        console.log("Fetching template from:", templateUrl);
         const response = await fetch(templateUrl);
 
         if (!response.ok) {
@@ -97,7 +96,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         }
 
         const blob = await response.blob();
-        console.log("Template blob fetched successfully, size:", blob.size, "type:", blob.type);
 
         // Extract and modify header/footer if DOCX
         if (templateUrl.toLowerCase().endsWith('.docx') || blob.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
@@ -203,7 +201,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         if (!blob) throw new Error("Failed to export document");
 
         const innerContent = await extractOOXMLBody(blob);
-        console.log("Saving OOXML body content (length):", innerContent.length);
         showToast("Document saved successfully!", "success");
         onSave(innerContent);
         return blob; // Return blob for use in export
@@ -325,10 +322,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         setSelectedItemIds(newSelectedIds);
         setItemQuantities(newQuantities);
         setManualEntries(newManualEntries);
-        console.log("Synced items from document:", {
-          dbItems: newSelectedIds.size,
-          manualItems: newManualEntries.length
-        });
       }
     } catch (err) {
       console.error("Sync from doc failed:", err);
@@ -394,7 +387,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   // Handle AI Initial Estimate Injection
   useEffect(() => {
     if (initialEstimate && initialEstimate.length > 0) {
-      console.log("Processing AI Budget Estimate:", initialEstimate);
 
       const processEstimates = async () => {
         let itemsList = priceListItems;
@@ -547,10 +539,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
       let newXml;
       if (priceTableRegex.test(documentXml)) {
-        console.log("Existing price table found. Updating...");
         newXml = documentXml.replace(priceTableRegex, ooxmlTable);
       } else {
-        console.log("No price table found. Appending to body...");
         newXml = documentXml.replace('</w:body>', `${ooxmlTable}</w:body>`);
       }
 
@@ -614,7 +604,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               >
                 <Database className="w-4 h-4" /> <span>Show Price List</span>
               </button>
-              
+
               <select
                 value={templateIndex}
                 onChange={(e) => onTemplateChange && onTemplateChange(Number(e.target.value))}

@@ -99,7 +99,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
               }`}
           >
             <Database className="w-4 h-4" />
-            <span>Knowledge Base</span>
+            <span>Archive</span>
           </button>
         </div>
 
@@ -198,7 +198,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
               className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700 text-lg font-medium text-gray-800 dark:text-white active:bg-blue-50"
             >
               <Database className="w-6 h-6 text-blue-600" />
-              Knowledge Base
+              Archive
             </button>
             <button
               onClick={() => handleNavigate('settings')}

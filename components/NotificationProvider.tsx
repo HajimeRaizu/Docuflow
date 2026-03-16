@@ -97,9 +97,9 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
                     <div
                         key={toast.id}
                         className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl border backdrop-blur-md animate-scale-in min-w-[300px] max-w-md ${toast.type === 'success' ? 'bg-green-50/90 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-800 dark:text-green-300' :
-                                toast.type === 'error' ? 'bg-red-50/90 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300' :
-                                    toast.type === 'warning' ? 'bg-amber-50/90 border-amber-200 text-amber-800 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-300' :
-                                        'bg-blue-50/90 border-blue-200 text-blue-800 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-300'
+                            toast.type === 'error' ? 'bg-red-50/90 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-300' :
+                                toast.type === 'warning' ? 'bg-amber-50/90 border-amber-200 text-amber-800 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-300' :
+                                    'bg-blue-50/90 border-blue-200 text-blue-800 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-300'
                             }`}
                     >
                         {toast.type === 'success' && <CheckCircle className="w-5 h-5 flex-shrink-0" />}
@@ -123,8 +123,8 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
                         <div className="p-6">
                             <div className="flex items-center gap-3 mb-4">
                                 <div className={`p-2 rounded-lg ${confirmState.variant === 'error' ? 'bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400' :
-                                        confirmState.variant === 'warning' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400' :
-                                            'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400'
+                                    confirmState.variant === 'warning' ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-400' :
+                                        'bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400'
                                     }`}>
                                     {confirmState.variant === 'error' ? <AlertTriangle className="w-6 h-6" /> :
                                         confirmState.variant === 'warning' ? <AlertTriangle className="w-6 h-6" /> :
@@ -145,8 +145,8 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
                                 <button
                                     onClick={confirmState.onConfirm}
                                     className={`px-6 py-2.5 text-sm font-bold text-white rounded-xl shadow-lg transition transform active:scale-95 ${confirmState.variant === 'error' ? 'bg-red-600 hover:bg-red-700 shadow-red-200 dark:shadow-red-950/20' :
-                                            confirmState.variant === 'warning' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-200 dark:shadow-amber-950/20' :
-                                                'bg-blue-900 hover:bg-blue-800 shadow-blue-200 dark:shadow-blue-950/20'
+                                        confirmState.variant === 'warning' ? 'bg-amber-600 hover:bg-amber-700 shadow-amber-200 dark:shadow-amber-950/20' :
+                                            'bg-blue-900 hover:bg-blue-800 shadow-blue-200 dark:shadow-blue-950/20'
                                         }`}
                                 >
                                     {confirmState.confirmLabel}

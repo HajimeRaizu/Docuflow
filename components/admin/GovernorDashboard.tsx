@@ -234,10 +234,8 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                 if (existingTemplate && existingTemplate.file_url) {
                     try {
                         const urlParts = existingTemplate.file_url.split('/templates/');
-                        console.log(urlParts);
                         if (urlParts.length > 1 && urlParts[1]) {
                             const oldFilePath = decodeURIComponent(urlParts[1]);
-                            console.log(oldFilePath);
                             await supabase.storage.from('templates').remove([oldFilePath]);
                         }
                     } catch (e) {
@@ -428,7 +426,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                 }`}
                         >
                             <Database className={`w-6 h-6 ${activeTab === 'knowledge' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
-                            <span className="font-bold text-lg">Knowledge Base</span>
+                            <span className="font-bold text-lg">Archive</span>
                         </button>
                     )}
 
@@ -651,7 +649,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                                     <Database className="w-5 h-5" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="font-bold text-gray-900 dark:text-white leading-tight">Knowledge Base</h3>
+                                                    <h3 className="font-bold text-gray-900 dark:text-white leading-tight">Archive</h3>
                                                     <p className="text-xs text-gray-500 dark:text-gray-400">Reference Materials</p>
                                                 </div>
                                             </div>

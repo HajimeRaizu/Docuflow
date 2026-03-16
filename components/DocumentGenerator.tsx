@@ -419,7 +419,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
     const dataToUse = overrideData || formData;
     try {
       const { content, referenceMaterial } = await generateDocument(docType, dataToUse, user?.department);
-      
+
       // Attempt Budget Estimation if applicable
       if (docType === DocumentType.ACTIVITY_PROPOSAL && dataToUse.budget) {
         setLoadingMessage('Creating table for Budgetary requirements...');
@@ -428,7 +428,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
           setBudgetEstimate(estimate);
         }
       }
-      
+
       setResult(content);
     } catch (error) {
       console.error("Generation failed", error);
@@ -514,14 +514,14 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
         modifiedBy: { id: user.id, name: user.full_name }
       };
       const updatedVersions = [...currentVersions, newVersion];
-      const docData: any = { 
-        title, 
-        type: docType, 
-        content, 
-        status: 'Draft', 
-        updated_at: new Date().toISOString(), 
-        visibility, 
-        department: user.department, 
+      const docData: any = {
+        title,
+        type: docType,
+        content,
+        status: 'Draft',
+        updated_at: new Date().toISOString(),
+        visibility,
+        department: user.department,
         versions: updatedVersions,
         template_index: templateIndex
       };
