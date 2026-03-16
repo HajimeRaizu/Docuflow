@@ -20,6 +20,8 @@ interface RichTextEditorProps {
   templateUrl?: string | null;
   documentType?: DocumentType;
   initialEstimate?: any[];
+  templateIndex?: number;
+  onTemplateChange?: (index: number) => void;
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -31,7 +33,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   readOnly = false,
   templateUrl,
   documentType,
-  initialEstimate
+  initialEstimate,
+  templateIndex = 0,
+  onTemplateChange
 }) => {
   const { showToast } = useNotification();
   const [isMaximized, setIsMaximized] = useState(false);
@@ -288,10 +292,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           return textMatch ? textMatch.map(t => t.replace(/<[^>]*>/g, '')).join('') : '';
         };
 
-        // Skip header (0), and process rows until "GRAND TOTAL"
+        // Skip header (0), and process rows until "Total Estimated Expenses"
         for (let i = 1; i < rows.length; i++) {
           const rowXml = rows[i];
-          if (rowXml.includes('GRAND TOTAL')) continue;
+          if (rowXml.includes('Total Estimated Expenses')) continue;
 
           // Extract cells
           const cellRegex = /<w:tc[^>]*>[\s\S]*?<\/w:tc>/g;
@@ -514,8 +518,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       // Total Row
       tableRows += `
         <w:tr>
-          <w:tc><w:tcPr><w:gridSpan w:val="4"/></w:tcPr><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>GRAND TOTAL</w:t></w:r></w:p></w:tc>
-          <w:tc><w:p><w:pPr><w:jc w:val="right"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>₱${grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</w:t></w:r></w:p></w:tc>
+          <w:tc><w:tcPr><w:gridSpan w:val="4"/></w:tcPr><w:p><w:pPr><w:jc w:val="left"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Total Estimated Expenses</w:t></w:r></w:p></w:tc>
+          <w:tc><w:p><w:pPr><w:jc w:val="left"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>₱${grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</w:t></w:r></w:p></w:tc>
         </w:tr>
       `;
 
@@ -603,12 +607,29 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             <Download className="w-4 h-4" /> <span>DOCX</span>
           </button>
           {!readOnly && documentType === DocumentType.ACTIVITY_PROPOSAL && (
-            <button
-              onClick={() => setIsPriceListOpen(true)}
-              className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition flex items-center gap-2 text-sm font-medium"
-            >
-              <Database className="w-4 h-4" /> <span>Show Price List</span>
-            </button>
+            <>
+              <button
+                onClick={() => setIsPriceListOpen(true)}
+                className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition flex items-center gap-2 text-sm font-medium"
+              >
+                <Database className="w-4 h-4" /> <span>Show Price List</span>
+              </button>
+              
+              <select
+                value={templateIndex}
+                onChange={(e) => onTemplateChange && onTemplateChange(Number(e.target.value))}
+                className="p-1 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
+                title="Select Document Template"
+              >
+                <option value={0}>No Template</option>
+                <option value={1}>Template 1</option>
+                <option value={2}>Template 2</option>
+              </select>
+
+              <span className="text-[11px] text-gray-400 dark:text-gray-500 italic ml-2">
+                Please make sure to save draft before trying out other features
+              </span>
+            </>
           )}
         </div>
 

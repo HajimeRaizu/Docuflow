@@ -136,16 +136,21 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   const [result, setResult] = useState(initialDoc ? initialDoc.content : '');
   const [budgetEstimate, setBudgetEstimate] = useState<any[] | undefined>(undefined);
   const [templateUrl, setTemplateUrl] = useState<string | null>(initialDoc?.templateUrl || null);
+  const [templateIndex, setTemplateIndex] = useState<number>(initialDoc?.template_index || 0);
 
   useEffect(() => {
     const fetchTemplateUrl = async () => {
-      if (!user.department) return;
+      if (!user.department || templateIndex === 0) {
+        setTemplateUrl(null);
+        return;
+      }
       try {
         const { data } = await supabase
           .from('department_templates')
           .select('file_url')
           .eq('department', user.department)
           .eq('document_type', docType)
+          .eq('template_index', templateIndex)
           .maybeSingle();
 
         if (data) setTemplateUrl(data.file_url);
@@ -155,7 +160,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
       }
     };
     fetchTemplateUrl();
-  }, [docType, user.department]);
+  }, [docType, user.department, templateIndex]);
 
   useEffect(() => {
     const fetchOrgName = async () => {
@@ -509,7 +514,17 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
         modifiedBy: { id: user.id, name: user.full_name }
       };
       const updatedVersions = [...currentVersions, newVersion];
-      const docData: any = { title, type: docType, content, status: 'Draft', updated_at: new Date().toISOString(), visibility, department: user.department, versions: updatedVersions };
+      const docData: any = { 
+        title, 
+        type: docType, 
+        content, 
+        status: 'Draft', 
+        updated_at: new Date().toISOString(), 
+        visibility, 
+        department: user.department, 
+        versions: updatedVersions,
+        template_index: templateIndex
+      };
       if (currentDocId) {
         const { error } = await supabase.from('documents').update(docData).eq('id', currentDocId);
         if (error) throw error;
@@ -928,6 +943,8 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                 readOnly={!canEdit}
                 documentType={docType}
                 initialEstimate={budgetEstimate}
+                templateIndex={templateIndex}
+                onTemplateChange={setTemplateIndex}
               />
             </div>
           </div>

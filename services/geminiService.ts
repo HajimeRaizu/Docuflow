@@ -148,7 +148,7 @@ class GeminiService {
         STRUCTURAL MANDATES:
         - **Font Styling**: You MUST use Arial 12 for ALL text.
           - Apply this using <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr> within text runs.
-        - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY", "SIGNATORIES") MUST NOT be bulleted or numbered or lettered. Use bold text in a standard paragraph (<w:rPr><w:b/></w:rPr>).
+        - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY", "SIGNATORIES"). Use bold text in a standard paragraph and MUST NOT be bulleted or numbered or lettered (<w:rPr><w:b/></w:rPr>).
         - **Numbering**: For numbered or lettered lists beneath a header (e.g., specific objectives), ALWAYS ensure the numbering or lettering resets to 1 or A for each new section/heading. Do NOT continue numbering from a previous list.
         - **Signatories**: You MUST append a "Signatories" section at the bottom.
           - Use the "signatories" array from the formData if provided. Each signatory has a 'name' and 'position'.
@@ -156,6 +156,9 @@ class GeminiService {
           - Arrange them professionally: 2 or 3 per row if there are many, or spaced out horizontally if few.
           - Labels like "Prepared by", "Noted by", etc., should be used appropriately based on the number and order of signatories if not explicitly provided, but primarily use the Names and Positions given.
           - Do NOT list them in a single vertical column; mimic the wide layout of official documents.
+        - **Budget Table**: When creating a table for budgetary requirements:
+          - The text for the overall total MUST be "Total Estimated Expenses" (do NOT use "GRAND TOTAL", "Grand Total", etc.).
+          - The "Total Estimated Expenses" label MUST NOT be right-aligned. Keep it left-aligned or default (do NOT use <w:jc w:val="right"/> for this specific label).
         `;
 
         let searchContext = "";
@@ -275,9 +278,12 @@ class GeminiService {
 
                 // @ts-ignore
                 const generatedText = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
-                
+
+                // Clean and enforce rules on the generated text
+                const cleanedText = this.enforceOOXMLRules(generatedText);
+
                 return {
-                    content: generatedText,
+                    content: cleanedText,
                     referenceMaterial: referenceMaterial || ""
                 };
             } catch (error) {
@@ -285,6 +291,93 @@ class GeminiService {
                 throw new Error(`Failed to generate document: ${error instanceof Error ? error.message : 'Unknown error'}`);
             }
         });
+    }
+
+    private enforceOOXMLRules(content: string): string {
+        if (!content) return content;
+        
+        // 1 & 3: Strip markdown blocks and HTML wrappers
+        let cleaned = content.replace(/^```(xml)?/mi, '').replace(/```$/m, '').trim();
+
+        // 2: Strip outer <w:document> / <w:body> wrappers if the AI included them
+        const bodyMatch = cleaned.match(/<w:body[^>]*>([\s\S]*?)<\/w:body>/);
+        if (bodyMatch) {
+            cleaned = bodyMatch[1].trim();
+        } else {
+            cleaned = cleaned.replace(/<\/?w:document[^>]*>/g, '').trim();
+        }
+
+        // 4 & NEW: Enforce headers to not be bulleted/numbered, reset numbering after headers, and justify text
+        let currentGlobalNumId = 1000;
+        let numIdMap = new Map<string, number>();
+
+        cleaned = cleaned.replace(/<w:p(?:\s[^>]*>|>)[\s\S]*?<\/w:p>/g, (pMatch) => {
+            const textMatch = pMatch.match(/<w:t[^>]*>(.*?)<\/w:t>/g);
+            const textContent = textMatch ? textMatch.map(t => t.replace(/<[^>]*>/g, '')).join('').trim() : '';
+            
+            const isAllUppercase = textContent && textContent === textContent.toUpperCase() && textContent.length > 3 && textContent.length < 100;
+            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "SIGNATORIES", "RATIONALE", "BUDGET"].some(h => textContent.toUpperCase().includes(h));
+            const isHeader = isAllUppercase || isKnownHeader;
+
+            if (isHeader) {
+                // Clear the numId tracking so the next list gets new IDs (restarting at 1)
+                numIdMap.clear();
+                
+                // Remove numbering from headers
+                if (pMatch.includes('<w:numPr>')) {
+                    pMatch = pMatch.replace(/<w:numPr>[\s\S]*?<\/w:numPr>/g, '');
+                }
+                
+                // Remove any accidental right/both alignment on headers (ensure left/standard)
+                if (pMatch.includes('<w:jc')) {
+                    pMatch = pMatch.replace(/<w:jc\s+w:val="[^"]*"[^>]*\/>/g, '<w:jc w:val="left"/>');
+                }
+                
+                return pMatch;
+            }
+
+            // For non-headers:
+            
+            // Apply text justification (w:val="both")
+            if (!pMatch.includes('<w:jc') && pMatch.includes('<w:pPr>')) {
+                // Inject justification into existing pPr
+                pMatch = pMatch.replace(/<w:pPr>/, '<w:pPr><w:jc w:val="both"/>');
+            } else if (pMatch.includes('<w:jc')) {
+                // Change existing justification to both (unless it's explicitly centered/right for something else, but user asked for justified texts)
+                // Let's replace left/right with both, keep center if intended (often used for titles, though titles are headers)
+                if (!pMatch.includes('w:val="center"')) {
+                     pMatch = pMatch.replace(/<w:jc\s+w:val="[^"]*"([^>]*)>/g, '<w:jc w:val="both"$1>');
+                }
+            } else {
+                // No pPr exists, inject it
+                pMatch = pMatch.replace(/<w:p([^>]*)>/, '<w:p$1><w:pPr><w:jc w:val="both"/></w:pPr>');
+            }
+
+            // Remap list numbering so it restarts after a header
+            if (pMatch.includes('<w:numPr>')) {
+                pMatch = pMatch.replace(/<w:numId\s+w:val="(\d+)"([^>]*)>/g, (match, val, rest) => {
+                    if (!numIdMap.has(val)) {
+                        numIdMap.set(val, currentGlobalNumId++);
+                    }
+                    return `<w:numId w:val="${numIdMap.get(val)}"${rest}>`;
+                });
+            }
+
+            return pMatch;
+        });
+
+        // 5. Enforce Budget Table rules
+        cleaned = cleaned.replace(/GRAND\s*TOTAL/gi, 'Total Estimated Expenses');
+        
+        // Ensure "Total Estimated Expenses" is left-aligned in table cells
+        cleaned = cleaned.replace(/<w:tc(?:\s[^>]*>|>)[\s\S]*?<\/w:tc>/g, (tcMatch) => {
+            if (tcMatch.includes('Total Estimated Expenses')) {
+                return tcMatch.replace(/<w:jc\s+w:val="[^"]*"[^>]*\/>/g, '<w:jc w:val="left"/>');
+            }
+            return tcMatch;
+        });
+
+        return cleaned;
     }
 
     public async generateDatasetContext(content: string): Promise<string> {
@@ -360,7 +453,7 @@ class GeminiService {
             if (data && data.length > 0) {
                 priceListContext = "AVAILABLE PRICE LIST ITEMS:\n" + data.map(i => `- ${i.item_name} (${i.unit}) : ₱${i.price}`).join("\n");
             }
-        } catch(e) {
+        } catch (e) {
             console.warn("Failed to fetch price list for estimation context", e);
         }
 
@@ -404,10 +497,10 @@ class GeminiService {
                         parts: [{ text: prompt }]
                     }]
                 });
-                
+
                 // @ts-ignore
                 let rawText = response.text?.trim() || (response.candidates?.[0]?.content?.parts?.[0]?.text?.trim()) || "[]";
-                
+
                 // Strip markdown blocks if the AI accidentally adds them
                 rawText = rawText.replace(/^```json/mi, '').replace(/```$/m, '').trim();
 
@@ -418,7 +511,7 @@ class GeminiService {
                     console.error("Failed to parse estimate out of AI response:", rawText);
                     parsed = [];
                 }
-                
+
                 return Array.isArray(parsed) ? parsed : [];
             } catch (error) {
                 console.error("Budget Estimation Error:", error);

@@ -123,6 +123,7 @@ export type Database = {
           file_name: string | null
           file_url: string | null
           id: string
+          template_index: number
           updated_at: string | null
           updated_by: string | null
         }
@@ -133,6 +134,7 @@ export type Database = {
           file_name?: string | null
           file_url?: string | null
           id?: string
+          template_index?: number
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -143,6 +145,7 @@ export type Database = {
           file_name?: string | null
           file_url?: string | null
           id?: string
+          template_index?: number
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -159,6 +162,7 @@ export type Database = {
           reference_source_id: string | null
           school_year: string | null
           status: string | null
+          template_index: number
           title: string
           type: string
           updated_at: string | null
@@ -176,6 +180,7 @@ export type Database = {
           reference_source_id?: string | null
           school_year?: string | null
           status?: string | null
+          template_index?: number
           title: string
           type: string
           updated_at?: string | null
@@ -193,6 +198,7 @@ export type Database = {
           reference_source_id?: string | null
           school_year?: string | null
           status?: string | null
+          template_index?: number
           title?: string
           type?: string
           updated_at?: string | null

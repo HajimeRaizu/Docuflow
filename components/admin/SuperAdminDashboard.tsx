@@ -41,6 +41,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
     const [uploadType, setUploadType] = useState<DocumentType>(DocumentType.ACTIVITY_PROPOSAL);
     const [uploadContext, setUploadContext] = useState('');
     const [uploadFile, setUploadFile] = useState<File | null>(null);
+    const [uploadTemplateIndex, setUploadTemplateIndex] = useState<number>(1);
     const [isUploading, setIsUploading] = useState(false);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -284,9 +285,10 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
         });
     };
 
-    const openUploadModal = (category: 'template' | 'dataset', type?: DocumentType) => {
+    const openUploadModal = (category: 'template' | 'dataset', type?: DocumentType, templateIndex: number = 1) => {
         setUploadCategory(category);
         setUploadType(type || DocumentType.ACTIVITY_PROPOSAL);
+        setUploadTemplateIndex(templateIndex);
         setUploadFile(null);
         setIsUploadModalOpen(true);
     };
@@ -329,6 +331,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     .select('file_url')
                     .eq('department', department)
                     .eq('document_type', uploadType)
+                    .eq('template_index', uploadTemplateIndex)
                     .maybeSingle();
 
                 if (existingTemplate && existingTemplate.file_url) {
@@ -347,7 +350,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                 const fileExt = uploadFile.name.split('.').pop();
                 const sanitizedType = uploadType.split(' ').join('_');
                 const timestamp = new Date().getTime();
-                const fileName = `${department}_${sanitizedType}_${timestamp}.${fileExt}`;
+                const fileName = `${department}_${sanitizedType}_${uploadTemplateIndex}_${timestamp}.${fileExt}`;
                 const filePath = `${department}/${fileName}`;
 
                 // 2. Upload to Storage
@@ -366,11 +369,12 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                 const { error } = await supabase.from('department_templates').upsert({
                     department: department,
                     document_type: uploadType,
+                    template_index: uploadTemplateIndex,
                     content: textContent, // Keep text for AI reference
                     file_url: publicUrl,
                     file_name: uploadFile.name,
                     updated_by: user.id
-                }, { onConflict: 'department, document_type' }); // Ensure constraints match DB
+                });
 
                 if (error) throw error;
 
@@ -761,31 +765,34 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                     <h3 className="font-bold text-lg mb-4 flex items-center gap-2 dark:text-white">
                                         <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" /> Templates
                                     </h3>
-                                    <p className="text-sm text-gray-500 mb-6 dark:text-gray-400">Upload ONE standard template per document type (Docx/PDF).</p>
+                                    <p className="text-sm text-gray-500 mb-6 dark:text-gray-400">Upload up to TWO standard templates per document type (Docx/PDF).</p>
 
                                     <div className="space-y-4">
-                                        {[DocumentType.ACTIVITY_PROPOSAL, DocumentType.OFFICIAL_LETTER, DocumentType.CONSTITUTION].map(type => {
-                                            const exists = templates.find(t => t.document_type === type);
-                                            return (
-                                                <div key={type} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className={`p-2 rounded-lg ${exists ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400' : 'bg-gray-200 text-gray-500 dark:bg-gray-600 dark:text-gray-300'}`}>
-                                                            <FileText className="w-4 h-4" />
+                                        {[DocumentType.ACTIVITY_PROPOSAL, DocumentType.OFFICIAL_LETTER, DocumentType.CONSTITUTION].map(type => (
+                                            <div key={type} className="flex flex-col gap-3 p-3 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                                                <p className="text-sm font-bold text-gray-700 dark:text-gray-200 border-b pb-2 dark:border-gray-600">{type}</p>
+                                                {[1, 2].map(index => {
+                                                    const exists = templates.find(t => t.document_type === type && t.template_index === index);
+                                                    return (
+                                                        <div key={index} className="flex items-center justify-between pl-2">
+                                                            <div className="flex items-center gap-3">
+                                                                <FileText className={`w-4 h-4 ${exists ? 'text-green-500' : 'text-gray-400'}`} />
+                                                                <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Template {index}</span>
+                                                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${exists ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400' : 'bg-gray-200 text-gray-500 dark:bg-gray-600 dark:text-gray-400'}`}>
+                                                                    {exists ? 'Uploaded' : 'Missing'}
+                                                                </span>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => openUploadModal('template', type, index)}
+                                                                className="text-xs bg-white border border-gray-300 px-3 py-1.5 rounded shadow-sm hover:bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:hover:bg-gray-500"
+                                                            >
+                                                                {exists ? 'Replace' : 'Upload'}
+                                                            </button>
                                                         </div>
-                                                        <div>
-                                                            <p className="text-sm font-bold text-gray-700 dark:text-gray-200">{type}</p>
-                                                            <p className="text-xs text-gray-500 dark:text-gray-400">{exists ? 'Uploaded' : 'Missing'}</p>
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => openUploadModal('template', type)}
-                                                        className="text-xs bg-white border border-gray-300 px-3 py-1.5 rounded shadow-sm hover:bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:hover:bg-gray-500"
-                                                    >
-                                                        {exists ? 'Replace' : 'Upload'}
-                                                    </button>
-                                                </div>
-                                            );
-                                        })}
+                                                    );
+                                                })}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
 
