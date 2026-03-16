@@ -1,6 +1,6 @@
 import React from 'react';
-import { User, DocumentType } from '../types';
-import { FileText, ArrowRight, Scale, Mail } from 'lucide-react';
+import { User, DocumentType, DocumentTypeIcon, DocumentTypeColor } from '../types';
+import { ArrowRight } from 'lucide-react';
 
 interface DashboardProps {
   user: User;
@@ -12,24 +12,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   const tiles = [
     {
       title: 'New Activity Proposal',
-      icon: FileText,
-      color: 'bg-blue-600',
+      icon: DocumentTypeIcon[DocumentType.ACTIVITY_PROPOSAL],
+      color: DocumentTypeColor[DocumentType.ACTIVITY_PROPOSAL],
       docType: DocumentType.ACTIVITY_PROPOSAL,
       action: () => onNavigate('generate', { type: DocumentType.ACTIVITY_PROPOSAL }),
       enabled: user.permissions?.activity_proposal === 'edit'
     },
     {
       title: 'Official Letter',
-      icon: Mail,
-      color: 'bg-purple-600',
+      icon: DocumentTypeIcon[DocumentType.OFFICIAL_LETTER],
+      color: DocumentTypeColor[DocumentType.OFFICIAL_LETTER],
       docType: DocumentType.OFFICIAL_LETTER,
       action: () => onNavigate('generate', { type: DocumentType.OFFICIAL_LETTER }),
       enabled: user.permissions?.official_letter === 'edit'
     },
     {
       title: 'Constitution & By-Laws',
-      icon: Scale,
-      color: 'bg-amber-500',
+      icon: DocumentTypeIcon[DocumentType.CONSTITUTION],
+      color: DocumentTypeColor[DocumentType.CONSTITUTION],
       docType: DocumentType.CONSTITUTION,
       action: () => onNavigate('generate', { type: DocumentType.CONSTITUTION }),
       enabled: user.permissions?.constitution === 'edit'
@@ -61,7 +61,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
                 <div className="absolute inset-[-12px] rounded-full border-2 border-dashed border-blue-200 dark:border-blue-800/50 group-hover:rotate-45 transition-transform duration-1000"></div>
 
                 {/* Icon Container */}
-                <div className="w-24 h-24 rounded-full bg-blue-600 flex items-center justify-center text-white shadow-2xl relative z-10 transform group-hover:scale-110 transition-transform duration-500">
+                <div className={`w-24 h-24 rounded-full ${tile.color} flex items-center justify-center text-white shadow-2xl relative z-10 transform group-hover:scale-110 transition-transform duration-500`}>
                   <tile.icon className="w-12 h-12" />
                 </div>
               </div>

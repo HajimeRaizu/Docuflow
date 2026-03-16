@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, SpecificRole, Department, DocumentType } from '../../types';
+import { User, SpecificRole, Department, DocumentType, DocumentTypeIcon } from '../../types';
 import { supabase } from '../../services/supabaseClient';
 import { UserCheck, Users, Power, LogOut, Loader, Check, X, ShieldAlert, School, Home, Database, FileText, Plus, Trash2, Upload, AlertCircle, Settings, BarChart3, Menu } from 'lucide-react';
 import { useNotification } from '../NotificationProvider';
@@ -773,10 +773,11 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                                 <p className="text-sm font-bold text-gray-700 dark:text-gray-200 border-b pb-2 dark:border-gray-600">{type}</p>
                                                 {[1, 2].map(index => {
                                                     const exists = templates.find(t => t.document_type === type && t.template_index === index);
+                                                    const Icon = DocumentTypeIcon[type as DocumentType] || FileText;
                                                     return (
                                                         <div key={index} className="flex items-center justify-between pl-2">
                                                             <div className="flex items-center gap-3">
-                                                                <FileText className={`w-4 h-4 ${exists ? 'text-green-500' : 'text-gray-400'}`} />
+                                                                <Icon className={`w-4 h-4 ${exists ? 'text-green-500' : 'text-gray-400'}`} />
                                                                 <span className="text-xs font-medium text-gray-600 dark:text-gray-300">Template {index}</span>
                                                                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${exists ? 'bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400' : 'bg-gray-200 text-gray-500 dark:bg-gray-600 dark:text-gray-400'}`}>
                                                                     {exists ? 'Uploaded' : 'Missing'}

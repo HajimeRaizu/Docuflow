@@ -1,8 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
-import { FileText, MoreVertical, Download, Clock, Trash2, Eye, History, X, ChevronRight, Share2, Users, CheckCircle, AlertCircle } from 'lucide-react';
+import { MoreVertical, Download, Clock, Trash2, Eye, History, X, ChevronRight, Share2, Users, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
-import { GeneratedDocument, DocumentVersion, User, DocumentType } from '../types';
+import { GeneratedDocument, DocumentVersion, User, DocumentType, DocumentTypeIcon } from '../types';
 import { useNotification } from './NotificationProvider';
 
 interface DocumentListProps {
@@ -226,7 +226,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 {filteredDocs.length === 0 ? (
                     <div className="p-8 text-center text-gray-500">
-                        <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                        <AlertCircle className="w-12 h-12 mx-auto mb-3 opacity-30" />
                         <p>No documents found.</p>
                         {activeTab === 'my' && <p className="text-sm">Generate a new document to see it here.</p>}
                     </div>
@@ -254,7 +254,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex items-center">
                                                 <div className="flex-shrink-0 h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded flex items-center justify-center text-blue-600">
-                                                    <FileText className="w-5 h-5" />
+                                                    {React.createElement(DocumentTypeIcon[doc.type as DocumentType])}
                                                 </div>
                                                 <div className="ml-4">
                                                     <div className="text-sm font-medium text-gray-900 dark:text-white max-w-[200px] truncate" title={doc.title}>

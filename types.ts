@@ -1,3 +1,4 @@
+import { FileText, Mail, Scale } from 'lucide-react';
 export enum UserRole {
   OFFICER = 'officer',
   ADMIN = 'admin',
@@ -42,6 +43,18 @@ export const DocumentTypePermissionKey: Record<DocumentType, keyof UserPermissio
   [DocumentType.ACTIVITY_PROPOSAL]: 'activity_proposal',
   [DocumentType.OFFICIAL_LETTER]: 'official_letter',
   [DocumentType.CONSTITUTION]: 'constitution',
+};
+
+export const DocumentTypeIcon = {
+  [DocumentType.ACTIVITY_PROPOSAL]: FileText,
+  [DocumentType.OFFICIAL_LETTER]: Mail,
+  [DocumentType.CONSTITUTION]: Scale,
+};
+
+export const DocumentTypeColor = {
+  [DocumentType.ACTIVITY_PROPOSAL]: 'bg-blue-600',
+  [DocumentType.OFFICIAL_LETTER]: 'bg-blue-600',
+  [DocumentType.CONSTITUTION]: 'bg-blue-600',
 };
 
 export interface DocumentVersion {
