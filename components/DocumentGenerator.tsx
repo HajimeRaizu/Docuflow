@@ -846,9 +846,13 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
               )}
               {docType === DocumentType.CONSTITUTION && (
                 <>
-                  <input name="topic" value={formData.topic} placeholder="Constitution/Resolution Topic" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-                  <textarea name="whereas" value={formData.whereas} placeholder="Whereas clauses (one per line)..." onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-32" />
-                  <textarea name="resolved" value={formData.resolved} placeholder="Resolved clauses (one per line)..." onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-32" />
+                  <textarea 
+                    name="detailedInstructions" 
+                    value={formData.detailedInstructions} 
+                    placeholder="Detailed Instructions (What additions or specific rules should be added to the constitution?)" 
+                    onChange={handleChange} 
+                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-64" 
+                  />
 
                   {/* Signatories Section for Constitution */}
                   <div className="space-y-3 p-4 bg-gray-50/50 dark:bg-gray-700/30 rounded-xl border border-gray-100 dark:border-gray-700">

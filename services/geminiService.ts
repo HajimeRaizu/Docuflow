@@ -216,6 +216,20 @@ class GeminiService {
                 
                 Return pure OOXML format. Start with the Date, then the Recipient Block, then the Thru block (if provided), then the Subject line (if provided), then the Salutation. End with the Signatories section as defined in basic instructions. Use proper <w:p> for paragraphs.`;
                 break;
+            case DocumentType.CONSTITUTION:
+                searchContext = `Constitution and By-Laws for ${formData.topic || formData.orgName || 'Organization'}`;
+                prompt = `You are tasked with drafting or updating a CONSTITUTION & BY-LAWS document.
+                
+                CRITICAL INSTRUCTIONS for Constitution & By-Laws:
+                1. You MUST use the provided UPLOADED TEMPLATE content exactly as the base.
+                2. You are ONLY allowed to ADD new sections or content based on the user's instructions.
+                3. DO NOT change, delete, or rephrase the existing content of the template.
+                4. Maintain the exact same formatting style as the template.
+                
+                User Instructions: ${formData.detailedInstructions || 'No specific instructions. Just ensure the template is ready for use.'}
+                
+                Reference the REFERENCE MATERIAL if available, but the UPLOADED TEMPLATE is your primary source of truth.`;
+                break;
             default:
                 searchContext = `${type} document details`;
                 prompt = `Generate the body content for a document of type ${type} with details: ${JSON.stringify(formData)}. Return in pure OOXML format. Do not include letterhead/logos.`;
@@ -568,7 +582,7 @@ const constitutionTool: FunctionDeclaration = {
         properties: {
             gatheredData: {
                 type: Type.OBJECT,
-                description: 'A JSON object with keys: "topic", "whereas", "resolved", "signatories" (array of {name, position}).',
+                description: 'A JSON object with keys: "detailedInstructions", "signatories" (array of {name, position}).',
             },
         },
         required: ['gatheredData'],
@@ -722,11 +736,9 @@ ${tmplData[0].content}
             expectedKeys = `JSON keys to use: "senderName", "senderPosition", "recipientName", "thru", "subject", "details", "signatories" (array of {name, position})`;
         } else if (this.documentType === DocumentType.CONSTITUTION) {
             requiredFields = `
-1. Topic (What is the constitution/resolution about?)
-2. Whereas Clauses (The background or justification)
-3. Resolved Clauses (The specific actions or rules)
-4. Signatories (Names and Positions of people who will sign)`;
-            expectedKeys = `JSON keys to use: "topic", "whereas", "resolved", "signatories" (array of {name, position})`;
+1. Detailed Instructions (What additions or specific rules should be added to the constitution?)
+2. Signatories (Names and Positions of people who will sign)`;
+            expectedKeys = `JSON keys to use: "detailedInstructions", "signatories" (array of {name, position})`;
         }
 
         // Select the tool based on document type
@@ -765,7 +777,10 @@ YOUR MISSION:
 You are a conversational data gatherer. Your job is to extract the following information interactively from the user, one or two questions at a time:
 ${requiredFields}
 
-CRITICAL INITIALIZATION: YOU MUST SPEAK FIRST. Greet the user and identify the document they are trying to create.
+CRITICAL INITIALIZATION: YOU MUST SPEAK FIRST. 
+${this.documentType === DocumentType.CONSTITUTION 
+    ? 'Greet the user briefly and then ask exactly: "Do you have any specific instructions in mind?"' 
+    : `Greet the user and identify the document they are trying to create.`}
 
 Once you have gathered all details, say "Great, I have all the details. Generating your document now." and IMMEDIATELY call the '${selectedTool.name}' tool.
 
