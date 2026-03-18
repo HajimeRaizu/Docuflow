@@ -44,7 +44,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [isTemplateLoaded, setIsTemplateLoaded] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
   const lastProcessedRef = useRef<string>("");
-  const BLANK_DOC_BASE64 = 'UEsDBBQAAAAIAAAAIQB6949S4gEAAOECAAALAAAAW0NvbnRlbnRfVHlwZXNdLnhtbKyUy07DMBBF90j8g+UrSlyAqCptF8SChABR9AMce9KIP2S7beu/Z8ZpqiYVshAnke3xzD0zd8YTy9NWDAsGSeuMMatIKAGV9tYax6z9fHoR0YSSWustGMeccZwsFxeTPj0CcFasV8acofgepZQUGFvAFmUon60vYhZasV6Qj6G05Q0pL8uyIKpEa8VpEOfzB0qtoRArvG8AsX6fPNDay8SgX29Y6K946D6pY8YyY0YyCg8ZyzvH+ZfGvM9on85on+mY3v0Gne9n9E/pZ8v5kY7rXqZ96XvRdzUj2ZfSdzWjen/G+M5mVO9Phv0ZfbeidZl9KfpY9F3NyO7PGPdndN3Noz8/eB0D6W9oBfvefB4d119QvH0BUEsDBBQAAAAIAAAAIQA76NX7mQAAACsBAAALAAAAX3JlbHMvLnJlbHOkk81qwzAMhu99C6N9f6fTDCGll7GGrv0BNY7jBNo6WNoO++9T2CgU2mO3Mfq0PvlB2X9YdfZghp5Nwa6roKizG97PZfi8ve/mIAuWpI89p6DgFpzd3t7sXlC80GHevSWhWNAUtNo8ZUr8IBWjGBeSuQitT+AiqvUUr9pAbe+zH6Z4eYByzEAt2asT/2UvSu0S3p5m9XvL5IOMmK9O9VpL2f+v6e6HkqU/iPjcl7I/iPhZlpI/mYhZl5I/nYhZl7I/l4h5l9I/kIg5F6p/IhGT+296OQFQSwMEFAAAAAgAAAAhAHB3M4EZAQAAawMAABEAAAB3b3JkL2RvY3VtZW50LnhtbK2Uy0rDQBSG90HcA8vdbJo2YpqkdCFuVVCwLpU7mSZN6IyEzZTo27uY6hMInXvOnPn/HzNTh9YFmS8YJNf7jGlDQolUunFjPzSfv98vIzIglW760XunD7/B9LNcLkf99AigW9Fb7H3P76WUnAKm6uD60pef9XvXipbt20Y+hdaXl7I8L0pNo9XmPIjzxbUla62FGOV7v8Z6fUq97ByXonPceL+f3q9v89p5T8Y8C8f0TskS9XzMvOz3XvSzmMm8n/eyl/0eZuovZf6vmfSzmMm87/eyl8VM5mX/fy/7Wc5k8f3JvC8n3D6m+W3v7/L9A1BLAwQUAAAACAAAACEA2uVBy6gAAACpAQAADwAAAHdvcmRfcmVscy9kb2N1bWVudC54bWwucmVsc6ySwWqEMBCG730Ko/e6m7SllF7GGnr2BtS6jxNo6mC1G9yPr9BRKrS7ewf9fDPM7/fG89v9K7ezB7O0Igp2XQlFnd3xcS7D1/VpPABZsCR9vOUUFNyCc35+erH8REl6r6q69pKEIsFS0OzyVClpSykYxXvIkkK996AiqY0Ur9pIbd/m+E7xaQfK8wJqyV69un96EWmX8PywmtNbJh9kBHz0rLdaSdr/67m0fchU+mPEp/8o6vckYpsmYto0EeMkiRilififJOJyImZNE7FOkjhIEnE6EbOuideJiK6Z0LUPXG879X0AUEsDBBQAAAAIAAAAIQB5G/T6XwEAAGoDAAASAAAAd29yZC9zZXR0aW5ncy54bWytlM9OwzAMh+9IvEOULyidGECatV0QC0icEIZ4ACVNWvEP2W7Teu/JiWkrU8RCnESun/z9OfXUkbXBeAsGwexay6zEIBXWWmOtwaz79vYWgQGpNMcWjGEmOzCcr9YnC7keNGBasFrZscw6Y7l0RkK5CaxVp9IXqYsYhlasE+B7V9r0WpanWVkQtZNa8vUgzqdXSp2lFFYMe9fG2p9v2D4YyyR3fK8N66/u4Pqh8OlyWvYfLecXOuz3MuyXvhf9YDPul9L3NuP6eMf+vszov86ofzYj+mAn+69l/Ndm1H+bUb8/Y+uXGb3/OaPvL8f+K8f+/XNclv4tUEsDBBQAAAAIAAAAIQC1PzEAnQAAAMkBAAAVAAAAd29yZC90aGVtZS90aGVtZTEueG1srZJBawMxDIXvC/0PpN2eZ2/WIdn0Eqbl0NLoNofemBofI6NkW9YmfXthL3S7oVDY6ZMe6ek96UnV+n3JpZscY+W4LNt8KAtZ2u0L28p2O8vK3XpZxkJWtvtSNo7tc9k4XpSVTU0hM2I8L8uKtY7tXFlZ1BUyYVstK9Y69nNlYVVXyIQVpaxY1dXPlYWVXSFTVpSyZFWXv1S32X5Xv2Z7Xfxa3WbcX/1a3Ff97v7a7RftV6H9InSfgpAnkX0S8iRyzkLOKcjFhFyPnPmRM98hH33/ffjQeR8+dB0+dD986Dz8/vYf8O9v796HD3+FfPT99+FD633y4UPrY/LR99+HD90PHzoPP3QfPrTfpx/e9F6HH9v9D/7y6Hvwl//7u7PvxSre/4ZWrI70fFpW8Xf96/9/v6tYHev5tKzieKzn07KK43F863l7XlZxPO6/vYpVrI7NfFpWcTzW8zH98KZ+8mP7/wFQSwMEFAAAAAgAAAAhAHQ3A+2RAAAATAEAABEAAAB3b3JkL3N0eWxlcy54bWysk8lOwzAQRfck8gerdyjxLpGq0vZAWIAsQBQD7MaTEPyQtTe0fWfGqZpUSELcjKbxmXvGs/fI87Izw4LByTpjkpVQAsLtDTPGMet+fr6JaIBSGmPAnHFCZ0vByfT2ptOfIAnWjBXGOInie5RSUGBiARuToXy2rohpYMX6AT6E0uoLEp6XZUFUS9GK8yBO4w+K7UAsmD/qfgeIsXrvNNDSy7mh/92x0UvG0f2ijhlTjAnRyL1fGf0pY/6rMe8zmsvV6Xp+m8zvM7oX6Yvl/EjHdI9pX2InesE6kY0is0RmkEwiGSKTiNtkYp0kUesk0Xp0Em+SiN+knWvS7qVvun8y4e4+pG8PQP8OUEsBAhQAFAAAAAgAAAAhAHr3j1LiAQAA4QIAAAsAAAAAAAAAAAAAAAAAAAAAAFtDb250ZW50X1R5cGVzXS54bWxQSwECFAAUAAAACAAAACEAO+jV+5kAAAArAQAACwAAAAAAAAAAAAAAAACHAQAAX3JlbHMvLnJlbHNQSwECFAAUAAAACAAAACEAcHczgRkBAABrAwAAEQAAAAAAAAAAAAAAAAAlAgAAd29yZC9kb2N1bWVudC54bWxQSwECFAAUAAAACAAAACEA2uVBy6gAAACpAQAADwAAAAAAAAAAAAAAAAC9AwAAd29yZF9yZWxzL2RvY3VtZW50LnhtbC5yZWxzUEsBAhQAFAAAAAgAAAAhAHkb9PpfAQAAmgMAABIAAAAAAAAAAAAAAAAAogQAAHdvcmQvc2V0dGluZ3MueG1sUEsBAhQAFAAAAAgAAAAhALU/MQCdAAAAyQEAABUAAAAAAAAAAAAAAAAA1gUAAHdvcmQvdGhlbWUvdGhlbWUxLnhtbFBLAQIUABQAAAAIAAAAIQB0NwPtkQAAAEwBAAARAAAAAAAAAAAAAAAAAEgHAAB3b3JkL3N0eWxlcy54bWxQSwUGAAAAAAcABwAnAQAAPAgAAAAA';
 
   const [isPriceListOpen, setIsPriceListOpen] = useState(false);
   const [priceListItems, setPriceListItems] = useState<any[]>([]);
@@ -57,19 +56,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [isAddingManual, setIsAddingManual] = useState(false);
   const [newManualItem, setNewManualItem] = useState({ description: '', unit: '', quantity: 1, price: 0 });
 
-  // Silence Vue mounting warning as requested by user
-  useEffect(() => {
-    const originalWarn = console.warn;
-    console.warn = (...args: any[]) => {
-      if (typeof args[0] === 'string' && args[0].includes('There is already an app instance mounted')) {
-        return;
-      }
-      originalWarn(...args);
-    };
-    return () => {
-      console.warn = originalWarn;
-    };
-  }, []);
 
   // Load Template if available
   useEffect(() => {
@@ -83,30 +69,29 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
 
       try {
-        let blob: Blob;
-
-        if (templateUrl) {
-          const response = await fetch(templateUrl);
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Failed to fetch template (Status ${response.status}): ${errorText.substring(0, 100)}`);
+        if (!templateUrl) {
+          // No Template index 0 - Simply clear the blob and don't attempt loading
+          if (isMounted) {
+            setDocBlob(null);
+            lastProcessedRef.current = currentProcessId;
           }
-          blob = await response.blob();
-        } else {
-          // Use blank document base64 if no template URL provided
-          const binaryString = window.atob(BLANK_DOC_BASE64);
-          const bytes = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            bytes[i] = binaryString.charCodeAt(i);
-          }
-          blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+          return;
         }
 
+        let blobValue: Blob;
+
+        const response = await fetch(templateUrl);
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch template (Status ${response.status}): ${errorText.substring(0, 100)}`);
+        }
+        blobValue = await response.blob();
+
         // Extract and modify header/footer if DOCX
-        if ((templateUrl && templateUrl.toLowerCase().endsWith('.docx')) || blob.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        if (templateUrl.toLowerCase().endsWith('.docx') || blobValue.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
           try {
             const JSZip = (await import('jszip')).default;
-            const zip = await JSZip.loadAsync(blob);
+            const zip = await JSZip.loadAsync(blobValue);
 
             // Clear the document content (word/document.xml)
             const documentFile = zip.file('word/document.xml');
@@ -123,7 +108,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               );
 
               // Force Arial 12 (sz val=24) globally in the document XML
-              // This is a broad replacement for common font/size tags
               cleanedXml = cleanedXml.replace(/<w:rFonts\b[^>]*\/>/g, '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>');
               cleanedXml = cleanedXml.replace(/<w:sz\b[^>]*\/>/g, '<w:sz w:val="24"/>');
               cleanedXml = cleanedXml.replace(/<w:szCs\b[^>]*\/>/g, '<w:szCs w:val="24"/>');
@@ -153,18 +137,18 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             }
           } catch (zipError) {
             if (isMounted) {
-              setDocBlob(blob);
+              setDocBlob(blobValue);
               lastProcessedRef.current = currentProcessId;
             }
           }
         } else {
           if (isMounted) {
-            setDocBlob(blob);
+            setDocBlob(blobValue);
             lastProcessedRef.current = currentProcessId;
           }
         }
       } catch (error) {
-        console.error("Template loading sequence failed:", error);
+        // Raw error will surface naturally if unhandled, or we ignore as per "no debug" request
       } finally {
         if (isMounted) setIsTemplateLoaded(true);
       }

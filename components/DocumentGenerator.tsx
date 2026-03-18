@@ -848,12 +848,12 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
               )}
               {docType === DocumentType.CONSTITUTION && (
                 <>
-                  <textarea 
-                    name="detailedInstructions" 
-                    value={formData.detailedInstructions} 
-                    placeholder="Detailed Instructions (What additions or specific rules should be added to the constitution?)" 
-                    onChange={handleChange} 
-                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-64" 
+                  <textarea
+                    name="detailedInstructions"
+                    value={formData.detailedInstructions}
+                    placeholder="Detailed Instructions (What additions or specific rules should be added to the constitution?)"
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-64"
                   />
 
                   {/* Signatories Section for Constitution */}
