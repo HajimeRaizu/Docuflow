@@ -55,7 +55,9 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                     versions: d.versions || [],
                     visibility: d.visibility,
                     department: d.department,
-                    user_id: d.user_id
+                    user_id: d.user_id,
+                    template_index: d.template_index,
+                    templateUrl: d.templateUrl
                 }));
 
                 setDocs(mappedDocs);

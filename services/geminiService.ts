@@ -214,7 +214,7 @@ class GeminiService {
                 Details: ${formData.details}
                 Signatories: ${JSON.stringify(formData.signatories)}
                 
-                Return pure OOXML format. Start with the Date, then the Recipient Block, then the Thru block (if provided), then the Subject line (if provided), then the Salutation. End with the Signatories section as defined in basic instructions. Use proper <w:p> for paragraphs.`;
+                Return pure OOXML format. DO NOT include any date in the generated document. Start with the Recipient Block, then the Thru block (if provided), then the Subject line (if provided), then the Salutation. End with the Signatories section as defined in basic instructions. Use proper <w:p> for paragraphs.`;
                 break;
             case DocumentType.CONSTITUTION:
                 searchContext = `Constitution and By-Laws for ${formData.topic || formData.orgName || 'Organization'}`;

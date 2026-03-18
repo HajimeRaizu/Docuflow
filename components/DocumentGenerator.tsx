@@ -528,6 +528,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
       if (currentDocId) {
         const { error } = await supabase.from('documents').update(docData).eq('id', currentDocId);
         if (error) throw error;
+        setResult(content);
         showAlert("Success", "Document updated successfully!", 'success');
       } else {
         docData.user_id = user.id;
@@ -535,6 +536,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
         if (error) throw error;
         if (data) {
           setCurrentDocId(data.id);
+          setResult(content);
           showAlert("Success", "New document created and saved!", 'success');
         }
       }

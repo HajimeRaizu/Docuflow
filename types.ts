@@ -81,6 +81,8 @@ export interface GeneratedDocument {
   visibility?: 'private' | 'department';
   school_year?: string;
   user_id?: string;
+  template_index?: number;
+  templateUrl?: string | null;
 }
 
 export interface ChatMessage {

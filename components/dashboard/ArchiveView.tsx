@@ -83,7 +83,9 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
                 createdAt: new Date(d.created_at),
                 department: d.department,
                 school_year: d.school_year,
-                author: d.profiles?.full_name || 'Unknown Author'
+                author: d.profiles?.full_name || 'Unknown Author',
+                template_index: d.template_index,
+                templateUrl: d.templateUrl
             }));
             setDocuments(docs);
         } catch (err) {
