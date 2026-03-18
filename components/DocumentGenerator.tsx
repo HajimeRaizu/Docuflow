@@ -136,7 +136,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   const [result, setResult] = useState(initialDoc ? initialDoc.content : '');
   const [budgetEstimate, setBudgetEstimate] = useState<any[] | undefined>(undefined);
   const [templateUrl, setTemplateUrl] = useState<string | null>(initialDoc?.templateUrl || null);
-  const [templateIndex, setTemplateIndex] = useState<number>(initialDoc?.template_index || 0);
+  const [templateIndex, setTemplateIndex] = useState<number>(initialDoc?.template_index || 1);
 
   useEffect(() => {
     const fetchTemplateUrl = async () => {
@@ -241,6 +241,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
 
   const [customVenue, setCustomVenue] = useState(false);
   const [customBudget, setCustomBudget] = useState(false);
+  const [customSource, setCustomSource] = useState(false);
 
   useEffect(() => {
     if (initialDoc) {
@@ -701,10 +702,32 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                         <input name="budget" placeholder="Specify Budget" onChange={handleChange} className="flex-1 min-w-0 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-left-1" />
                       )}
                     </div>
-                    <select name="source" value={formData.source} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-                      <option value="STF">STF</option>
-                      <option value="GAA">GAA</option>
-                    </select>
+                    <div className="flex flex-col gap-2">
+                      <label className="block text-sm font-medium text-gray-400">Source of Funds</label>
+                      <div className="flex gap-2">
+                        <CustomSelect
+                          className={`${customSource ? 'w-20' : 'w-full'} transition-all`}
+                          value={customSource ? "Others" : (["Student Trust Fund", "Student Development Funds"].includes(formData.source) ? formData.source : (formData.source === '' ? '' : "Others"))}
+                          options={[
+                            { label: "Student Trust Fund", value: "Student Trust Fund" },
+                            { label: "Student Development Funds", value: "Student Development Funds" },
+                            { label: "Others", value: "Others" }
+                          ]}
+                          onChange={(val) => {
+                            if (val === "Others") {
+                              setCustomSource(true);
+                              setFormData(prev => ({ ...prev, source: '' }));
+                            } else {
+                              setCustomSource(false);
+                              setFormData(prev => ({ ...prev, source: val }));
+                            }
+                          }}
+                        />
+                        {customSource && (
+                          <input name="source" placeholder="Specify Source of Funds" onChange={handleChange} className="flex-1 min-w-0 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-left-1" />
+                        )}
+                      </div>
+                    </div>
                   </div>
                   <textarea name="objectives" value={formData.objectives} placeholder="Objectives" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
 

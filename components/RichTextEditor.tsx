@@ -34,7 +34,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   templateUrl,
   documentType,
   initialEstimate,
-  templateIndex = 0,
+  templateIndex = 1,
   onTemplateChange
 }) => {
   const { showToast } = useNotification();
@@ -599,7 +599,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                 className="p-1 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
                 title="Select Document Template"
               >
-                <option value={0}>No Template</option>
                 <option value={1}>Template 1</option>
                 <option value={2}>Template 2</option>
               </select>
