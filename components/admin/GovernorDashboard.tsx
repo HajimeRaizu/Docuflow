@@ -370,7 +370,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                     <Menu className="w-6 h-6" />
                 </button>
                 <div className="flex-1 flex justify-center mr-10">
-                    <h1 className="text-xl font-serif italic text-blue-900 dark:text-white">SmartDraft</h1>
+                        <h1 className="text-xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
                 </div>
             </div>
 
@@ -393,7 +393,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                     </button>
 
                     <div className="flex items-center gap-3 flex-1 overflow-hidden">
-                        <h1 className="text-xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">SmartDraft</h1>
+                        <h1 className="text-xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
                     </div>
                 </div>
 

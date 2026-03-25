@@ -929,9 +929,9 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
             <div key="voice-agent-container" className="flex flex-col flex-1 h-full bg-black relative overflow-hidden rounded-b-xl lg:rounded-b-none lg:rounded-br-none">
               <div ref={canvasRef} className="absolute inset-0 w-full h-full z-0" style={{ background: 'radial-gradient(circle at center, #050510 0%, #000000 70%)' }} />
               <div className="absolute inset-0 z-10 flex flex-col items-center justify-end pb-12 pointer-events-none">
-                <h3 className="text-xl md:text-2xl font-bold mb-2 text-white drop-shadow-[0_0_10px_rgba(0,200,255,0.8)] tracking-wide">SmartDraft AI</h3>
+                <h3 className="text-xl md:text-2xl font-bold mb-2 text-white drop-shadow-[0_0_10px_rgba(0,200,255,0.8)] tracking-wide">NEMSify AI</h3>
                 <p className="text-gray-300 mb-2 max-w-xs text-center drop-shadow-md text-sm md:text-base">
-                  {isLiveActive ? "Listening to your proposal details..." : "Connect to start drafting with SmartDraft"}
+                  {isLiveActive ? "Listening to your proposal details..." : "Connect to start drafting with NEMSify"}
                 </p>
                 <p className="text-[10px] md:text-xs text-gray-500 mb-8 max-w-[250px] text-center italic opacity-80">
                   The performance of the voice agent may depend on a stable internet connection

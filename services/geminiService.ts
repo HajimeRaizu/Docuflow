@@ -757,7 +757,7 @@ ${tmplData[0].content}
             }
         }
 
-        const systemInstructionText = `You are the Voice Agent for NEMSU SmartDraft (Identity: Gemini Pulse). 
+        const systemInstructionText = `You are the Voice Agent for NEMSify (Identity: Gemini Pulse). 
 You help academic users draft formal documents (like ${this.documentType || 'general documents'}).
 
 LANGUAGE CONSTRAINTS:

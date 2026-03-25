@@ -1,4 +1,4 @@
-SmartDraft: List of Functions and Purposes
+NEMSify: List of Functions and Purposes
 
 This document provides a comprehensive list of the core functions used in the Docuflow application, categorized by their primary domain.
 

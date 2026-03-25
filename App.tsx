@@ -28,7 +28,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ theme, user, onNavigate, 
   const [saveStatus, setSaveStatus] = useState('');
 
   useEffect(() => {
-    const saved = localStorage.getItem('nemsu_ai_settings');
+    const saved = localStorage.getItem('nemsify_ai_settings');
     if (saved) {
       try {
         setAiSettings(JSON.parse(saved));
@@ -37,7 +37,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ theme, user, onNavigate, 
   }, []);
 
   const saveAISettings = () => {
-    localStorage.setItem('nemsu_ai_settings', JSON.stringify(aiSettings));
+    localStorage.setItem('nemsify_ai_settings', JSON.stringify(aiSettings));
     setSaveStatus('Preferences Saved!');
     setTimeout(() => setSaveStatus(''), 2000);
   };
@@ -199,7 +199,7 @@ const App: React.FC = () => {
   const [viewParams, setViewParams] = useState<any>({});
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('nemsu_theme') as 'light' | 'dark') || 'light';
+      return (localStorage.getItem('nemsify_theme') as 'light' | 'dark') || 'light';
     }
     return 'light';
   });
@@ -218,7 +218,7 @@ const App: React.FC = () => {
   const toggleTheme = () => {
     setTheme(prev => {
       const newTheme = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('nemsu_theme', newTheme);
+      localStorage.setItem('nemsify_theme', newTheme);
       return newTheme;
     });
   };
@@ -337,7 +337,7 @@ const App: React.FC = () => {
       {loading ? (
         <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col items-center justify-center">
           <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-900 rounded-full animate-spin mb-4"></div>
-          <h2 className="text-xl font-serif italic text-blue-900 dark:text-blue-400 animate-pulse">SmartDraft</h2>
+          <h2 className="text-xl font-serif italic text-blue-900 dark:text-blue-400 animate-pulse">NEMSify</h2>
         </div>
       ) : !user ? (
         <Auth onLogin={(u) => setUser(u)} theme={theme} toggleTheme={toggleTheme} />

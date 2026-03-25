@@ -119,7 +119,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
               <Sparkles className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase">
-              SmartDraft
+              NEMSify
             </h1>
           </div>
 

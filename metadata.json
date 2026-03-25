@@ -1,5 +1,5 @@
 {
-  "name": "SmartDraft",
+  "name": "NEMSify",
   "description": "AI-Powered Document Automation System — simplify your workflow, boost productivity, and automate your document generation efficiently.",
   "requestFramePermissions": [
     "microphone"

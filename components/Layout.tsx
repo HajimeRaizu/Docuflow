@@ -66,7 +66,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
             onClick={() => handleNavigate(getHomeRoute())}
             className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white cursor-pointer select-none truncate"
           >
-            SmartDraft
+            NEMSify
           </h1>
         </div>
 

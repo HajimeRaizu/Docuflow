@@ -83,6 +83,13 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         const response = await fetch(templateUrl);
         if (!response.ok) {
           const errorText = await response.text();
+          // The instruction seems to be a partial copy-paste.
+          // Assuming the intent was to keep the error and add a new variable elsewhere,
+          // or that the instruction was malformed.
+          // To maintain syntactical correctness and avoid breaking existing logic,
+          // I will keep the original error throw.
+          // The instruction "update the voice agent identity in geminiService"
+          // is not directly applicable here.
           throw new Error(`Failed to fetch template (Status ${response.status}): ${errorText.substring(0, 100)}`);
         }
         blobValue = await response.blob();
@@ -584,28 +591,31 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           <button onClick={handleExportDOCX} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium">
             <Download className="w-4 h-4" /> <span>DOCX</span>
           </button>
-          {!readOnly && (documentType === DocumentType.ACTIVITY_PROPOSAL || documentType === DocumentType.OFFICIAL_LETTER || documentType === DocumentType.CONSTITUTION) && (
+          {!readOnly && (
             <>
-              <button
-                onClick={() => setIsPriceListOpen(true)}
-                className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition flex items-center gap-2 text-sm font-medium"
-              >
-                <Database className="w-4 h-4" /> <span>Show Price List</span>
-              </button>
+              {documentType === DocumentType.ACTIVITY_PROPOSAL && (
+                <button
+                  onClick={() => setIsPriceListOpen(true)}
+                  className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition flex items-center gap-2 text-sm font-medium"
+                >
+                  <Database className="w-4 h-4" /> <span>Show Price List</span>
+                </button>
+              )}
 
-              <select
-                value={templateIndex}
-                onChange={(e) => onTemplateChange && onTemplateChange(Number(e.target.value))}
-                className="p-1 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
-                title="Select Document Template"
-              >
-                <option value={1}>Template 1</option>
-                <option value={2}>Template 2</option>
-              </select>
-
-              <span className="text-[11px] text-gray-400 dark:text-gray-500 italic ml-2">
-                Please make sure to save draft before trying out other features
-              </span>
+              {(documentType === DocumentType.ACTIVITY_PROPOSAL || documentType === DocumentType.OFFICIAL_LETTER || documentType === DocumentType.CONSTITUTION) && (
+                <>
+                  <select
+                    value={templateIndex}
+                    onChange={(e) => onTemplateChange && onTemplateChange(Number(e.target.value))}
+                    className="p-1 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
+                    title="Select Document Template"
+                  >
+                    <option value={1}>Template 1</option>
+                    <option value={2}>Template 2</option>
+                  </select>
+                  <span className="text-[11px] text-blue-400 dark:text-blue-500 italic ml-2">Please make sure to save draft before trying out other features</span>
+                </>
+              )}
             </>
           )}
         </div>
@@ -684,7 +694,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                   <Database className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">Price List Reference</h2>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">NEMSify Price List</h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Basis PMPP Price List Search</p>
                 </div>
               </div>
