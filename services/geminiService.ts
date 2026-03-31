@@ -222,8 +222,8 @@ class GeminiService {
                 
                 CRITICAL INSTRUCTIONS for Constitution & By-Laws:
                 1. You MUST use the provided UPLOADED TEMPLATE content exactly as the base.
-                2. You are ONLY allowed to ADD new sections or content based on the user's instructions.
-                3. DO NOT change, delete, or rephrase the existing content of the template.
+                2. If the User Instructions are empty or just say "ensure the template is ready", DO NOT change, delete, or rephrase ANY of the existing content of the template. Simply return the template content exactly as it is in pure OOXML.
+                3. You are ONLY allowed to ADD new sections or MODIFY existing ones if the user explicitly specifies what to change.
                 4. Maintain the exact same formatting style as the template.
                 
                 User Instructions: ${formData.detailedInstructions || 'No specific instructions. Just ensure the template is ready for use.'}

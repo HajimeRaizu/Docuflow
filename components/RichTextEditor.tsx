@@ -105,14 +105,22 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             if (documentFile) {
               const documentXml = await documentFile.async('string');
 
-              // Use initialContent or a simple fallback paragraph
-              const AIGeneratedContent = initialContent || `<w:p><w:r><w:t></w:t></w:r></w:p>`;
+              let cleanedXml = documentXml;
 
-              // Replace the content but keep the structure
-              let cleanedXml = documentXml.replace(
-                /(<w:body>)([\s\S]*?)(<w:sectPr[\s\S]*?<\/w:sectPr>)([\s\S]*?)(<\/w:body>)/,
-                `$1${AIGeneratedContent}$3$5`
-              );
+              // For Constitution documents, if no initial content is provided, 
+              // keep the original template body (don't replace it).
+              if (documentType === DocumentType.CONSTITUTION && !initialContent) {
+                // Do nothing, cleanedXml remains documentXml
+              } else {
+                // Use initialContent or a simple fallback paragraph
+                const AIGeneratedContent = initialContent || `<w:p><w:r><w:t></w:t></w:r></w:p>`;
+
+                // Replace the content but keep the structure
+                cleanedXml = documentXml.replace(
+                  /(<w:body>)([\s\S]*?)(<w:sectPr[\s\S]*?<\/w:sectPr>)([\s\S]*?)(<\/w:body>)/,
+                  `$1${AIGeneratedContent}$3$5`
+                );
+              }
 
               // Force Arial 12 (sz val=24) globally in the document XML
               cleanedXml = cleanedXml.replace(/<w:rFonts\b[^>]*\/>/g, '<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/>');
