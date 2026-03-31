@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, Info, X } from 'lucide-react';
+import { AlertTriangle, Info, X, CheckCircle } from 'lucide-react';
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -35,13 +35,13 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
                     <h3 className={`text-lg font-bold flex items-center gap-2 ${variant === 'danger' ? 'text-red-600 dark:text-red-400' :
                         variant === 'warning' ? 'text-yellow-600 dark:text-yellow-400' :
-                            variant === 'success' ? 'text-green-600 dark:text-green-400' :
+                            variant === 'success' ? 'text-indigo-600 dark:text-indigo-400' :
                                 'text-blue-600 dark:text-blue-400'
                         }`}>
                         {variant === 'danger' && <AlertTriangle className="w-5 h-5" />}
                         {variant === 'warning' && <AlertTriangle className="w-5 h-5" />}
                         {variant === 'info' && <Info className="w-5 h-5" />}
-                        {variant === 'success' && <Info className="w-5 h-5" />}
+                        {variant === 'success' && <CheckCircle className="w-5 h-5" />}
                         {title}
                     </h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition">
@@ -70,7 +70,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                         onClick={() => { onConfirm(); onClose(); }}
                         className={`px-4 py-2 text-sm font-medium text-white rounded-lg shadow-sm transition ${variant === 'danger' ? 'bg-red-600 hover:bg-red-700' :
                             variant === 'warning' ? 'bg-yellow-600 hover:bg-yellow-700' :
-                                variant === 'success' ? 'bg-green-600 hover:bg-green-700' :
+                                variant === 'success' ? 'bg-indigo-600 hover:bg-indigo-700' :
                                     'bg-blue-600 hover:bg-blue-700'
                             }`}
                     >

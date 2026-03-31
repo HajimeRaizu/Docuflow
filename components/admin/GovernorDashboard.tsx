@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, SpecificRole, Department, DocumentType, DocumentTypeIcon } from '../../types';
 import { supabase } from '../../services/supabaseClient';
-import { Users, FileText, Upload, Trash2, Check, X, Shield, Plus, LogOut, Settings, Database, Archive, Home, Loader, AlertCircle, Power, BarChart3, Menu } from 'lucide-react';
+import { Users, FileText, Upload, Trash2, Check, X, Shield, Plus, LogOut, Settings, Library, Archive, Home, Loader, AlertCircle, Power, BarChart3, Menu } from 'lucide-react';
 import { useNotification } from '../NotificationProvider';
 import { parseFile } from '../../services/fileUtils';
 import { generateDatasetContext, generateEmbedding } from '../../services/geminiService';
@@ -76,6 +76,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                 id: r.user_id,
                 email: r.profiles?.email,
                 full_name: r.profiles?.full_name,
+                avatar_url: r.profiles?.avatar_url,
                 role_id: r.id,
                 user_type: r.role,
                 specific_role: r.specific_role,
@@ -425,7 +426,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                 : 'bg-gray-50/50 text-gray-500 hover:bg-gray-100 dark:bg-gray-800/50 dark:text-gray-400 dark:hover:bg-gray-800'
                                 }`}
                         >
-                            <Database className={`w-6 h-6 ${activeTab === 'knowledge' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
+                            <Library className={`w-6 h-6 ${activeTab === 'knowledge' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
                             <span className="font-bold text-lg">Archive</span>
                         </button>
                     )}
@@ -471,8 +472,12 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                 {officers.map(officer => (
                                     <div key={officer.role_id} className="p-4 border-b border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between last:border-0 hover:bg-gray-50 transition dark:border-gray-700 dark:hover:bg-gray-700 gap-4">
                                         <div className="flex items-center gap-4 w-full sm:w-auto">
-                                            <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
-                                                {officer.full_name.charAt(0)}
+                                            <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-gray-600 dark:bg-gray-700 dark:text-gray-300 overflow-hidden">
+                                                {officer.avatar_url ? (
+                                                    <img src={officer.avatar_url} className="w-full h-full object-cover" alt="" />
+                                                ) : (
+                                                    officer.full_name.charAt(0)
+                                                )}
                                             </div>
                                             <div className="overflow-hidden">
                                                 <h4 className="font-bold text-gray-900 dark:text-white truncate">{officer.full_name}</h4>
@@ -558,7 +563,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
                                     <div className="flex items-center justify-between mb-4">
                                         <h3 className="font-bold text-lg flex items-center gap-2 dark:text-white">
-                                            <Database className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Datasets
+                                            <Library className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Datasets
                                         </h3>
                                         <button
                                             onClick={() => openUploadModal('dataset')}
@@ -646,7 +651,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="p-3 rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400">
-                                                    <Database className="w-5 h-5" />
+                                                    <Library className="w-5 h-5" />
                                                 </div>
                                                 <div>
                                                     <h3 className="font-bold text-gray-900 dark:text-white leading-tight">Archive</h3>
@@ -757,7 +762,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                             {uploadCategory === 'dataset' && (
                                 <div>
                                     <div className="flex items-start gap-2 bg-purple-50 p-3 rounded-lg dark:bg-purple-900/20 mb-2">
-                                        <Database className="w-4 h-4 text-purple-600 mt-0.5 dark:text-purple-400" />
+                                        <Library className="w-4 h-4 text-purple-600 mt-0.5 dark:text-purple-400" />
                                         <p className="text-xs text-purple-800 dark:text-purple-300">
                                             The AI will automatically analyze this document to generate a detailed description and context for better retrieval.
                                         </p>

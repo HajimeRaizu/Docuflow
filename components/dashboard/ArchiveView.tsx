@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, GeneratedDocument, Department, UserRole } from '../../types';
 import { supabase } from '../../services/supabaseClient';
-import { Database, Copy, FileText, Search, Filter, Loader, Calendar } from 'lucide-react';
+import { Library, Copy, FileText, Search, Filter, Loader, Calendar } from 'lucide-react';
 
 interface ArchiveViewProps {
     user: User;
@@ -64,8 +64,10 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
         try {
             const { data, error } = await supabase
                 .from('documents')
-                .select('*, profiles:user_id(full_name)')
-                .select('*, profiles:user_id(full_name)')
+                .select(`
+                    *,
+                    profiles:user_id (full_name, avatar_url)
+                `)
                 .eq('department', selectedDepartment) // Use selectedDepartment
                 .eq('school_year', year)
                 .eq('status', 'Archived') // Only show archived docs
@@ -83,7 +85,8 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
                 createdAt: new Date(d.created_at),
                 department: d.department,
                 school_year: d.school_year,
-                author: d.profiles?.full_name || 'Unknown Author',
+                author_name: d.profiles?.full_name || 'Unknown Author',
+                author_avatar: d.profiles?.avatar_url,
                 template_index: d.template_index,
                 templateUrl: d.templateUrl
             }));
@@ -98,7 +101,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
     const filteredDocs = documents.filter(doc =>
         doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doc.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (doc as any).author?.toLowerCase().includes(searchTerm.toLowerCase())
+        doc.author_name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -157,7 +160,7 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
                 </div>
             ) : filteredDocs.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300 dark:bg-gray-800/50 dark:border-gray-700">
-                    <Database className="w-12 h-12 text-gray-300 mx-auto mb-3 dark:text-gray-600" />
+                    <Library className="w-12 h-12 text-gray-300 mx-auto mb-3 dark:text-gray-600" />
                     <p className="text-gray-500 dark:text-gray-400">No documents found for this year.</p>
                 </div>
             ) : (
@@ -174,8 +177,18 @@ export const ArchiveView: React.FC<ArchiveViewProps> = ({ user, onUseReference }
                             </div>
                             <h3 className="font-bold text-gray-900 mb-1 truncate dark:text-gray-100">{doc.title}</h3>
                             <p className="text-xs text-blue-600 font-medium mb-1 dark:text-blue-400">{doc.type}</p>
-                            <p className="text-xs text-gray-500 mb-4 flex items-center gap-1 dark:text-gray-400">
-                                <span className="font-semibold">By:</span> {doc.author}
+                             <p className="text-xs text-gray-500 mb-4 flex items-center gap-2 dark:text-gray-400">
+                                <span className="font-semibold text-gray-400">By:</span>
+                                <div className="flex items-center gap-1.5">
+                                    {doc.author_avatar ? (
+                                        <img src={doc.author_avatar} className="w-5 h-5 rounded-full object-cover" alt="" />
+                                    ) : (
+                                        <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center text-[10px] text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                            {(doc.author_name || 'S').charAt(0)}
+                                        </div>
+                                    )}
+                                    <span className="font-medium text-gray-700 dark:text-gray-200">{doc.author_name}</span>
+                                </div>
                             </p>
 
                             <button

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import {
   Save, Download, Printer, Mic, MicOff, Maximize2, Minimize2, CheckCircle, AlertCircle,
-  Database, Search, X, Loader, Tag, Plus
+  BookOpen, Search, X, Loader, Tag, Plus
 } from 'lucide-react';
 import { useNotification } from './NotificationProvider';
 import { SuperDocEditor } from '@superdoc-dev/react';
@@ -597,7 +597,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             </button>
           )}
           <button onClick={handleExportDOCX} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium">
-            <Download className="w-4 h-4" /> <span>DOCX</span>
+            <Download className="w-4 h-4" /> <span>Download</span>
           </button>
           {!readOnly && (
             <>
@@ -606,7 +606,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                   onClick={() => setIsPriceListOpen(true)}
                   className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition flex items-center gap-2 text-sm font-medium"
                 >
-                  <Database className="w-4 h-4" /> <span>Show Price List</span>
+                  <BookOpen className="w-4 h-4" /> <span>Show Price List</span>
                 </button>
               )}
 
@@ -699,7 +699,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between bg-white dark:bg-gray-800">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
-                  <Database className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                  <BookOpen className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">NEMSify Price List</h2>
@@ -921,7 +921,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                     </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-20 opacity-40">
-                      <Database className="w-16 h-16 text-gray-300 mb-4" />
+                      <BookOpen className="w-16 h-16 text-gray-300 mb-4" />
                       <p className="text-gray-500 font-medium">No items found matching "{searchQuery}"</p>
                     </div>
                   )}
@@ -1021,7 +1021,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                   <button
                     disabled={(selectedItemIds.size > 0 && Object.values(itemQuantities).every(q => (q as number) <= 0)) && manualEntries.length === 0}
                     onClick={handleInsertPriceTable}
-                    className="px-8 py-2.5 bg-green-600 text-white rounded-xl font-bold text-sm hover:bg-green-700 active:scale-95 transition-all shadow-lg shadow-green-200 dark:shadow-green-950/20 flex items-center gap-2"
+                    className="px-8 py-2.5 bg-indigo-600 text-white rounded-xl font-bold text-sm hover:bg-indigo-700 active:scale-95 transition-all shadow-lg shadow-indigo-200 dark:shadow-indigo-950/20 flex items-center gap-2"
                   >
                     <CheckCircle className="w-4 h-4" /> Insert Table
                   </button>

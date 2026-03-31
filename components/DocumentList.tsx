@@ -35,7 +35,10 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
             try {
                 const { data, error } = await supabase
                     .from('documents')
-                    .select('*')
+                    .select(`
+                        *,
+                        profiles:user_id (full_name, avatar_url)
+                    `)
                     // Fetch own docs OR docs shared with department
                     .or(`user_id.eq.${user.id},and(visibility.eq.department,department.eq.${user.department})`)
                     .neq('status', 'Archived') // Exclude archived documents
@@ -56,6 +59,8 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                     visibility: d.visibility,
                     department: d.department,
                     user_id: d.user_id,
+                    author_name: d.profiles?.full_name,
+                    author_avatar: d.profiles?.avatar_url,
                     template_index: d.template_index,
                     templateUrl: d.templateUrl
                 }));
@@ -241,6 +246,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                                         Document Name
                                     </th>
                                     <th className="px-6 py-4 whitespace-nowrap">Type</th>
+                                    <th className="px-6 py-4 whitespace-nowrap">Author</th>
                                     <th className="px-6 py-4 whitespace-nowrap">Last Modified</th>
                                     <th className="px-6 py-4 whitespace-nowrap">Status</th>
                                     <th className="px-6 py-4 whitespace-nowrap">Actions</th>
@@ -270,6 +276,18 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             {doc.type}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 font-medium">
+                                            <div className="flex items-center gap-2">
+                                                {doc.author_avatar ? (
+                                                    <img src={doc.author_avatar} className="w-6 h-6 rounded-full object-cover" alt="" />
+                                                ) : (
+                                                    <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                                        {(doc.author_name || 'S').charAt(0)}
+                                                    </div>
+                                                )}
+                                                <span>{doc.author_name || 'System'}</span>
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             <div className="flex items-center gap-1">

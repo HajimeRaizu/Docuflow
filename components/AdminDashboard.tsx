@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Users, FileText, Folder, Activity, Plus, Database, History, X, Settings, CheckCircle, ChevronRight, Bell, Search, Edit2, Trash2, Mail, Shield, Upload, File, AlertCircle, Info } from 'lucide-react';
+import { Users, FileText, Folder, Activity, Plus, Library, History, X, Settings, CheckCircle, ChevronRight, Bell, Search, Edit2, Trash2, Mail, Shield, Upload, File, AlertCircle, Info } from 'lucide-react';
 import { useNotification } from './NotificationProvider';
 import { supabase } from '../services/supabaseClient';
 import { parseFile } from '../services/fileUtils';
@@ -158,14 +158,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
   const recentActivities = [
     { action: 'Template Created', detail: 'Letter Format v2', user: 'Admin System', time: '2h ago', icon: FileText, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-100 dark:bg-blue-900/40' },
     { action: 'Document Generated', detail: 'Activity Proposal - CITE Days', user: 'Secretary', time: '3h ago', icon: Activity, color: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-100 dark:bg-sky-900/40' },
-    { action: 'Dataset Updated', detail: 'Student Handbook 2024', user: 'Admin System', time: '1d ago', icon: Database, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-100 dark:bg-indigo-900/40' },
+    { action: 'Dataset Updated', detail: 'Student Handbook 2024', user: 'Admin System', time: '1d ago', icon: Library, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-100 dark:bg-indigo-900/40' },
     { action: 'New User', detail: 'Registered: Student Council', user: 'System', time: '1d ago', icon: Users, color: 'text-cyan-600 dark:text-cyan-400', bg: 'bg-cyan-100 dark:bg-cyan-900/40' },
   ];
 
   const quickActions = [
     { title: 'Manage Users', desc: 'Add, remove, or edit user roles', icon: Users, action: () => setIsManageUserOpen(true), color: 'blue' },
     { title: 'Update Templates', desc: 'Modify generation templates', icon: Folder, action: () => setIsUpdateTemplateOpen(true), color: 'indigo' },
-    { title: 'Update Datasets', desc: 'Manage knowledge base', icon: Database, action: () => setIsUpdateDatasetsOpen(true), color: 'sky' },
+    { title: 'Update Datasets', desc: 'Manage knowledge base', icon: Library, action: () => setIsUpdateDatasetsOpen(true), color: 'sky' },
     { title: 'Recent Activity', desc: 'View system logs', icon: History, action: () => setIsRecentActivityOpen(true), color: 'emerald' },
   ];
 
@@ -455,7 +455,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
               <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-white dark:bg-gray-800 sticky top-0 z-10">
                 <div>
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <Database className="w-6 h-6 text-sky-600 dark:text-sky-400" /> Archive
+                    <Library className="w-6 h-6 text-sky-600 dark:text-sky-400" /> Archive
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Manage reference datasets for AI generation</p>
                 </div>

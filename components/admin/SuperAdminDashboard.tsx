@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, SpecificRole, Department, DocumentType, DocumentTypeIcon } from '../../types';
 import { supabase } from '../../services/supabaseClient';
-import { UserCheck, Users, Power, LogOut, Loader, Check, X, ShieldAlert, School, Home, Database, FileText, Plus, Trash2, Upload, AlertCircle, Settings, BarChart3, Menu } from 'lucide-react';
+import { UserCheck, Users, Power, LogOut, Loader, Check, X, ShieldAlert, School, Home, Library, BookOpen, FileText, Plus, Trash2, Upload, AlertCircle, Settings, BarChart3, Menu } from 'lucide-react';
 import { useNotification } from '../NotificationProvider';
 import { parseFile } from '../../services/fileUtils';
 import { generateDatasetContext, generateEmbedding } from '../../services/geminiService';
@@ -615,7 +615,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                             : 'bg-gray-50/50 text-gray-500 hover:bg-gray-100 dark:bg-gray-800/50 dark:text-gray-400 dark:hover:bg-gray-800'
                             }`}
                     >
-                        <Database className={`w-6 h-6 ${activeTab === 'knowledge' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
+                        <Library className={`w-6 h-6 ${activeTab === 'knowledge' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
                         <span className="font-bold text-lg">Archive</span>
                     </button>
 
@@ -692,8 +692,12 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                         pendingStaff.map(user => (
                                             <div key={user.role_id} className="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between dark:bg-gray-800 dark:border-gray-700 gap-4">
                                                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                                                    <div className="w-12 h-12 bg-blue-50 rounded-full flex-shrink-0 flex items-center justify-center text-blue-900 font-bold uppercase dark:bg-blue-900/30 dark:text-blue-400">
-                                                        {user.full_name.charAt(0)}
+                                                    <div className="w-12 h-12 bg-blue-50 rounded-full flex-shrink-0 flex items-center justify-center text-blue-900 font-bold uppercase dark:bg-blue-900/30 dark:text-blue-400 overflow-hidden">
+                                                        {user.avatar_url ? (
+                                                            <img src={user.avatar_url} className="w-full h-full object-cover" alt="" />
+                                                        ) : (
+                                                            user.full_name.charAt(0)
+                                                        )}
                                                     </div>
                                                     <div>
                                                         <h3 className="font-bold text-gray-900 dark:text-white">{user.full_name}</h3>
@@ -747,8 +751,12 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                                 )}
                                             </div>
 
-                                            <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center font-bold text-xl mb-4 dark:bg-blue-900/30 dark:text-blue-400">
-                                                {user.full_name.charAt(0)}
+                                            <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center font-bold text-xl mb-4 dark:bg-blue-900/30 dark:text-blue-400 overflow-hidden">
+                                                {user.avatar_url ? (
+                                                    <img src={user.avatar_url} className="w-full h-full object-cover" alt="" />
+                                                ) : (
+                                                    user.full_name.charAt(0)
+                                                )}
                                             </div>
                                             <h3 className="font-bold text-gray-900 text-lg dark:text-white">{user.full_name}</h3>
                                             <p className="text-gray-500 text-sm mb-1 dark:text-gray-400">{user.email}</p>
@@ -808,7 +816,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 dark:bg-gray-800 dark:border-gray-700">
                                         <div className="flex items-center justify-between mb-4">
                                             <h3 className="font-bold text-lg flex items-center gap-2 dark:text-white">
-                                                <Database className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Datasets
+                                                <Library className="w-5 h-5 text-purple-600 dark:text-purple-400" /> Datasets
                                             </h3>
                                             <button
                                                 onClick={() => openUploadModal('dataset')}
@@ -912,7 +920,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                     {uploadCategory === 'dataset' && (
                                         <div>
                                             <div className="flex items-start gap-2 bg-purple-50 p-3 rounded-lg dark:bg-purple-900/20 mb-2">
-                                                <Database className="w-4 h-4 text-purple-600 mt-0.5 dark:text-purple-400" />
+                                                <Library className="w-4 h-4 text-purple-600 mt-0.5 dark:text-purple-400" />
                                                 <p className="text-xs text-purple-800 dark:text-purple-300">
                                                     The AI will automatically analyze this document to generate a detailed description and context for better retrieval.
                                                 </p>
@@ -1043,7 +1051,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                     <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">System Maintenance</h3>
                                     <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                                         <div className="flex items-start gap-3">
-                                            <Database className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                                            <Library className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                                             <div>
                                                 <h4 className="font-medium text-blue-900 dark:text-blue-100">Price List Ingestion</h4>
                                                 <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
@@ -1063,7 +1071,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                                         htmlFor="price-list-upload"
                                                         className={`inline-flex px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2 text-sm cursor-pointer ${isImportingPriceList ? 'opacity-50 pointer-events-none' : ''}`}
                                                     >
-                                                        {isImportingPriceList ? <Loader className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                                                        {isImportingPriceList ? <Loader className="w-4 h-4 animate-spin" /> : <BookOpen className="w-4 h-4" />}
                                                         {isImportingPriceList ? "Importing..." : "Upload Price List (.xlsx)"}
                                                     </label>
                                                 </div>

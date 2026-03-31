@@ -81,6 +81,8 @@ export interface GeneratedDocument {
   visibility?: 'private' | 'department';
   school_year?: string;
   user_id?: string;
+  author_name?: string;
+  author_avatar?: string;
   template_index?: number;
   templateUrl?: string | null;
 }

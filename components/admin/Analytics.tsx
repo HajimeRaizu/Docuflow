@@ -14,7 +14,7 @@ import {
   Calendar,
   Filter,
   Search,
-  Database
+  Library
 } from 'lucide-react';
 import { DocumentType } from '../../types';
 
