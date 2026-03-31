@@ -370,11 +370,11 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     department: department,
                     document_type: uploadType,
                     template_index: uploadTemplateIndex,
-                    content: textContent, // Keep text for AI reference
+                    content: textContent,
                     file_url: publicUrl,
                     file_name: uploadFile.name,
                     updated_by: user.id
-                });
+                }, { onConflict: 'department,document_type,template_index' });
 
                 if (error) throw error;
 
@@ -412,9 +412,16 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
             setUploadContext('');
             fetchData();
 
-        } catch (err) {
-            console.error("Upload Error:", err);
-            showToast(`Failed to upload ${uploadCategory}. ${(err as Error).message}`, "error");
+        } catch (err: any) {
+            console.error("Critical Upload Error Details:", {
+                message: err.message,
+                details: err.details,
+                hint: err.hint,
+                code: err.code,
+                context: uploadCategory,
+                fullError: err
+            });
+            showToast(`Failed to upload ${uploadCategory}. ${err.message || 'Unknown error'}`, "error");
         } finally {
             setIsUploading(false);
         }
