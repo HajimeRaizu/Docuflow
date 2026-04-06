@@ -10,9 +10,6 @@ interface AuthProps {
 }
 
 export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
   const handleGoogleLogin = async () => {
@@ -33,67 +30,6 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
     }
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      // 2. Supabase Auth Login
-      const { data: { user: authUser }, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (authError) throw authError;
-
-      if (authUser) {
-        // 3. Fetch Active Role
-        const { data: roleData, error: roleError } = await supabase
-          .from('user_roles')
-          .select('*')
-          .eq('user_id', authUser.id)
-          .eq('status', 'active')
-          .maybeSingle();
-
-        if (roleError && roleError.code !== 'PGRST116') { // PGRST116 is "Row not found" which is fine here
-          console.error('Error fetching role:', roleError);
-        }
-
-        // 4. Fetch Profile
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authUser.id)
-          .single();
-
-        if (profileError && !profileData) {
-          // If profile doesn't exist yet (trigger failed?), we might need to create it or show error
-          // ideally trigger handles it.
-          console.error('Profile not found:', profileError);
-          throw new Error('User profile not found.');
-        }
-
-        const constructedUser: User = {
-          id: authUser.id,
-          email: authUser.email!,
-          full_name: profileData?.full_name || authUser.user_metadata?.full_name || 'User',
-          avatar_url: profileData?.avatar_url || authUser.user_metadata?.avatar_url,
-          // Role Data
-          role_id: roleData?.id,
-          user_type: roleData?.role as UserRole,
-          specific_role: roleData?.specific_role,
-          department: roleData?.department,
-          status: roleData?.status || 'pending',
-          permissions: roleData?.permissions
-        };
-
-        onLogin(constructedUser);
-      }
-    } catch (err: any) {
-      console.error('Login error:', err);
-      setError(err.message || 'Invalid login credentials.');
-    }
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col lg:flex-row transition-colors duration-500 overflow-hidden">
@@ -157,7 +93,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
               {
                 icon: <Lock className="w-5 h-5" />,
                 title: "Secure",
-                desc: "Allows NEMSU emails only for security",
+                desc: "Access request required for first-time login",
                 color: "bg-blue-500"
               }
             ].map((feature, i) => (
@@ -186,7 +122,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
               Welcome back
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mb-6 text-center text-sm">
-              Sign in with your university account.
+              Sign in with your email account.
             </p>
 
             {error && (
@@ -212,7 +148,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
 
             <div className="mb-4">
               <span className="text-[10px] font-black tracking-[0.2em] text-gray-400 dark:text-gray-500 uppercase">
-                NEMSU EMAILS ONLY
+                ANY VALID EMAIL ALLOWED
               </span>
             </div>
 
