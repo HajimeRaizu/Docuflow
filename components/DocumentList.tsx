@@ -364,9 +364,9 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                             </button>
                         </div>
 
-                        <div className="flex flex-1 overflow-hidden">
+                        <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
                             {/* Version List */}
-                            <div className="w-1/3 border-r border-gray-200 dark:border-gray-700 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900/30">
+                            <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900/30 max-h-[30vh] md:max-h-none">
                                 <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">Saved Versions</h4>
                                 <div className="space-y-2">
                                     {historyDoc.versions?.slice().reverse().map((version) => (
@@ -380,7 +380,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                                         >
                                             <div className="flex justify-between items-center">
                                                 <span className="font-bold text-sm text-gray-800 dark:text-gray-200">{version.versionNumber === 1 ? "Original Version" : `Version ${version.versionNumber}`}</span>
-                                                {previewVersion?.id === version.id && <ChevronRight className="w-4 h-4 text-blue-500" />}
+                                                {previewVersion?.id === version.id && <ChevronRight className="w-4 h-4 text-blue-500 hidden md:block" />}
                                             </div>
                                             <span className="text-xs text-gray-500 flex flex-col gap-0.5">
                                                 <span className="flex items-center gap-1">
@@ -398,7 +398,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                             </div>
 
                             {/* Preview Area */}
-                            <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-y-auto p-8">
+                            <div className="flex-1 bg-gray-100 dark:bg-gray-900 overflow-y-auto p-4 md:p-8">
                                 {previewVersion ? (
                                     <div className="max-w-[210mm] mx-auto bg-white text-black shadow-lg p-[20mm] min-h-full">
                                         <div className="mb-4 pb-2 border-b border-gray-200 text-xs text-gray-400 uppercase tracking-widest text-center">

@@ -148,17 +148,21 @@ class GeminiService {
         STRUCTURAL MANDATES:
         - **Font Styling**: You MUST use Arial 12 for ALL text.
           - Apply this using <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr> within text runs.
-        - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY", "SIGNATORIES"). Use bold text in a standard paragraph and MUST NOT be bulleted or numbered or lettered (<w:rPr><w:b/></w:rPr>).
+        - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY"). Use bold text in a standard paragraph and MUST NOT be bulleted or numbered or lettered (<w:rPr><w:b/></w:rPr>).
         - **Numbering**: For numbered or lettered lists beneath a header (e.g., specific objectives), ALWAYS ensure the numbering or lettering resets to 1 or A for each new section/heading. Do NOT continue numbering from a previous list.
         - **Signatories**: You MUST append a "Signatories" section at the bottom.
           - Use the "signatories" array from the formData if provided. Each signatory has a 'name' and 'position'.
-          - Format this using OOXML tables (<w:tbl>) with invisible borders (<w:tcBorders> with val="nil" inside <w:tblBorders>) to ensure proper alignment.
-          - Arrange them professionally: 2 or 3 per row if there are many, or spaced out horizontally if few.
-          - Labels like "Prepared by", "Noted by", etc., should be used appropriately based on the number and order of signatories if not explicitly provided, but primarily use the Names and Positions given.
-          - Do NOT list them in a single vertical column; mimic the wide layout of official documents.
+          - DO NOT USE TABLES (<w:tbl>) for signatories.
+          - Format them as simple, left-aligned paragraphs (<w:p>).
+          - For each signatory, output the name on one line and the position on the line immediately below it.
+          - Add a blank line (<w:p><w:r><w:t/></w:r></w:p>) between different signatories.
+          - This applies to ALL document types.
+          - just list down the signatories do not include a "Signatories:" header.
+
         - **Budget Table**: When creating a table for budgetary requirements:
           - The text for the overall total MUST be "Total Estimated Expenses" (do NOT use "GRAND TOTAL", "Grand Total", etc.).
           - The "Total Estimated Expenses" label MUST NOT be right-aligned. Keep it left-aligned or default (do NOT use <w:jc w:val="right"/> for this specific label).
+        - 
         `;
 
         let searchContext = "";
@@ -203,19 +207,36 @@ class GeminiService {
                 `;
                 break;
             case DocumentType.OFFICIAL_LETTER:
-                searchContext = `Official Letter regarding ${formData.subject || 'General Topic'}`;
+                searchContext = `Official Letter regarding ${formData.details.substring(0, 50)}`;
                 prompt = `Write the BODY of a formal official letter.
                 DO NOT include the University Header, Logo, or Address at the top.
                 
+                Date to use: ${formData.date || 'Current Date'}
                 From: ${formData.senderName} (${formData.senderPosition})
                 To: ${formData.recipientName}
-                ${formData.thru ? `Thru: ${formData.thru}` : ''}
-                ${formData.subject ? `Subject: ${formData.subject}` : ''}
+                Recipient Position: ${formData.recipientPosition}
+                Recipient Institution: ${formData.recipientInstitution}
+                Recipient Address: ${formData.recipientAddress}
+                ${formData.showThru && formData.thruPerson ? `Thru: ${formData.thruPerson} (${formData.thruPosition})` : ''}
+                
+                ${formData.showSubject ? 'You MUST generate a professional SUBJECT line based on the details provided.' : 'DO NOT include a SUBJECT line.'}
+                
                 Details: ${formData.details}
                 Signatories: ${JSON.stringify(formData.signatories)}
                 
-                Return pure OOXML format. DO NOT include any date in the generated document. Start with the Recipient Block, then the Thru block (if provided), then the Subject line (if provided), then the Salutation. End with the Signatories section as defined in basic instructions. Use proper <w:p> for paragraphs.`;
+                STRICT FORMATTING RULES FOR OFFICIAL LETTER:
+                1. DO NOT use any indentations (<w:ind>) for paragraphs. Every line must be left-aligned.
+                2. Start with the Date.
+                3. Follow with the Recipient Block (Name, Position, Institution, Address).
+                4. Follow with the Thru block (if provided and showThru is true).
+                5. Follow with the Subject line (if showSubject is true, prefixed with "SUBJECT: ").
+                6. Follow with the Salutation (e.g., "Dear Sir/Madam:").
+                7. End with the Signatories section as defined in basic instructions.
+
+                
+                Return pure OOXML format. Use proper <w:p> for paragraphs.`;
                 break;
+
             case DocumentType.CONSTITUTION:
                 searchContext = `Constitution and By-Laws for ${formData.topic || formData.orgName || 'Organization'}`;
                 prompt = `You are tasked with drafting or updating a CONSTITUTION & BY-LAWS document.
@@ -293,7 +314,8 @@ class GeminiService {
                 const generatedText = response.text || response.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
                 // Clean and enforce rules on the generated text
-                const cleanedText = this.enforceOOXMLRules(generatedText);
+                const cleanedText = this.enforceOOXMLRules(generatedText, type);
+
 
                 return {
                     content: cleanedText,
@@ -306,7 +328,8 @@ class GeminiService {
         });
     }
 
-    private enforceOOXMLRules(content: string): string {
+    private enforceOOXMLRules(content: string, type?: DocumentType): string {
+
         if (!content) return content;
 
         // 1 & 3: Strip markdown blocks and HTML wrappers
@@ -329,7 +352,7 @@ class GeminiService {
             const textContent = textMatch ? textMatch.map(t => t.replace(/<[^>]*>/g, '')).join('').trim() : '';
 
             const isAllUppercase = textContent && textContent === textContent.toUpperCase() && textContent.length > 3 && textContent.length < 100;
-            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "SIGNATORIES", "RATIONALE", "BUDGET"].some(h => textContent.toUpperCase().includes(h));
+            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "RATIONALE", "BUDGET"].some(h => textContent.toUpperCase().includes(h));
             const isHeader = isAllUppercase || isKnownHeader;
 
             if (isHeader) {
@@ -379,19 +402,15 @@ class GeminiService {
             return pMatch;
         });
 
-        // 5. Enforce Budget Table rules
-        cleaned = cleaned.replace(/GRAND\s*TOTAL/gi, 'Total Estimated Expenses');
-
-        // Ensure "Total Estimated Expenses" is left-aligned in table cells
-        cleaned = cleaned.replace(/<w:tc(?:\s[^>]*>|>)[\s\S]*?<\/w:tc>/g, (tcMatch) => {
-            if (tcMatch.includes('Total Estimated Expenses')) {
-                return tcMatch.replace(/<w:jc\s+w:val="[^"]*"[^>]*\/>/g, '<w:jc w:val="left"/>');
-            }
-            return tcMatch;
-        });
+        // 6. Remove indentations for Official Letter if detected
+        if (type === DocumentType.OFFICIAL_LETTER) {
+            cleaned = cleaned.replace(/<w:ind[^>]*\/>/g, '');
+        }
 
         return cleaned;
     }
+
+
 
     public async generateDatasetContext(content: string): Promise<string> {
         return this.withRetry(async () => {
@@ -567,12 +586,14 @@ const officialLetterTool: FunctionDeclaration = {
         properties: {
             gatheredData: {
                 type: Type.OBJECT,
-                description: 'A JSON object with keys: "senderName", "senderPosition", "recipientName", "thru", "subject", "details", "signatories" (array of {name, position}).',
+                description: 'A JSON object with keys: "senderName", "senderPosition", "recipientName", "recipientPosition", "recipientInstitution", "recipientAddress", "thruPerson", "thruPosition", "date", "details", "signatories" (array of {name, position}), "showSubject" (boolean), "showThru" (boolean).',
             },
         },
         required: ['gatheredData'],
     },
 };
+
+
 
 const constitutionTool: FunctionDeclaration = {
     name: 'submit_constitution',
@@ -728,13 +749,16 @@ ${tmplData[0].content}
         } else if (this.documentType === DocumentType.OFFICIAL_LETTER) {
             requiredFields = `
 1. From (Sender Name and Position)
-2. To (Recipient Name and Position)
-3. Thru (Optional - who else should see this first?)
-4. Subject
-5. Key details to include in the body
-6. Signatories (Names and Positions of people who will sign the letter)`;
-            expectedKeys = `JSON keys to use: "senderName", "senderPosition", "recipientName", "thru", "subject", "details", "signatories" (array of {name, position})`;
+2. To (Recipient Name, Position, Institution, Address)
+3. Thru (Optional - Person and Position. Set showThru=true if the user wants to include this)
+4. Subject (Optional - Set showSubject=true if the user wants the AI to generate a subject line)
+5. Date (When the letter is being sent)
+6. Key details to include in the body
+7. Signatories (Names and Positions of people who will sign the letter)`;
+            expectedKeys = `JSON keys to use: "senderName", "senderPosition", "recipientName", "recipientPosition", "recipientInstitution", "recipientAddress", "thruPerson", "thruPosition", "date", "details", "signatories" (array of {name, position}), "showSubject" (boolean), "showThru" (boolean)`;
         } else if (this.documentType === DocumentType.CONSTITUTION) {
+
+
             requiredFields = `
 1. Detailed Instructions (What additions or specific rules should be added to the constitution?)
 2. Signatories (Names and Positions of people who will sign)`;
@@ -778,9 +802,9 @@ You are a conversational data gatherer. Your job is to extract the following inf
 ${requiredFields}
 
 CRITICAL INITIALIZATION: YOU MUST SPEAK FIRST. 
-${this.documentType === DocumentType.CONSTITUTION 
-    ? 'Greet the user briefly and then ask exactly: "Do you have any specific instructions in mind?"' 
-    : `Greet the user and identify the document they are trying to create.`}
+${this.documentType === DocumentType.CONSTITUTION
+                ? 'Greet the user briefly and then ask exactly: "Do you have any specific instructions in mind?"'
+                : `Greet the user and identify the document they are trying to create.`}
 
 Once you have gathered all details, say "Great, I have all the details. Generating your document now." and IMMEDIATELY call the '${selectedTool.name}' tool.
 

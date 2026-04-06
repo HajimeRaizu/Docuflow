@@ -4,7 +4,7 @@ import { DocumentType, GeneratedDocument, DocumentVersion, User, DocumentTypePer
 import { ConfirmModal } from './ConfirmModal';
 import { generateDocument, LiveSession, generateDocumentTitle, estimateBudget } from '../services/geminiService';
 import { supabase } from '../services/supabaseClient';
-import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical, Eye, CheckCircle, Info, AlertTriangle, Plus, Trash2, UserPlus, ChevronDown } from 'lucide-react';
+import { Bot, ArrowLeft, FormInput, Mic, PhoneOff, GripVertical, Eye, CheckCircle, Info, AlertTriangle, Plus, Trash2, UserPlus, ChevronDown, X } from 'lucide-react';
 import { useNotification } from './NotificationProvider';
 import { RichTextEditor } from './RichTextEditor';
 import * as THREE from 'three';
@@ -186,6 +186,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   const [sidebarWidth, setSidebarWidth] = useState(320);
   const [isResizing, setIsResizing] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isMobileOverlayOpen, setIsMobileOverlayOpen] = useState(!initialDoc);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -194,6 +195,17 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
     window.addEventListener('resize', checkDesktop);
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
+
+  // Lock body scroll when mobile overlay is open
+  useEffect(() => {
+    if (isMobileOverlayOpen && !isDesktop) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+  }, [isMobileOverlayOpen, isDesktop]);
 
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
@@ -231,10 +243,16 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
 
   const [formData, setFormData] = useState({
     orgName: '', title: '', venue: 'North Eastern Mindanao State University – Tandag, Main Campus', date: '', proponent: user.full_name, budget: '', source: 'STF', objectives: '',
-    senderName: user.full_name, senderPosition: user.specific_role || '', recipientName: '', thru: '', subject: '', details: '', resNum: '', topic: '', whereas: '', resolved: '',
+    senderName: user.full_name, senderPosition: user.specific_role || '',
+    recipientName: '', recipientPosition: '',
+    recipientInstitution: 'North Eastern Mindanao State University - Main Campus',
+    recipientAddress: 'Tandag City, Surigao del Sur',
+    thruPerson: '', thruPosition: '',
+    subject: '', details: '', resNum: '', topic: '', whereas: '', resolved: '',
     detailedInstructions: '',
     signatories: [{ name: user.full_name, position: user.specific_role || '' }]
   });
+
 
   const [showThru, setShowThru] = useState(false);
   const [showSubject, setShowSubject] = useState(false);
@@ -417,7 +435,8 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   const handleGenerate = async (overrideData?: Record<string, string>) => {
     setLoading(true);
     setLoadingMessage('Drafting your document...');
-    const dataToUse = overrideData || formData;
+    const dataToUse = { ...(overrideData || formData), showSubject, showThru };
+
     try {
       const { content, referenceMaterial } = await generateDocument(docType, dataToUse, user?.department);
 
@@ -584,21 +603,21 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   };
 
   return (
-    <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row gap-4 lg:gap-0 overflow-hidden">
+    <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row gap-0 overflow-hidden relative">
       <div
         ref={sidebarRef}
-        className="flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col h-[40vh] lg:h-full transition-all duration-300 ease-in-out"
-        style={{ width: isDesktop ? sidebarWidth : '100%', marginBottom: isDesktop ? 0 : '1rem' }}
+        className={`${isMobileOverlayOpen ? 'fixed inset-4 z-50 flex' : 'hidden lg:flex'} lg:relative flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-2xl lg:shadow-lg border border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 ease-in-out overflow-hidden`}
+        style={isDesktop ? { width: sidebarWidth } : { height: 'calc(100dvh - 2rem)', maxHeight: 'calc(100dvh - 2rem)' }}
       >
-        <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4">
+        <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4 relative">
           <div className="flex items-center gap-3">
-            <button onClick={onBack} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition">
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <h2 className="text-xl font-bold">
+            <h2 className="text-xl font-bold flex-1 truncate">
               Generator
               {!canEdit && <span className="ml-2 text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full border border-gray-300 font-normal">View Only</span>}
             </h2>
+            <button className="lg:hidden p-2 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300" onClick={() => setIsMobileOverlayOpen(false)}>
+              <X className="w-5 h-5" />
+            </button>
           </div>
           {canEdit && (
             <div className="bg-gray-100 dark:bg-gray-700 p-1 rounded-lg flex">
@@ -779,7 +798,16 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                 <>
                   <input name="senderName" value={formData.senderName} placeholder="Your Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
                   <input name="senderPosition" value={formData.senderPosition} placeholder="Your Position" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
-                  <input name="recipientName" value={formData.recipientName} placeholder="Recipient Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+
+                  <div className="space-y-3 p-4 bg-blue-50/20 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30">
+                    <p className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">Recipient Details</p>
+                    <input name="recipientName" value={formData.recipientName} placeholder="Recipient Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                    <input name="recipientPosition" value={formData.recipientPosition} placeholder="Recipient Position" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                    <input name="recipientInstitution" value={formData.recipientInstitution} placeholder="Institution" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                    <input name="recipientAddress" value={formData.recipientAddress} placeholder="Address" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                    <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
+                  </div>
+
 
                   <div className="flex flex-col gap-2 p-3 bg-gray-50 dark:bg-gray-700/30 rounded-lg border border-gray-100 dark:border-gray-700">
                     <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Optional Sections</p>
@@ -805,25 +833,39 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                     </div>
                   </div>
 
+
+
                   {showThru && (
-                    <input
-                      name="thru"
-                      value={formData.thru}
-                      placeholder="Thru (e.g. The Campus Director)"
-                      onChange={handleChange}
-                      className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-top-1"
-                    />
+                    <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
+                      <input
+                        name="thruPerson"
+                        value={formData.thruPerson}
+                        placeholder="Thru Person (e.g. Dr. Juan Cruz)"
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <input
+                        name="thruPosition"
+                        value={formData.thruPosition}
+                        placeholder="Thru Position (e.g. The Campus Director)"
+                        onChange={handleChange}
+                        className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+                      />
+                    </div>
                   )}
 
                   {showSubject && (
-                    <input
-                      name="subject"
-                      value={formData.subject}
-                      placeholder="Subject"
-                      onChange={handleChange}
-                      className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 animate-in fade-in slide-in-from-top-1"
-                    />
+                    <div className="p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-900/20 animate-in fade-in slide-in-from-top-1">
+                      <p className="text-[10px] font-bold text-blue-500 uppercase flex items-center gap-1 mb-1">
+                        <Bot className="w-3 h-3" /> Auto-Generated Subject
+                      </p>
+                      <p className="text-xs text-blue-700 dark:text-blue-300 italic">
+                        The Subject line will be automatically generated by the AI based on your details.
+                      </p>
+                    </div>
                   )}
+
+
 
                   <textarea name="details" value={formData.details} placeholder="Details..." onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-32" />
 
@@ -952,7 +994,19 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
         <GripVertical className="w-4 h-4" />
       </div>
 
-      <div className="flex-1 h-[60vh] lg:h-full flex flex-col min-w-0">
+      {isMobileOverlayOpen && !isDesktop && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" onClick={() => setIsMobileOverlayOpen(false)}></div>
+      )}
+
+      <div className="flex-1 h-full flex flex-col min-w-0 relative">
+        <button
+          className={`${isMobileOverlayOpen ? 'hidden' : 'flex'} lg:hidden fixed bottom-10 right-6 z-40 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-2 border-white/20 backdrop-blur-sm transition-all active:scale-90 items-center justify-center animate-in fade-in zoom-in duration-300`}
+          onClick={() => setIsMobileOverlayOpen(true)}
+          title="Open Generator"
+        >
+          <FormInput className="w-6 h-6" />
+        </button>
+
         {loading ? (
           <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center text-gray-400">
             <Bot className="w-16 h-16 mb-4 text-blue-500 animate-bounce" />

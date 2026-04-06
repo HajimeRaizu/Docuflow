@@ -589,60 +589,68 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     <div className={`flex flex-col h-full bg-gray-300 dark:bg-gray-300 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm transition-all ${isMaximized ? 'fixed inset-0 z-50' : 'relative'}`}>
 
       {/* Toolbar */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 flex items-center justify-between shadow-sm z-10">
-        <div className="flex items-center gap-1">
-          {!readOnly && (
-            <button onClick={() => handleSave()} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium">
-              <Save className="w-4 h-4" /> <span>Save</span>
-            </button>
-          )}
-          <button onClick={handleExportDOCX} className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium">
-            <Download className="w-4 h-4" /> <span>Download</span>
-          </button>
-          {!readOnly && (
-            <>
-              {documentType === DocumentType.ACTIVITY_PROPOSAL && (
-                <button
-                  onClick={() => setIsPriceListOpen(true)}
-                  className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition flex items-center gap-2 text-sm font-medium"
-                >
-                  <BookOpen className="w-4 h-4" /> <span>Show Price List</span>
-                </button>
-              )}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 md:p-3 flex flex-col md:flex-row items-center justify-between shadow-sm z-10 gap-3 md:gap-0">
+        <div className="flex flex-col w-full md:w-auto gap-2 md:flex-row md:items-center">
+          
+          {/* Row 1 on Mobile: Save + Show Price List */}
+          <div className="flex w-full md:w-auto items-center justify-between md:justify-start gap-2">
+            {!readOnly && (
+              <button onClick={() => handleSave()} className="flex-1 md:flex-none justify-center p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium border md:border-0 border-blue-100 dark:border-blue-900/30">
+                <Save className="w-4 h-4" /> <span>Save</span>
+              </button>
+            )}
+            {!readOnly && documentType === DocumentType.ACTIVITY_PROPOSAL && (
+              <button
+                onClick={() => setIsPriceListOpen(true)}
+                className="flex-1 md:flex-none justify-center p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded transition flex items-center gap-2 text-sm font-medium border md:border-0 border-indigo-100 dark:border-indigo-900/30"
+              >
+                <BookOpen className="w-4 h-4" /> <span className="truncate">Price List</span>
+              </button>
+            )}
+          </div>
 
-              {(documentType === DocumentType.ACTIVITY_PROPOSAL || documentType === DocumentType.OFFICIAL_LETTER || documentType === DocumentType.CONSTITUTION) && (
-                <>
-                  <select
-                    value={templateIndex}
-                    onChange={(e) => onTemplateChange && onTemplateChange(Number(e.target.value))}
-                    className="p-1 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
-                    title="Select Document Template"
-                  >
-                    <option value={1}>Template 1</option>
-                    <option value={2}>Template 2</option>
-                  </select>
-                  <span className="text-[11px] text-blue-400 dark:text-blue-500 italic ml-2">Please make sure to save draft before trying out other features</span>
-                </>
-              )}
-            </>
-          )}
+          {/* Row 2 on Mobile: Download + Template */}
+          <div className="flex w-full md:w-auto items-center justify-between md:justify-start gap-2">
+            <button onClick={handleExportDOCX} className="flex-1 md:flex-none justify-center p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium border md:border-0 border-blue-100 dark:border-blue-900/30">
+              <Download className="w-4 h-4" /> <span>Download</span>
+            </button>
+            
+            {!readOnly && (documentType === DocumentType.ACTIVITY_PROPOSAL || documentType === DocumentType.OFFICIAL_LETTER || documentType === DocumentType.CONSTITUTION) && (
+              <div className="flex-1 md:flex-none">
+                <select
+                  value={templateIndex}
+                  onChange={(e) => onTemplateChange && onTemplateChange(Number(e.target.value))}
+                  className="w-full md:w-auto p-1.5 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
+                  title="Select Document Template"
+                >
+                  <option value={1}>Template 1</option>
+                  <option value={2}>Template 2</option>
+                </select>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {onToggleVoice && !readOnly && (
+        <div className="flex items-center justify-between md:justify-end gap-2 w-full md:w-auto border-t md:border-0 border-gray-100 dark:border-gray-700 pt-2 md:pt-0">
+          <span className="text-[11px] text-blue-400 dark:text-blue-500 italic max-w-[200px] truncate hidden md:block">
+            Save draft before using features
+          </span>
+          <div className="flex items-center gap-2 ml-auto">
+            {onToggleVoice && !readOnly && (
+              <button
+                onClick={onToggleVoice}
+                className={`p-2 rounded-lg transition ${isVoiceActive ? 'bg-red-500 text-white animate-pulse' : 'bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400'}`}
+              >
+                {isVoiceActive ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+            )}
             <button
-              onClick={onToggleVoice}
-              className={`p-2 rounded-lg transition ${isVoiceActive ? 'bg-red-500 text-white animate-pulse' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
+              onClick={() => setIsMaximized(!isMaximized)}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition text-gray-600 dark:text-gray-300"
             >
-              {isVoiceActive ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              {isMaximized ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
             </button>
-          )}
-          <button
-            onClick={() => setIsMaximized(!isMaximized)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition text-gray-600 dark:text-gray-300"
-          >
-            {isMaximized ? <Minimize2 className="w-5 h-5" /> : <Maximize2 className="w-5 h-5" />}
-          </button>
+          </div>
         </div>
       </div>
 
