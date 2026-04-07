@@ -150,13 +150,12 @@ class GeminiService {
           - Apply this using <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr> within text runs.
         - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY"). Use bold text in a standard paragraph and MUST NOT be bulleted or numbered or lettered (<w:rPr><w:b/></w:rPr>).
         - **Numbering**: For numbered or lettered lists beneath a header (e.g., specific objectives), ALWAYS ensure the numbering or lettering resets to 1 or A for each new section/heading. Do NOT continue numbering from a previous list.
-        - **Signatories**: You MUST append a "Signatories" section at the bottom.
+        - **Signatories**: ${type === DocumentType.CONSTITUTION ? "DO NOT APPEND a signatories section for Constitution & By-Laws." : `You MUST append a "Signatories" section at the bottom.
           - Use the "signatories" array from the formData if provided. Each signatory has a 'name' and 'position'.
           - DO NOT USE TABLES (<w:tbl>) for signatories.
           - Format them as simple, left-aligned paragraphs (<w:p>).
           - For each signatory, output the name on one line and the position on the line immediately below it.
-          - Add a blank line (<w:p><w:r><w:t/></w:r></w:p>) between different signatories.
-          - This applies to ALL document types.
+          - Add a blank line (<w:p><w:r><w:t/></w:r></w:p>) between different signatories.`}
 
         - **Budget Table**: When creating a table for budgetary requirements:
           - The text for the overall total MUST be "Total Estimated Expenses" (do NOT use "GRAND TOTAL", "Grand Total", etc.).
@@ -165,23 +164,25 @@ class GeminiService {
         `;
 
         let searchContext = "";
-        // TWO-STEP RAG: Step 1 - Analyze intent to get an optimized search query
-        try {
-            const analysisPrompt = `Analyze this document request and provide a single, keyword-rich search query to find relevant reference materials in a database.
-            Document Type: ${type}
-            Details: ${JSON.stringify(formData)}
-            
-            Output ONLY the search query string. No other text.`;
+        // TWO-STEP RAG: Step 1 - Analyze intent to get an optimized search query (Skip for Constitution)
+        if (type !== DocumentType.CONSTITUTION) {
+            try {
+                const analysisPrompt = `Analyze this document request and provide a single, keyword-rich search query to find relevant reference materials in a database.
+                Document Type: ${type}
+                Details: ${JSON.stringify(formData)}
+                
+                Output ONLY the search query string. No other text.`;
 
-            const analysisResult = await ai.models.generateContent({
-                model: "gemini-2.5-flash",
-                contents: [{ role: "user", parts: [{ text: analysisPrompt }] }]
-            });
-            // @ts-ignore
-            searchContext = analysisResult.text?.trim() || analysisResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-        } catch (e) {
-            console.warn("Failed to extract search context, falling back to basic metadata.", e);
-            searchContext = `${type} ${formData.title || formData.subject || ''}`;
+                const analysisResult = await ai.models.generateContent({
+                    model: "gemini-2.5-flash",
+                    contents: [{ role: "user", parts: [{ text: analysisPrompt }] }]
+                });
+                // @ts-ignore
+                searchContext = analysisResult.text?.trim() || analysisResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+            } catch (e) {
+                console.warn("Failed to extract search context, falling back to basic metadata.", e);
+                searchContext = `${type} ${formData.title || formData.subject || ''}`;
+            }
         }
 
         let prompt = "";
@@ -237,13 +238,13 @@ class GeminiService {
                 break;
 
             case DocumentType.CONSTITUTION:
-                searchContext = `Constitution and By-Laws for ${formData.topic || formData.orgName || 'Organization'}`;
+                // No search context needed for Constitution as RAG search is bypassed
                 prompt = `You are tasked with drafting or updating a CONSTITUTION & BY-LAWS document.
                 
                 CRITICAL INSTRUCTIONS for Constitution & By-Laws:
                 1. You MUST use the provided UPLOADED TEMPLATE content exactly as the base.
                 2. If the User Instructions are empty or just say "ensure the template is ready", DO NOT change, delete, or rephrase ANY of the existing content of the template. Simply return the template content exactly as it is in pure OOXML.
-                3. You are ONLY allowed to ADD new sections or MODIFY existing ones if the user explicitly specifies what to change.
+                3. You are ONLY allowed to ADD new sections, MODIFY existing ones, or DELETE existing ones if the user explicitly specifies what to change.
                 4. Maintain the exact same formatting style as the template.
                 
                 User Instructions: ${formData.detailedInstructions || 'No specific instructions. Just ensure the template is ready for use.'}
@@ -257,16 +258,18 @@ class GeminiService {
 
         let referenceMaterial = "";
         if (userDepartment) {
-            // 1. Fetch Similar Datasets
-            const similarDatasets = await this.searchSimilarDatasets(userDepartment, searchContext, type);
-            if (similarDatasets && similarDatasets.length > 0) {
-                referenceMaterial += similarDatasets.map((d: any) => `
-                --- SIMILAR DATABASE DOCUMENT ---
-                CONTEXT: ${d.detailed_context || 'No specific context'}
-                CONTENT:
-                ${d.file_content || d.content || ''}
-                --------------------------
-                `).join('\n\n');
+            // 1. Fetch Similar Datasets (Skip for Constitution & By-Laws)
+            if (type !== DocumentType.CONSTITUTION) {
+                const similarDatasets = await this.searchSimilarDatasets(userDepartment, searchContext, type);
+                if (similarDatasets && similarDatasets.length > 0) {
+                    referenceMaterial += similarDatasets.map((d: any) => `
+                    --- SIMILAR DATABASE DOCUMENT ---
+                    CONTEXT: ${d.detailed_context || 'No specific context'}
+                    CONTENT:
+                    ${d.file_content || d.content || ''}
+                    --------------------------
+                    `).join('\n\n');
+                }
             }
 
             // 2. Fetch Blank Template Content (always include as base structural reference)
@@ -602,7 +605,7 @@ const constitutionTool: FunctionDeclaration = {
         properties: {
             gatheredData: {
                 type: Type.OBJECT,
-                description: 'A JSON object with keys: "detailedInstructions", "signatories" (array of {name, position}).',
+                description: 'A JSON object with keys: "detailedInstructions".',
             },
         },
         required: ['gatheredData'],
@@ -759,9 +762,8 @@ ${tmplData[0].content}
 
 
             requiredFields = `
-1. Detailed Instructions (What additions or specific rules should be added to the constitution?)
-2. Signatories (Names and Positions of people who will sign)`;
-            expectedKeys = `JSON keys to use: "detailedInstructions", "signatories" (array of {name, position})`;
+1. Detailed Instructions (What additions or specific rules should be added to the constitution?)`;
+            expectedKeys = `JSON keys to use: "detailedInstructions"`;
         }
 
         // Select the tool based on document type

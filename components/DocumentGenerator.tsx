@@ -606,7 +606,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
     <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row gap-0 overflow-hidden relative">
       <div
         ref={sidebarRef}
-        className={`${isMobileOverlayOpen ? 'fixed inset-4 z-50 flex' : 'hidden lg:flex'} lg:relative flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-2xl lg:shadow-lg border border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 ease-in-out overflow-hidden`}
+        className={`${isMobileOverlayOpen ? 'fixed inset-4 z-50 flex' : 'hidden lg:flex z-10'} lg:relative flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-2xl lg:shadow-lg border border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 ease-in-out overflow-hidden`}
         style={isDesktop ? { width: sidebarWidth } : { height: 'calc(100dvh - 2rem)', maxHeight: 'calc(100dvh - 2rem)' }}
       >
         <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4 relative">
@@ -663,6 +663,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                   <button onClick={() => isOwner || !initialDoc ? setVisibility('department') : null} disabled={!!initialDoc && !isOwner} className={`flex-1 py-1.5 text-sm font-bold rounded-md transition ${visibility === 'department' ? 'bg-white dark:bg-gray-600 shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>Allow Collaboration</button>
                 </div>
               </div>
+
               {docType === DocumentType.ACTIVITY_PROPOSAL && (
                 <>
                   <input name="orgName" value={formData.orgName} placeholder="Organization Name" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600" />
@@ -920,47 +921,6 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                     onChange={handleChange}
                     className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-64"
                   />
-
-                  {/* Signatories Section for Constitution */}
-                  <div className="space-y-3 p-4 bg-gray-50/50 dark:bg-gray-700/30 rounded-xl border border-gray-100 dark:border-gray-700">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-sm font-bold flex items-center gap-2">
-                        <UserPlus className="w-4 h-4 text-blue-500" /> Signatories
-                      </h4>
-                      <button
-                        onClick={addSignatory}
-                        className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded-md transition-all"
-                      >
-                        <Plus className="w-3 h-3" /> Add Signatory
-                      </button>
-                    </div>
-                    <div className="space-y-3">
-                      {formData.signatories.map((sig: any, index: number) => (
-                        <div key={index} className="flex flex-col gap-2 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-600 shadow-sm relative group/sig">
-                          <input
-                            placeholder="Name"
-                            value={sig.name}
-                            onChange={(e) => handleSignatoryChange(index, 'name', e.target.value)}
-                            className="text-sm w-full p-2 border-b dark:border-gray-600 focus:border-blue-500 outline-none bg-transparent"
-                          />
-                          <input
-                            placeholder="Position"
-                            value={sig.position}
-                            onChange={(e) => handleSignatoryChange(index, 'position', e.target.value)}
-                            className="text-sm w-full p-2 bg-transparent outline-none italic text-gray-500"
-                          />
-                          {formData.signatories.length > 1 && (
-                            <button
-                              onClick={() => removeSignatory(index)}
-                              className="absolute top-2 right-2 p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all opacity-0 group-hover/sig:opacity-100"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </>
               )}
               <button onClick={() => handleGenerate()} disabled={loading} className="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 rounded-lg font-bold hover:opacity-90 transition flex items-center justify-center gap-2 disabled:opacity-50">

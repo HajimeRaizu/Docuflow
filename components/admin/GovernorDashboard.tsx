@@ -575,7 +575,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                     <p className="text-sm text-gray-500 mb-6 dark:text-gray-400">Upload multiple reference files for AI context.</p>
 
                                     <div className="space-y-4">
-                                        {[DocumentType.ACTIVITY_PROPOSAL, DocumentType.OFFICIAL_LETTER, DocumentType.CONSTITUTION].map(type => {
+                                        {[DocumentType.ACTIVITY_PROPOSAL, DocumentType.OFFICIAL_LETTER].map(type => {
                                             const typeDatasets = datasets.filter(d => d.document_type === type);
                                             return (
                                                 <div key={type} className="border border-gray-100 dark:border-gray-700 rounded-lg p-3">
@@ -728,7 +728,9 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                 >
                                     <option value={DocumentType.ACTIVITY_PROPOSAL}>Activity Proposal</option>
                                     <option value={DocumentType.OFFICIAL_LETTER}>Official Letter</option>
-                                    <option value={DocumentType.CONSTITUTION}>Constitution & By-Laws</option>
+                                    {uploadCategory === 'template' && (
+                                        <option value={DocumentType.CONSTITUTION}>Constitution & By-Laws</option>
+                                    )}
                                 </select>
                             </div>
 
