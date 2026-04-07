@@ -606,7 +606,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
     <div className="p-2 md:p-6 max-w-[1600px] mx-auto h-[100dvh] flex flex-col lg:flex-row gap-0 overflow-hidden relative">
       <div
         ref={sidebarRef}
-        className={`${isMobileOverlayOpen ? 'fixed inset-4 z-50 flex' : 'hidden lg:flex z-10'} lg:relative flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-2xl lg:shadow-lg border border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 ease-in-out overflow-hidden`}
+        className={`${isMobileOverlayOpen && !isDesktop ? 'fixed inset-4 z-50 flex' : 'hidden lg:flex z-10'} lg:relative flex-shrink-0 bg-white dark:bg-gray-800 rounded-xl shadow-2xl lg:shadow-lg border border-gray-200 dark:border-gray-700 flex-col transition-all duration-300 ease-in-out overflow-hidden`}
         style={isDesktop ? { width: sidebarWidth } : { height: 'calc(100dvh - 2rem)', maxHeight: 'calc(100dvh - 2rem)' }}
       >
         <div className="p-4 md:p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col gap-4 relative">

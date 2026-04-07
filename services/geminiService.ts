@@ -135,6 +135,8 @@ class GeminiService {
         const ai = this.getAI();
         const aiSettings = this.getAISettings();
 
+
+
         const systemInstruction = `You are an expert academic administrator. Output Office Open XML (OOXML) format only, representing the inner content of a <w:body> tag for a Word document.
 
         CRITICAL INSTRUCTION:
@@ -318,7 +320,7 @@ class GeminiService {
                 // Clean and enforce rules on the generated text
                 const cleanedText = this.enforceOOXMLRules(generatedText, type);
 
-
+                console.log(cleanedText);
                 return {
                     content: cleanedText,
                     referenceMaterial: referenceMaterial || ""
