@@ -157,7 +157,6 @@ class GeminiService {
           - For each signatory, output the name on one line and the position on the line immediately below it.
           - Add a blank line (<w:p><w:r><w:t/></w:r></w:p>) between different signatories.
           - This applies to ALL document types.
-          - just list down the signatories do not include a "Signatories:" header.
 
         - **Budget Table**: When creating a table for budgetary requirements:
           - The text for the overall total MUST be "Total Estimated Expenses" (do NOT use "GRAND TOTAL", "Grand Total", etc.).
@@ -352,7 +351,7 @@ class GeminiService {
             const textContent = textMatch ? textMatch.map(t => t.replace(/<[^>]*>/g, '')).join('').trim() : '';
 
             const isAllUppercase = textContent && textContent === textContent.toUpperCase() && textContent.length > 3 && textContent.length < 100;
-            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "RATIONALE", "BUDGET"].some(h => textContent.toUpperCase().includes(h));
+            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "RATIONALE", "BUDGET", "SIGNATORIES"].some(h => textContent.toUpperCase().includes(h));
             const isHeader = isAllUppercase || isKnownHeader;
 
             if (isHeader) {
