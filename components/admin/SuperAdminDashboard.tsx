@@ -226,11 +226,11 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                 try {
                     const { error } = await supabase
                         .from('user_roles')
-                        .update({ status: 'rejected' })
+                        .delete()
                         .eq('id', roleId);
                     if (error) throw error;
                     fetchData();
-                    showToast("Request rejected", "info");
+                    showToast("Request rejected and application removed.", "info");
                 } catch (err) {
                     showToast("Failed to reject request", "error");
                 } finally {
