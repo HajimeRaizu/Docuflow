@@ -14,6 +14,29 @@ interface GovernorDashboardProps {
     onLogout: () => void;
 }
 
+// Role Definitions
+const USG_ROLES = [
+    'Vice President – Internal',
+    'Vice President – External',
+    'Executive Secretary',
+    'USG Treasurer',
+    'USG Auditor',
+    'Legislative Secretary',
+    'Senator',
+    'Other'
+];
+
+const STANDARD_ROLES = [
+    'Vice Governor',
+    'Secretary',
+    'Treasurer',
+    'Auditor',
+    'P.I.O',
+    'Business Manager',
+    'Sgt. at Arms',
+    'Other'
+];
+
 // Helper to get API Key for Embeddings
 const getApiKey = () => {
     // @ts-ignore
@@ -44,8 +67,11 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
     const [isAnalyzing, setIsAnalyzing] = useState(false); // New State for Context Generation
 
     // Approval Modal
+    const isUSG = user.specific_role === 'USG President';
+    const currentRoleList = isUSG ? USG_ROLES : STANDARD_ROLES;
+
     const [selectedOfficer, setSelectedOfficer] = useState<User | null>(null);
-    const [assignRole, setAssignRole] = useState<string>('Vice Governor');
+    const [assignRole, setAssignRole] = useState<string>(isUSG ? 'Vice President – Internal' : 'Vice Governor');
     const [customRole, setCustomRole] = useState('');
     const [permissions, setPermissions] = useState({
         official_letter: false,
@@ -170,8 +196,9 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
 
     const handleEditOfficer = (officer: User) => {
         setSelectedOfficer(officer);
-        if (['Vice Governor', 'Secretary', 'Treasurer', 'Auditor', 'P.I.O', 'Business Manager', 'Sgt. at Arms'].includes(officer.specific_role || '')) {
-            setAssignRole(officer.specific_role || 'Vice Governor');
+        const roleList = isUSG ? USG_ROLES : STANDARD_ROLES;
+        if (roleList.includes(officer.specific_role || '')) {
+            setAssignRole(officer.specific_role || (isUSG ? 'Vice President – Internal' : 'Vice Governor'));
             setCustomRole('');
         } else {
             setAssignRole('Other');
@@ -371,7 +398,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                     <Menu className="w-6 h-6" />
                 </button>
                 <div className="flex-1 flex justify-center mr-10">
-                        <h1 className="text-xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
+                        <h1 className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
                 </div>
             </div>
 
@@ -427,7 +454,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                 }`}
                         >
                             <Library className={`w-6 h-6 ${activeTab === 'knowledge' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
-                            <span className="font-bold text-lg">Archive</span>
+                            <span className="font-bold text-lg">Templates & Datasets</span>
                         </button>
                     )}
 
@@ -828,14 +855,9 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                     onChange={(e) => setAssignRole(e.target.value)}
                                     className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500"
                                 >
-                                    <option>Vice Governor</option>
-                                    <option>Secretary</option>
-                                    <option>Treasurer</option>
-                                    <option>Auditor</option>
-                                    <option>P.I.O</option>
-                                    <option>Business Manager</option>
-                                    <option>Sgt. at Arms</option>
-                                    <option>Other</option>
+                                    {currentRoleList.map(role => (
+                                        <option key={role} value={role}>{role}</option>
+                                    ))}
                                 </select>
                                 {assignRole === 'Other' && (
                                     <input

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, SpecificRole, Department, DocumentType, DocumentTypeIcon } from '../../types';
 import { supabase } from '../../services/supabaseClient';
-import { UserCheck, Users, Power, LogOut, Loader, Check, X, ShieldAlert, School, Home, Library, BookOpen, FileText, Plus, Trash2, Upload, AlertCircle, Settings, BarChart3, Menu } from 'lucide-react';
+import { UserCheck, Users, Power, LogOut, Loader, Check, X, ShieldAlert, School, Home, Library, BookOpen, FileText, Plus, Trash2, Upload, AlertCircle, Settings, BarChart3, Menu, ChevronDown } from 'lucide-react';
 import { useNotification } from '../NotificationProvider';
 import { parseFile } from '../../services/fileUtils';
 import { generateDatasetContext, generateEmbedding } from '../../services/geminiService';
@@ -21,7 +21,7 @@ interface SuperAdminDashboardProps {
 
 export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, onNavigate, onLogout }) => {
     const { showToast, confirm: confirmAction } = useNotification();
-    const [activeTab, setActiveTab] = useState<'requests' | 'governors' | 'knowledge' | 'settings' | 'analytics'>('analytics');
+    const [activeTab, setActiveTab] = useState<'requests' | 'active-users' | 'inactive-users' | 'knowledge' | 'settings' | 'analytics'>('analytics');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [orgName, setOrgName] = useState('');
     const [isSavingOrg, setIsSavingOrg] = useState(false);
@@ -30,6 +30,9 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
     const [activeGovernors, setActiveGovernors] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState<string | null>(null);
+    const [viewingManagedUser, setViewingManagedUser] = useState<User | null>(null);
+    const [managedStaff, setManagedStaff] = useState<User[]>([]);
+    const [loadingManagedStaff, setLoadingManagedStaff] = useState(false);
 
     // Knowledge Base State
     const [templates, setTemplates] = useState<any[]>([]);
@@ -49,20 +52,36 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [assignRole, setAssignRole] = useState<SpecificRole>('CITE Governor');
     const [assignDept, setAssignDept] = useState<Department>('CITE');
+    const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+    const [isDeptDropdownOpen, setIsDeptDropdownOpen] = useState(false);
 
     // Auto-assign department based on role
     useEffect(() => {
-        if (assignRole.includes('CITE')) setAssignDept('CITE');
+        if (assignRole === 'CITE Secretary') setAssignDept('College of Information Technology Education');
+        else if (assignRole === 'CET Secretary') setAssignDept('College of Engineering Technology');
+        else if (assignRole === 'CTE Secretary') setAssignDept('College of Teacher Education');
+        else if (assignRole === 'CAS Secretary') setAssignDept('Department of Social Sciences (DSS) Secretary');
+        else if (assignRole === 'CBM Secretary') setAssignDept('Department of Business Management (DBM) Secretary');
+        else if (assignRole.includes('CITE')) setAssignDept('CITE');
         else if (assignRole.includes('CAS')) setAssignDept('CAS');
         else if (assignRole.includes('CBM')) setAssignDept('CBM');
         else if (assignRole.includes('CTE')) setAssignDept('CTE');
         else if (assignRole.includes('CET')) setAssignDept('CET');
         else if (assignRole === 'USG President') setAssignDept('USG');
-        else if (assignRole === 'University Official') setAssignDept('System Administration');
     }, [assignRole]);
 
     useEffect(() => {
         fetchData();
+
+        // Close dropdowns on outside click
+        const handleClickOutside = (e: MouseEvent) => {
+            if (!(e.target as Element).closest('.custom-dropdown')) {
+                setIsRoleDropdownOpen(false);
+                setIsDeptDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const fetchData = async () => {
@@ -165,6 +184,38 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
         }
     };
 
+    const fetchManagedStaff = async (managedByRoleId: string) => {
+        setLoadingManagedStaff(true);
+        try {
+            const { data, error } = await supabase
+                .from('user_roles')
+                .select(`*, profiles:user_id (full_name, email, avatar_url)`)
+                .eq('managed_by_role_id', managedByRoleId)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            const mapUser = (r: any) => ({
+                id: r.user_id,
+                email: r.profiles?.email,
+                full_name: r.profiles?.full_name,
+                avatar_url: r.profiles?.avatar_url,
+                role_id: r.id,
+                user_type: r.role,
+                specific_role: r.specific_role,
+                department: r.department,
+                status: r.status
+            });
+
+            setManagedStaff(data?.map(mapUser) || []);
+        } catch (err) {
+            console.error('Error fetching managed staff:', err);
+            showToast("Failed to fetch staff details", "error");
+        } finally {
+            setLoadingManagedStaff(false);
+        }
+    };
+
     const handleReject = (roleId: string) => {
         confirmAction({
             title: "Reject Request",
@@ -182,6 +233,39 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     showToast("Request rejected", "info");
                 } catch (err) {
                     showToast("Failed to reject request", "error");
+                } finally {
+                    setActionLoading(null);
+                }
+            }
+        });
+    };
+
+    const handleToggleMemberStatus = (userId: string, currentStatus: string) => {
+        const isDisabling = currentStatus === 'active';
+        confirmAction({
+            title: isDisabling ? "Disable Member" : "Enable Member",
+            message: `Are you sure you want to ${isDisabling ? 'DISABLE' : 'ENABLE'} this staff member? ${isDisabling ? 'They will lose access to system features.' : 'They will regain access to system features.'}`,
+            variant: isDisabling ? "error" : "primary",
+            confirmLabel: isDisabling ? "Confirm Disable" : "Confirm Enable",
+            onConfirm: async () => {
+                setActionLoading(userId);
+                try {
+                    const newStatus = isDisabling ? 'disabled' : 'active';
+                    const { error } = await supabase
+                        .from('user_roles')
+                        .update({ status: newStatus })
+                        .eq('id', userId);
+
+                    if (error) throw error;
+
+                    // Update local state for the modal
+                    setManagedStaff(prev => prev.map(staff =>
+                        staff.role_id === userId ? { ...staff, status: newStatus } : staff
+                    ));
+
+                    showToast(`Member account ${newStatus === 'active' ? 'enabled' : 'disabled'} successfully.`, "success");
+                } catch (error: any) {
+                    showToast(error.message, "error");
                 } finally {
                     setActionLoading(null);
                 }
@@ -246,6 +330,8 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
         confirmAction({
             title: "Enable User",
             message: "Are you sure you want to ENABLE this user?",
+            variant: "primary",
+            confirmLabel: "Confirm Enable",
             onConfirm: async () => {
                 setActionLoading(roleId);
                 try {
@@ -561,7 +647,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     <Menu className="w-6 h-6" />
                 </button>
                 <div className="flex-1 flex justify-center mr-10">
-                        <h1 className="text-xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
                 </div>
             </div>
 
@@ -584,7 +670,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     </button>
 
                     <div className="flex items-center gap-3 flex-1 overflow-hidden">
-                        <h1 className="text-xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
+                        <h1 className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
                     </div>
                 </div>
 
@@ -616,7 +702,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                             }`}
                     >
                         <Library className={`w-6 h-6 ${activeTab === 'knowledge' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
-                        <span className="font-bold text-lg">Archive</span>
+                        <span className="font-bold text-[13px] leading-tight text-left">Templates & Datasets</span>
                     </button>
 
                     <button
@@ -627,7 +713,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                             }`}
                     >
                         <UserCheck className={`w-6 h-6 ${activeTab === 'requests' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
-                        <span className="font-bold text-lg">Staff</span>
+                        <span className="font-bold text-lg">Pending Users</span>
                         {pendingStaff.length > 0 && (
                             <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full ml-auto">
                                 {pendingStaff.length}
@@ -636,14 +722,25 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     </button>
 
                     <button
-                        onClick={() => { setActiveTab('governors'); setIsSidebarOpen(false); }}
-                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 group ${activeTab === 'governors'
+                        onClick={() => { setActiveTab('active-users'); setIsSidebarOpen(false); }}
+                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 group ${activeTab === 'active-users'
                             ? 'bg-blue-50 text-blue-600 shadow-sm'
                             : 'bg-gray-50/50 text-gray-500 hover:bg-gray-100 dark:bg-gray-800/50 dark:text-gray-400 dark:hover:bg-gray-800'
                             }`}
                     >
-                        <Users className={`w-6 h-6 ${activeTab === 'governors' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
-                        <span className="font-bold text-lg">Governors</span>
+                        <Users className={`w-6 h-6 ${activeTab === 'active-users' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
+                        <span className="font-bold text-lg">Active Users</span>
+                    </button>
+
+                    <button
+                        onClick={() => { setActiveTab('inactive-users'); setIsSidebarOpen(false); }}
+                        className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 group ${activeTab === 'inactive-users'
+                            ? 'bg-blue-50 text-blue-600 shadow-sm'
+                            : 'bg-gray-50/50 text-gray-500 hover:bg-gray-100 dark:bg-gray-800/50 dark:text-gray-400 dark:hover:bg-gray-800'
+                            }`}
+                    >
+                        <Power className={`w-6 h-6 ${activeTab === 'inactive-users' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600'} transition-colors`} />
+                        <span className="font-bold text-lg">Inactive Users</span>
                     </button>
 
                     <button
@@ -726,51 +823,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                 </div>
                             )}
 
-                            {/* Governors Tab */}
-                            {activeTab === 'governors' && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    {activeGovernors.map(user => (
-                                        <div key={user.role_id} className="bg-white p-6 rounded-xl shadow-md border border-gray-200 relative group dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center text-center">
-                                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition flex gap-2">
-                                                {user.status === 'disabled' ? (
-                                                    <button
-                                                        onClick={() => handleEnable(user.role_id!)}
-                                                        disabled={actionLoading === user.role_id}
-                                                        className="bg-green-100 text-green-600 hover:bg-green-200 p-2 rounded-lg text-xs font-bold flex items-center gap-1 dark:bg-green-900/30 dark:text-green-400"
-                                                    >
-                                                        <Power className="w-4 h-4" /> Enable
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => handleEndTerm(user.role_id!)}
-                                                        disabled={actionLoading === user.role_id}
-                                                        className="bg-red-100 text-red-600 hover:bg-red-200 p-2 rounded-lg text-xs font-bold flex items-center gap-1 dark:bg-red-900/30 dark:text-red-400"
-                                                    >
-                                                        <Power className="w-4 h-4" /> End Term
-                                                    </button>
-                                                )}
-                                            </div>
 
-                                            <div className="w-16 h-16 bg-blue-100 text-blue-900 rounded-full flex items-center justify-center font-bold text-xl mb-4 dark:bg-blue-900/30 dark:text-blue-400 overflow-hidden">
-                                                {user.avatar_url ? (
-                                                    <img src={user.avatar_url} className="w-full h-full object-cover" alt="" />
-                                                ) : (
-                                                    user.full_name.charAt(0)
-                                                )}
-                                            </div>
-                                            <h3 className="font-bold text-gray-900 text-lg dark:text-white">{user.full_name}</h3>
-                                            <p className="text-gray-500 text-sm mb-1 dark:text-gray-400">{user.email}</p>
-                                            <p className="text-blue-600 text-sm font-medium mb-4 dark:text-blue-400">{user.specific_role} • {user.department}</p>
-                                            <div className={`text-xs px-3 py-1 rounded-full border ${user.status === 'active'
-                                                ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
-                                                : 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
-                                                }`}>
-                                                {user.status === 'active' ? 'Active' : 'Disabled'}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
 
                             {/* Knowledge Database Tab */}
                             {activeTab === 'knowledge' && (
@@ -858,6 +911,78 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                                 );
                                             })}
                                         </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {(activeTab === 'active-users' || activeTab === 'inactive-users') && (
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-6 dark:text-white">
+                                        {activeTab === 'active-users' ? 'Active Administrative Users' : 'Inactive Administrative Users (Ended Term)'}
+                                    </h2>
+
+                                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+                                        {activeGovernors.filter(u => activeTab === 'active-users' ? u.status === 'active' : u.status === 'disabled').length > 0 ? (
+                                            activeGovernors.filter(u => activeTab === 'active-users' ? u.status === 'active' : u.status === 'disabled').map(gov => (
+                                                <div
+                                                    key={gov.role_id}
+                                                    className="p-4 border-b border-gray-100 flex items-center justify-between last:border-0 hover:bg-gray-50 transition dark:border-gray-700 dark:hover:bg-gray-700 cursor-pointer group"
+                                                    onClick={() => {
+                                                        setViewingManagedUser(gov);
+                                                        fetchManagedStaff(gov.role_id!);
+                                                    }}
+                                                >
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                                                            <img
+                                                                src={gov.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(gov.full_name)}&background=random`}
+                                                                className="w-full h-full rounded-full object-cover"
+                                                                alt=""
+                                                            />
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">{gov.full_name}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400">{gov.specific_role} • {gov.department}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-4">
+                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${gov.status === 'active' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'}`}>
+                                                            {gov.status === 'active' ? 'Active' : 'Term Ended'}
+                                                        </span>
+                                                        {activeTab === 'active-users' ? (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleEndTerm(gov.role_id!);
+                                                                }}
+                                                                disabled={actionLoading === gov.role_id}
+                                                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors dark:hover:bg-red-900/20"
+                                                                title="End Term"
+                                                            >
+                                                                {actionLoading === gov.role_id ? <Loader className="w-4 h-4 animate-spin" /> : <Power className="w-4 h-4" />}
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleEnable(gov.role_id!);
+                                                                }}
+                                                                disabled={actionLoading === gov.role_id}
+                                                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors dark:hover:bg-blue-900/20"
+                                                                title="Activate User"
+                                                            >
+                                                                {actionLoading === gov.role_id ? <Loader className="w-4 h-4 animate-spin" /> : <UserCheck className="w-4 h-4" />}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="p-12 text-center">
+                                                <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                                                <p className="text-gray-500 dark:text-gray-400">No {activeTab === 'active-users' ? 'active' : 'inactive'} users found.</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -979,30 +1104,87 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                 <div className="space-y-4 mb-8">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Specific Role</label>
-                                        <select
-                                            value={assignRole}
-                                            onChange={(e) => setAssignRole(e.target.value as SpecificRole)}
-                                            className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500"
-                                        >
-                                            <option value="CITE Governor">CITE Governor</option>
-                                            <option value="CAS Governor">CAS Governor</option>
-                                            <option value="CBM Governor">CBM Governor</option>
-                                            <option value="CTE Governor">CTE Governor</option>
-                                            <option value="CET Governor">CET Governor</option>
-                                            <option value="USG President">USG President</option>
-                                            <option value="University Official">University Official</option>
-                                        </select>
+                                        <div className="relative custom-dropdown">
+                                            <button
+                                                onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+                                                className="w-full flex items-center justify-between border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 bg-white"
+                                            >
+                                                <span className="truncate">{assignRole}</span>
+                                                <ChevronDown className={`w-5 h-5 transition-transform ${isRoleDropdownOpen ? 'rotate-180' : ''}`} />
+                                            </button>
+
+                                            {isRoleDropdownOpen && (
+                                                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-700 animate-in fade-in slide-in-from-top-1 duration-200">
+                                                    {[
+                                                        'CITE Governor', 'CAS Governor', 'CBM Governor', 'CTE Governor', 'CET Governor', 'USG President',
+                                                        'CITE Secretary', 'CET Secretary', 'CTE Secretary', 'CAS Secretary', 'CBM Secretary'
+                                                    ].map((role) => (
+                                                        <button
+                                                            key={role}
+                                                            onClick={() => {
+                                                                setAssignRole(role as SpecificRole);
+                                                                setIsRoleDropdownOpen(false);
+                                                            }}
+                                                            className={`w-full text-left px-4 py-2 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${assignRole === role ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-900/40 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'}`}
+                                                        >
+                                                            {role}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">Department</label>
-                                        <input
-                                            type="text"
-                                            value={assignDept}
-                                            disabled
-                                            className="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
-                                        />
-                                        <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">Department is automatically assigned based on role.</p>
+                                        {(assignRole === 'CAS Secretary' || assignRole === 'CBM Secretary') ? (
+                                            <div className="relative custom-dropdown">
+                                                <button
+                                                    onClick={() => setIsDeptDropdownOpen(!isDeptDropdownOpen)}
+                                                    className="w-full flex items-center justify-between border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-blue-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 bg-white"
+                                                >
+                                                    <span className="truncate">{assignDept}</span>
+                                                    <ChevronDown className={`w-5 h-5 transition-transform ${isDeptDropdownOpen ? 'rotate-180' : ''}`} />
+                                                </button>
+
+                                                {isDeptDropdownOpen && (
+                                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-50 max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-700 animate-in fade-in slide-in-from-top-1 duration-200">
+                                                        {(assignRole === 'CAS Secretary' ? [
+                                                            'Department of Social Sciences (DSS) Secretary',
+                                                            'Department of Languages (DOL) Secretary',
+                                                            'Department of Mathematics & Natural Sciences (DMNS) Secretary'
+                                                        ] : [
+                                                            'Department of Business Management (DBM) Secretary',
+                                                            'Department of Hospitality Management (DHM) Secretary',
+                                                            'Department of Public Administration (DPA) Secretary'
+                                                        ]).map((dept) => (
+                                                            <button
+                                                                key={dept}
+                                                                onClick={() => {
+                                                                    setAssignDept(dept as Department);
+                                                                    setIsDeptDropdownOpen(false);
+                                                                }}
+                                                                className={`w-full text-left px-4 py-2 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors ${assignDept === dept ? 'bg-blue-50 text-blue-700 font-bold dark:bg-blue-900/40 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'}`}
+                                                            >
+                                                                {dept.replace(' Secretary', '')}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <input
+                                                type="text"
+                                                value={assignDept}
+                                                disabled
+                                                className="w-full border border-gray-300 rounded-lg p-2.5 bg-gray-100 text-gray-500 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400"
+                                            />
+                                        )}
+                                        <p className="text-xs text-gray-500 mt-1 dark:text-gray-400">
+                                            {(assignRole === 'CAS Secretary' || assignRole === 'CBM Secretary')
+                                                ? "Select the specific department for this secretary."
+                                                : "Department is automatically assigned based on role."}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -1084,8 +1266,106 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                             </div>
                         </div>
                     )}
+
                 </div>
             </main>
+
+            {/* Managed Staff Modal */}
+            {viewingManagedUser && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60] animate-fade-in backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl max-w-lg w-full p-6 dark:bg-gray-800 dark:border dark:border-gray-700 shadow-2xl animate-scale-in max-h-[80vh] flex flex-col">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 bg-blue-100 rounded-lg dark:bg-blue-900/30">
+                                    <Users className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="text-xl font-bold dark:text-white">Members</h3>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Managed by {viewingManagedUser.full_name}</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setViewingManagedUser(null)} className="p-2 hover:bg-gray-100 rounded-lg dark:hover:bg-gray-700 transition">
+                                <X className="w-6 h-6 dark:text-white" />
+                            </button>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto px-1 custom-scrollbar">
+                            {loadingManagedStaff ? (
+                                <div className="py-12 flex flex-col items-center justify-center text-gray-400">
+                                    <Loader className="w-8 h-8 animate-spin mb-2" />
+                                    <p>Fetching staff members...</p>
+                                </div>
+                            ) : managedStaff.length > 0 ? (
+                                <div className="space-y-3">
+                                    {managedStaff.map(staff => (
+                                        <div key={staff.role_id} className="p-4 border border-gray-100 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-800/50 flex items-center justify-between">
+                                            <div className="flex items-center gap-4 text-left">
+                                                <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden dark:border-gray-600 shadow-sm">
+                                                    <img
+                                                        src={staff.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(staff.full_name)}&background=random`}
+                                                        className="w-full h-full object-cover"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-gray-900 dark:text-white">{staff.full_name}</p>
+                                                    <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">{staff.specific_role}</p>
+                                                    <p className="text-[10px] text-gray-400 dark:text-gray-500">{staff.email}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${staff.status === 'active' ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600'}`}>
+                                                    {staff.status}
+                                                </span>
+                                                <button
+                                                    onClick={() => handleToggleMemberStatus(staff.role_id!, staff.status!)}
+                                                    className={`p-1.5 rounded-lg transition-colors ${staff.status === 'active'
+                                                        ? 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+                                                        : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+                                                        }`}
+                                                    title={staff.status === 'active' ? 'Disable Member' : 'Enable Member'}
+                                                >
+                                                    {staff.status === 'active' ? <Power className="w-3.5 h-3.5" /> : <UserCheck className="w-3.5 h-3.5" />}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="py-12 text-center">
+                                    <Users className="w-12 h-12 text-gray-200 mx-auto mb-2" />
+                                    <p className="text-gray-500 dark:text-gray-400 text-sm italic">No staff members found under this user.</p>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-700 text-center">
+                            <button
+                                onClick={() => setViewingManagedUser(null)}
+                                className="w-full py-2.5 bg-gray-100 font-bold text-gray-700 rounded-xl hover:bg-gray-200 transition dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Global Processing Overlay */}
+            {(actionLoading || isSavingOrg || isImportingPriceList || isUploading || isAnalyzing) && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] animate-fade-in">
+                    <div className="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 dark:bg-gray-800 dark:border dark:border-gray-700 animate-scale-in">
+                        <div className="relative">
+                            <div className="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin dark:border-blue-900/50"></div>
+                            <ShieldAlert className="w-6 h-6 text-blue-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                        </div>
+                        <div className="text-center">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">Processing Request</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">Please wait while we update the system...</p>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

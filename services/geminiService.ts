@@ -127,6 +127,55 @@ class GeminiService {
         }
     }
 
+    private convertHtmlToOOXML(htmlContent: string): string {
+        // Map HTML tags to OOXML
+        let ooxml = htmlContent;
+
+        // Replace HTML paragraphs with OOXML paragraphs
+        ooxml = ooxml.replace(/<p(?:\s[^>]*)?>/gi, '<w:p><w:r><w:t>');
+        ooxml = ooxml.replace(/<\/p>/gi, '</w:t></w:r></w:p>');
+
+        // Replace HTML bold/strong with OOXML bold
+        ooxml = ooxml.replace(/<(?:strong|b)(?:\s[^>]*)?>/gi, '<w:r><w:rPr><w:b/></w:rPr><w:t>');
+        ooxml = ooxml.replace(/<\/(?:strong|b)>/gi, '</w:t></w:r>');
+
+        // Replace HTML italics/em with OOXML italics
+        ooxml = ooxml.replace(/<(?:em|i)(?:\s[^>]*)?>/gi, '<w:r><w:rPr><w:i/></w:rPr><w:t>');
+        ooxml = ooxml.replace(/<\/(?:em|i)>/gi, '</w:t></w:r>');
+
+        // Replace HTML unordered lists
+        ooxml = ooxml.replace(/<ul(?:\s[^>]*)?>/gi, '');
+        ooxml = ooxml.replace(/<\/ul>/gi, '');
+        ooxml = ooxml.replace(/<li(?:\s[^>]*)?>/gi, '<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr></w:pPr><w:r><w:t>• </w:t></w:r><w:r><w:t>');
+        ooxml = ooxml.replace(/<\/li>/gi, '</w:t></w:r></w:p>');
+
+        // Replace HTML ordered lists
+        let listCounter = 1;
+        ooxml = ooxml.replace(/<ol(?:\s[^>]*)?>/gi, () => {
+            listCounter = 1;
+            return '';
+        });
+        ooxml = ooxml.replace(/<\/ol>/gi, '');
+        ooxml = ooxml.replace(/<li(?:\s[^>]*)?>/gi, () => {
+            const currentNum = listCounter++;
+            return `<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="2"/></w:numPr></w:pPr><w:r><w:t>${currentNum}. </w:t></w:r><w:r><w:t>`;
+        });
+
+        // Add Arial font styling to all text runs
+        ooxml = ooxml.replace(/<w:r>/gi, '<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr>');
+
+        // Handle line breaks
+        ooxml = ooxml.replace(/<br\s*\/?>/gi, '</w:t></w:r></w:p><w:p><w:r><w:t>');
+
+        // Clean up empty runs
+        ooxml = ooxml.replace(/<w:r><w:rPr>[^<]*<\/w:rPr><w:t><\/w:t><\/w:r>/g, '');
+
+        // Ensure proper spacing between paragraphs
+        ooxml = ooxml.replace(/<\/w:p>\s*<w:p>/g, '</w:p><w:p>');
+
+        return ooxml;
+    }
+
     public async generateDocument(
         type: DocumentType,
         formData: Record<string, any>,
@@ -166,25 +215,23 @@ class GeminiService {
         `;
 
         let searchContext = "";
-        // TWO-STEP RAG: Step 1 - Analyze intent to get an optimized search query (Skip for Constitution)
-        if (type !== DocumentType.CONSTITUTION) {
-            try {
-                const analysisPrompt = `Analyze this document request and provide a single, keyword-rich search query to find relevant reference materials in a database.
-                Document Type: ${type}
-                Details: ${JSON.stringify(formData)}
-                
-                Output ONLY the search query string. No other text.`;
+        // TWO-STEP RAG: Step 1 - Analyze intent to get an optimized search query
+        try {
+            const analysisPrompt = `Analyze this document request and provide a single, keyword-rich search query to find relevant reference materials in a database.
+            Document Type: ${type}
+            Details: ${JSON.stringify(formData)}
+            
+            Output ONLY the search query string. No other text.`;
 
-                const analysisResult = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
-                    contents: [{ role: "user", parts: [{ text: analysisPrompt }] }]
-                });
-                // @ts-ignore
-                searchContext = analysisResult.text?.trim() || analysisResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-            } catch (e) {
-                console.warn("Failed to extract search context, falling back to basic metadata.", e);
-                searchContext = `${type} ${formData.title || formData.subject || ''}`;
-            }
+            const analysisResult = await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: [{ role: "user", parts: [{ text: analysisPrompt }] }]
+            });
+            // @ts-ignore
+            searchContext = analysisResult.text?.trim() || analysisResult.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+        } catch (e) {
+            console.warn("Failed to extract search context, falling back to basic metadata.", e);
+            searchContext = `${type} ${formData.title || formData.subject || formData.detailedInstructions || ''}`;
         }
 
         let prompt = "";
@@ -240,18 +287,16 @@ class GeminiService {
                 break;
 
             case DocumentType.CONSTITUTION:
-                // No search context needed for Constitution as RAG search is bypassed
+                searchContext = `Constitution and By-Laws for ${userDepartment || 'Organization'}`;
                 prompt = `You are tasked with drafting or updating a CONSTITUTION & BY-LAWS document.
                 
-                CRITICAL INSTRUCTIONS for Constitution & By-Laws:
-                1. You MUST use the provided UPLOADED TEMPLATE content exactly as the base.
-                2. If the User Instructions are empty or just say "ensure the template is ready", DO NOT change, delete, or rephrase ANY of the existing content of the template. Simply return the template content exactly as it is in pure OOXML.
-                3. You are ONLY allowed to ADD new sections, MODIFY existing ones, or DELETE existing ones if the user explicitly specifies what to change.
-                4. Maintain the exact same formatting style as the template.
-                
-                User Instructions: ${formData.detailedInstructions || 'No specific instructions. Just ensure the template is ready for use.'}
-                
-                Reference the REFERENCE MATERIAL if available, but the UPLOADED TEMPLATE is your primary source of truth.`;
+                IMPORTANT:
+                - Look at the REFERENCE MATERIAL provided below (especially the UPLOADED TEMPLATE).
+                - Use the UPLOADED TEMPLATE as the primary structural and formatting guide.
+                - Incorporate context and content from the SIMILAR DATABASE DOCUMENTS in the REFERENCE MATERIAL if they are relevant to the user request.
+                - User Instructions: ${formData.detailedInstructions || 'Prepare the document based on the template and any relevant references.'}
+                - Ensure all articles, sections, and provisions align with the university's standards as seen in the references.
+                `;
                 break;
             default:
                 searchContext = `${type} document details`;
@@ -260,18 +305,16 @@ class GeminiService {
 
         let referenceMaterial = "";
         if (userDepartment) {
-            // 1. Fetch Similar Datasets (Skip for Constitution & By-Laws)
-            if (type !== DocumentType.CONSTITUTION) {
-                const similarDatasets = await this.searchSimilarDatasets(userDepartment, searchContext, type);
-                if (similarDatasets && similarDatasets.length > 0) {
-                    referenceMaterial += similarDatasets.map((d: any) => `
-                    --- SIMILAR DATABASE DOCUMENT ---
-                    CONTEXT: ${d.detailed_context || 'No specific context'}
-                    CONTENT:
-                    ${d.file_content || d.content || ''}
-                    --------------------------
-                    `).join('\n\n');
-                }
+            // 1. Fetch Similar Datasets
+            const similarDatasets = await this.searchSimilarDatasets(userDepartment, searchContext, type);
+            if (similarDatasets && similarDatasets.length > 0) {
+                referenceMaterial += similarDatasets.map((d: any) => `
+                --- SIMILAR DATABASE DOCUMENT ---
+                CONTEXT: ${d.detailed_context || 'No specific context'}
+                CONTENT:
+                ${d.file_content || d.content || ''}
+                --------------------------
+                `).join('\n\n');
             }
 
             // 2. Fetch Blank Template Content (always include as base structural reference)
@@ -283,13 +326,26 @@ class GeminiService {
                 .limit(1);
 
             if (tmplData && tmplData.length > 0 && tmplData[0].content) {
+                let templateContent = tmplData[0].content;
+
+                // Detect if the content is HTML (has <p> but no <w:p>)
+                const isHtml = templateContent.includes('<p>') && !templateContent.includes('<w:p>');
+                const isOoxml = templateContent.includes('<w:p>');
+
+                if (isHtml && !isOoxml) {
+                    console.log(`Converting HTML template to OOXML for ${type}`);
+                    templateContent = this.convertHtmlToOOXML(templateContent);
+                }
+
                 referenceMaterial += `
-                --- UPLOADED TEMPLATE ---
-                CONTENT:
-                ${tmplData[0].content}
-                --------------------------
-                `;
+    --- UPLOADED TEMPLATE ---
+    CONTENT:
+    ${templateContent}
+    --------------------------
+    `;
             }
+
+            console.log(referenceMaterial);
         }
 
         const fullPrompt = `
@@ -784,39 +840,93 @@ ${tmplData[0].content}
             }
         }
 
-        const systemInstructionText = `You are the Voice Agent for NEMSify (Identity: Gemini Pulse). 
-You help academic users draft formal documents (like ${this.documentType || 'general documents'}).
+        const systemInstructionText = `You are an expert academic administrator. Output Office Open XML (OOXML) format only, representing the inner content of a <w:body> tag for a Word document.
 
-LANGUAGE CONSTRAINTS:
-- You must UNDERSTAND and ACCEPT input in Tagalog, Bisaya, and English.
-- You must ALWAYS RESPOND in English only.
+CRITICAL OUTPUT RULES:
+1. Output ONLY valid WordprocessingML (OOXML) elements (e.g., <w:p>, <w:tbl>, <w:r>, <w:t>, etc.).
+2. DO NOT include the <w:document> or root <w:body> wrapper tags.
+3. DO NOT output HTML or Markdown. DO NOT wrap in code blocks.
 
-ALREADY KNOWN INFORMATION (DO NOT ASK FOR THESE UNLESS THE USER WANTS TO CHANGE THEM):
-${knownInfoStr}
+========================================
+STRICT TEMPLATE VS RAG SEPARATION RULE
+========================================
 
-PRECISION MANDATE:
-1. DO NOT invent details.
-2. DO NOT make random decisions for the user.
-3. If a required field is not in "ALREADY KNOWN INFORMATION" and the user hasn't provided it yet, you MUST ASK.
-4. If the user provides a fact, follow it STRICTLY.
+You will receive two types of reference material:
 
-YOUR MISSION:
-You are a conversational data gatherer. Your job is to extract the following information interactively from the user, one or two questions at a time:
-${requiredFields}
+1. "UPLOADED TEMPLATE"
+2. "SIMILAR DATABASE DOCUMENTS" (RAG results)
 
-CRITICAL INITIALIZATION: YOU MUST SPEAK FIRST. 
+MANDATORY RULES:
+
+✅ TEMPLATE (HIGHEST PRIORITY — STRUCTURE SOURCE)
+- You MUST STRICTLY FOLLOW the structure of the UPLOADED TEMPLATE.
+- This includes:
+  - Section order
+  - Headers
+  - Tables (<w:tbl>)
+  - Black table borders
+  - Layout
+  - Formatting patterns
+- ALL formatting decisions MUST come ONLY from the TEMPLATE.
+
+❌ RAG DOCUMENTS (CONTENT ONLY — NEVER STRUCTURE)
+- You MUST use SIMILAR DATABASE DOCUMENTS ONLY for:
+  - Wording ideas
+  - Context
+  - Relevant details
+- You are STRICTLY FORBIDDEN from copying:
+  - Table structures
+  - Layouts
+  - Section ordering
+  - Formatting styles
+
+⚠️ HARD CONSTRAINT:
+If a conflict exists:
+- TEMPLATE structure ALWAYS wins
+- RAG content must ADAPT into the TEMPLATE structure
+
+⚠️ NEVER:
+- Copy tables from RAG
+- Copy formatting from RAG
+- Merge multiple document structures
+- Invent a new format if a TEMPLATE exists
+
+========================================
+
+STRUCTURAL MANDATES:
+
+- Font: Arial 12 ONLY
+  Apply:
+  <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr>
+
+- Headers:
+  - Bold (<w:b/>)
+  - NOT numbered or bulleted
+
+- Numbering:
+  - MUST reset per section
+
+- Signatories:
 ${this.documentType === DocumentType.CONSTITUTION
-                ? 'Greet the user briefly and then ask exactly: "Do you have any specific instructions in mind?"'
-                : `Greet the user and identify the document they are trying to create.`}
+                ? "DO NOT include signatories."
+                : `You MUST append a "Signatories" section:
+- Use formData.signatories
+- NO tables
+- Name on one line, position below
+- Add spacing between entries`}
 
-Once you have gathered all details, say "Great, I have all the details. Generating your document now." and IMMEDIATELY call the '${selectedTool.name}' tool.
+- Budget Table Rule:
+  - Use label: "Total Estimated Expenses"
+  - MUST NOT be right-aligned
 
-TOOL INSTRUCTIONS:
-Pass the gathered information into the 'gatheredData' parameter as a JSON object.
-Ensure you use the correct keys for the data to match the UI form.
-${expectedKeys}
+========================================
 
-Do NOT generate the document content yourself. Just pass the raw facts into the JSON and the main application pipeline will generate the OOXML safely.`;
+FINAL INSTRUCTION:
+- Structure = TEMPLATE ONLY
+- Content = TEMPLATE + RAG (but RAG is content-only)
+- Never let RAG affect layout
+
+`;
 
         const ai = geminiService['getAI']();
 
@@ -997,6 +1107,55 @@ Do NOT generate the document content yourself. Just pass the raw facts into the 
                 }
             }
         }
+    }
+
+    private convertHtmlToOOXML(htmlContent: string): string {
+        // Map HTML tags to OOXML
+        let ooxml = htmlContent;
+
+        // Replace HTML paragraphs with OOXML paragraphs
+        ooxml = ooxml.replace(/<p(?:\s[^>]*)?>/gi, '<w:p><w:r><w:t>');
+        ooxml = ooxml.replace(/<\/p>/gi, '</w:t></w:r></w:p>');
+
+        // Replace HTML bold/strong with OOXML bold
+        ooxml = ooxml.replace(/<(?:strong|b)(?:\s[^>]*)?>/gi, '<w:r><w:rPr><w:b/></w:rPr><w:t>');
+        ooxml = ooxml.replace(/<\/(?:strong|b)>/gi, '</w:t></w:r>');
+
+        // Replace HTML italics/em with OOXML italics
+        ooxml = ooxml.replace(/<(?:em|i)(?:\s[^>]*)?>/gi, '<w:r><w:rPr><w:i/></w:rPr><w:t>');
+        ooxml = ooxml.replace(/<\/(?:em|i)>/gi, '</w:t></w:r>');
+
+        // Replace HTML unordered lists
+        ooxml = ooxml.replace(/<ul(?:\s[^>]*)?>/gi, '');
+        ooxml = ooxml.replace(/<\/ul>/gi, '');
+        ooxml = ooxml.replace(/<li(?:\s[^>]*)?>/gi, '<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="1"/></w:numPr></w:pPr><w:r><w:t>• </w:t></w:r><w:r><w:t>');
+        ooxml = ooxml.replace(/<\/li>/gi, '</w:t></w:r></w:p>');
+
+        // Replace HTML ordered lists
+        let listCounter = 1;
+        ooxml = ooxml.replace(/<ol(?:\s[^>]*)?>/gi, () => {
+            listCounter = 1;
+            return '';
+        });
+        ooxml = ooxml.replace(/<\/ol>/gi, '');
+        ooxml = ooxml.replace(/<li(?:\s[^>]*)?>/gi, () => {
+            const currentNum = listCounter++;
+            return `<w:p><w:pPr><w:numPr><w:ilvl w:val="0"/><w:numId w:val="2"/></w:numPr></w:pPr><w:r><w:t>${currentNum}. </w:t></w:r><w:r><w:t>`;
+        });
+
+        // Add Arial font styling to all text runs
+        ooxml = ooxml.replace(/<w:r>/gi, '<w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr>');
+
+        // Handle line breaks
+        ooxml = ooxml.replace(/<br\s*\/?>/gi, '</w:t></w:r></w:p><w:p><w:r><w:t>');
+
+        // Clean up empty runs
+        ooxml = ooxml.replace(/<w:r><w:rPr>[^<]*<\/w:rPr><w:t><\/w:t><\/w:r>/g, '');
+
+        // Ensure proper spacing between paragraphs
+        ooxml = ooxml.replace(/<\/w:p>\s*<w:p>/g, '</w:p><w:p>');
+
+        return ooxml;
     }
 
     private createBlob(data: Float32Array) {

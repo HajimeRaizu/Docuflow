@@ -7,9 +7,20 @@ export enum UserRole {
 
 export type SpecificRole =
   | 'CITE Governor' | 'CAS Governor' | 'CBM Governor' | 'CTE Governor' | 'CET Governor' | 'USG President' | 'University Official'
-  | 'Vice Governor' | 'Secretary' | 'Treasurer' | 'Auditor' | 'P.I.O' | 'Business Manager' | 'Sgt. at Arms' | 'Other';
+  | 'Vice Governor' | 'Secretary' | 'Treasurer' | 'Auditor' | 'P.I.O' | 'Business Manager' | 'Sgt. at Arms' | 'Other'
+  | 'CITE Secretary' | 'CET Secretary' | 'CTE Secretary' | 'CAS Secretary' | 'CBM Secretary';
 
-export type Department = 'CITE' | 'CAS' | 'CBM' | 'CTE' | 'CET' | 'USG' | 'System Administration';
+export type Department = 
+  | 'CITE' | 'CAS' | 'CBM' | 'CTE' | 'CET' | 'USG' | 'System Administration'
+  | 'College of Information Technology Education'
+  | 'College of Engineering Technology'
+  | 'College of Teacher Education'
+  | 'Department of Social Sciences (DSS) Secretary'
+  | 'Department of Languages (DOL) Secretary'
+  | 'Department of Mathematics & Natural Sciences (DMNS) Secretary'
+  | 'Department of Business Management (DBM) Secretary'
+  | 'Department of Hospitality Management (DHM) Secretary'
+  | 'Department of Public Administration (DPA) Secretary';
 
 export interface UserPermissions {
   official_letter?: 'view' | 'edit';

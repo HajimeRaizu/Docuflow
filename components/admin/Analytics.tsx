@@ -189,19 +189,18 @@ export const Analytics: React.FC<AnalyticsProps> = ({ type, department }) => {
         .from('user_roles')
         .select(`
           *,
-          profiles(id, full_name)
-        `)
-        .eq('status', 'active');
+          profiles(id, full_name, email)
+        `);
 
       if (type === 'department' && department) {
         contribQuery = contribQuery.eq('department', department);
       }
 
-      const { data: activeRoles } = await contribQuery;
+      const { data: allRoles } = await contribQuery;
 
       // Fetch doc counts for these specific users
-      if (activeRoles && activeRoles.length > 0) {
-        const userIds = activeRoles.map(r => r.profiles.id);
+      if (allRoles && allRoles.length > 0) {
+        const userIds = allRoles.map(r => r.profiles?.id).filter(Boolean);
         const { data: userDocCounts } = await supabase
           .from('documents')
           .select('user_id')
@@ -212,10 +211,12 @@ export const Analytics: React.FC<AnalyticsProps> = ({ type, department }) => {
           countMap[d.user_id] = (countMap[d.user_id] || 0) + 1;
         });
 
-        const enrichedUsers = activeRoles.map(r => ({
+        const enrichedUsers = allRoles.map(r => ({
           ...r,
-          doc_count: countMap[r.profiles.id] || 0
-        })).sort((a, b) => b.doc_count - a.doc_count).slice(0, 5);
+          doc_count: countMap[r.profiles?.id] || 0
+        }))
+          .filter(u => u.doc_count > 0) // Only show users who actually contributed
+          .sort((a, b) => b.doc_count - a.doc_count);
 
         setContributors(enrichedUsers);
       }
@@ -395,9 +396,6 @@ export const Analytics: React.FC<AnalyticsProps> = ({ type, department }) => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               />
-            </div>
-            <div className="p-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors group">
-              <Filter className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
             </div>
           </div>
         </div>
