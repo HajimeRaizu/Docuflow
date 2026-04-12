@@ -242,7 +242,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
   const canEdit = hasTypePermission && (!initialDoc || isOwner || isSharedWithDept);
 
   const [formData, setFormData] = useState({
-    orgName: '', title: '', venue: 'North Eastern Mindanao State University – Tandag, Main Campus', date: '', proponent: user.full_name, budget: '', source: 'STF', objectives: '',
+    orgName: '', title: '', venue: 'North Eastern Mindanao State University – Tandag, Main Campus', date: new Date().toLocaleDateString('en-CA'), proponent: user.full_name, budget: '', source: 'STF', objectives: '',
     senderName: user.full_name, senderPosition: user.specific_role || '',
     recipientName: '', recipientPosition: '',
     recipientInstitution: 'North Eastern Mindanao State University - Main Campus',
@@ -750,6 +750,7 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                     </div>
                   </div>
                   <textarea name="objectives" value={formData.objectives} placeholder="Objectives" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
+                  <textarea name="detailedInstructions" value={formData.detailedInstructions} placeholder="Detailed Instructions (Optional info to guide AI generation)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
 
                   {/* Signatories Section for Activity Proposal */}
                   <div className="space-y-3 p-4 bg-gray-50/50 dark:bg-gray-700/30 rounded-xl border border-gray-100 dark:border-gray-700">
@@ -791,8 +792,6 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                       ))}
                     </div>
                   </div>
-
-                  <textarea name="detailedInstructions" value={formData.detailedInstructions} placeholder="Detailed Instructions (Optional info to guide AI generation)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
                 </>
               )}
               {docType === DocumentType.OFFICIAL_LETTER && (

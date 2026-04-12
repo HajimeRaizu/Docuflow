@@ -137,7 +137,7 @@ export const RoleSelection: React.FC<RoleSelectionProps> = ({ user, onRequestSub
                             </div>
                             <div className="text-center">
                                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">University Officials</h3>
-                                <p className="text-gray-500 dark:text-gray-400 text-sm">For administrative staff, faculty, university employees, Department Governors, and Organization Presidents.</p>
+                                <p className="text-gray-500 dark:text-gray-400 text-sm">For USG president, department governors, and department secretary</p>
                             </div>
                         </button>
                     </div>
