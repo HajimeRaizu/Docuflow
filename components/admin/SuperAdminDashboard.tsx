@@ -918,7 +918,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                             {(activeTab === 'active-users' || activeTab === 'inactive-users') && (
                                 <div>
                                     <h2 className="text-2xl font-bold text-gray-800 mb-6 dark:text-white">
-                                        {activeTab === 'active-users' ? 'Active Administrative Users' : 'Inactive Administrative Users (Ended Term)'}
+                                        {activeTab === 'active-users' ? 'Active Users' : 'Inactive Users'}
                                     </h2>
 
                                     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden dark:bg-gray-800 dark:border-gray-700">

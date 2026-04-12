@@ -37,20 +37,9 @@ class GeminiService {
         return this.ai;
     }
 
-    // Helper to get AI Configuration from LocalStorage
-    private getAISettings() {
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('nemsu_ai_settings');
-            if (saved) {
-                try {
-                    return JSON.parse(saved);
-                } catch (e) {
-                    console.error("Failed to parse AI settings", e);
-                }
-            }
-        }
-        return { tone: 'Formal', length: 'Standard' };
-    }
+    // Defaults for AI generation
+    private readonly defaultSettings = { tone: 'Formal', length: 'Standard' };
+
 
     private async withRetry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> {
         try {
@@ -182,7 +171,7 @@ class GeminiService {
         userDepartment?: string
     ): Promise<{ content: string; referenceMaterial: string }> {
         const ai = this.getAI();
-        const aiSettings = this.getAISettings();
+        const aiSettings = this.defaultSettings;
 
 
 
@@ -292,10 +281,11 @@ class GeminiService {
                 
                 IMPORTANT:
                 - Look at the REFERENCE MATERIAL provided below (especially the UPLOADED TEMPLATE).
-                - Use the UPLOADED TEMPLATE as the primary structural and formatting guide.
+                - Use the UPLOADED TEMPLATE as the primary structural, stylistic, and formatting guide.
                 - Incorporate context and content from the SIMILAR DATABASE DOCUMENTS in the REFERENCE MATERIAL if they are relevant to the user request.
                 - User Instructions: ${formData.detailedInstructions || 'Prepare the document based on the template and any relevant references.'}
                 - Ensure all articles, sections, and provisions align with the university's standards as seen in the references.
+                - The UPLOADED TEMPLATE contains the standard preamble and general structure; ensure your generation respects this hierarchy.
                 `;
                 break;
             default:
@@ -412,7 +402,7 @@ class GeminiService {
             const textContent = textMatch ? textMatch.map(t => t.replace(/<[^>]*>/g, '')).join('').trim() : '';
 
             const isAllUppercase = textContent && textContent === textContent.toUpperCase() && textContent.length > 3 && textContent.length < 100;
-            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "RATIONALE", "BUDGET", "SIGNATORIES"].some(h => textContent.toUpperCase().includes(h));
+            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "RATIONALE", "BUDGET", "SIGNATORIES", "ARTICLE", "SECTION"].some(h => textContent.toUpperCase().includes(h));
             const isHeader = isAllUppercase || isKnownHeader;
 
             if (isHeader) {

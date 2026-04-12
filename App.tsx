@@ -10,7 +10,7 @@ import { DocumentList } from './components/DocumentList';
 import { ArchiveView } from './components/dashboard/ArchiveView';
 import { Layout } from './components/Layout';
 import { User, DocumentType, UserRole } from './types';
-import { Settings, Moon, Sun, Sparkles, CheckCircle, Save, X, Loader, Clock, AlertTriangle, Shield, ChevronDown } from 'lucide-react';
+import { Settings, Moon, Sun, CheckCircle, Save, X, Loader, Clock, AlertTriangle, Shield, ChevronDown } from 'lucide-react';
 import { NotificationProvider } from './components/NotificationProvider';
 
 // ... Keep SettingsModal (omitted for brevity, assume it's there or I should include it. The user has "Settings" in the Layout. I'll include it to be safe.)
@@ -24,23 +24,11 @@ interface SettingsModalProps {
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ theme, user, onNavigate, toggleTheme, onClose }) => {
-  const [aiSettings, setAiSettings] = useState({ tone: 'Formal', length: 'Standard' });
   const [saveStatus, setSaveStatus] = useState('');
 
-  useEffect(() => {
-    const saved = localStorage.getItem('nemsify_ai_settings');
-    if (saved) {
-      try {
-        setAiSettings(JSON.parse(saved));
-      } catch (e) { }
-    }
-  }, []);
 
-  const saveAISettings = () => {
-    localStorage.setItem('nemsify_ai_settings', JSON.stringify(aiSettings));
-    setSaveStatus('Preferences Saved!');
-    setTimeout(() => setSaveStatus(''), 2000);
-  };
+
+
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
@@ -60,7 +48,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ theme, user, onNavigate, 
             </div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Settings</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 px-8 mb-8 leading-relaxed">
-              Customize your interface appearance and AI generation preferences.
+              Customize your interface appearance.
             </p>
           </div>
 
@@ -122,60 +110,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ theme, user, onNavigate, 
               </section>
             )}
 
-            {/* AI Configuration Section */}
-            <section>
-              <h3 className="text-xs font-bold uppercase text-gray-400 dark:text-gray-500 mb-3 tracking-wider flex items-center gap-2">
-                <Sparkles className="w-3 h-3" /> AI Preferences
-              </h3>
 
-              <div className="p-5 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-600 space-y-5">
-                {/* Tone Selector */}
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Tone of Voice</label>
-                  <div className="grid grid-cols-2 gap-2">
-                    {['Formal', 'Academic', 'Professional', 'Direct'].map((tone) => (
-                      <button
-                        key={tone}
-                        onClick={() => setAiSettings({ ...aiSettings, tone })}
-                        className={`px-3 py-2 rounded-lg border text-xs font-medium transition-all ${aiSettings.tone === tone
-                          ? 'bg-white dark:bg-gray-600 border-blue-500 text-blue-700 dark:text-blue-300 ring-1 ring-blue-500 shadow-sm'
-                          : 'bg-gray-100 dark:bg-gray-800 border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
-                          }`}
-                      >
-                        {tone}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Length Selector */}
-                <div>
-                  <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">Response Length</label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {['Concise', 'Standard', 'Detailed'].map((len) => (
-                      <button
-                        key={len}
-                        onClick={() => setAiSettings({ ...aiSettings, length: len })}
-                        className={`px-2 py-2 rounded-lg border text-xs font-medium transition-all ${aiSettings.length === len
-                          ? 'bg-white dark:bg-gray-600 border-blue-500 text-blue-700 dark:text-blue-300 ring-1 ring-blue-500 shadow-sm'
-                          : 'bg-gray-100 dark:bg-gray-800 border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
-                          }`}
-                      >
-                        {len}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={saveAISettings}
-                  className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-bold text-sm transition shadow-md shadow-blue-200 dark:shadow-blue-900/30 flex items-center justify-center gap-2 active:scale-95"
-                >
-                  {saveStatus ? <CheckCircle className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-                  {saveStatus || 'Save Preferences'}
-                </button>
-              </div>
-            </section>
           </div>
 
           <div className="mt-8 pt-4 border-t border-gray-100 dark:border-gray-700 text-center">
@@ -336,8 +271,13 @@ const App: React.FC = () => {
     <NotificationProvider>
       {loading ? (
         <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col items-center justify-center">
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-900 rounded-full animate-spin mb-4"></div>
-          <h2 className="text-xl font-serif italic text-blue-900 dark:text-blue-400 animate-pulse">NEMSify</h2>
+          <div className="w-24 h-24 mb-6 transition-transform animate-bounce">
+            <img src="./Nemsu_Logo.png" alt="NEMSU Logo" className="w-full h-full object-contain" />
+          </div>
+          <div className="w-16 h-1 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden mb-4">
+            <div className="w-full h-full bg-blue-600 animate-loading-bar origin-left"></div>
+          </div>
+          <h2 className="text-2xl font-serif italic text-blue-900 dark:text-blue-400 animate-pulse">NEMSify</h2>
         </div>
       ) : !user ? (
         <Auth onLogin={(u) => setUser(u)} theme={theme} toggleTheme={toggleTheme} />

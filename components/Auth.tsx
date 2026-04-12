@@ -51,10 +51,10 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
         <div className="relative z-10 max-w-2xl">
           {/* Logo Section */}
           <div className="flex items-center gap-4 mb-8 group">
-            <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/20 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 transition-transform group-hover:scale-110 duration-300">
+              <img src="./Nemsu_Logo.png" alt="NEMSU Logo" className="w-full h-full object-contain" />
             </div>
-            <h1 className="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase">
+            <h1 className="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase transition-colors group-hover:text-blue-600">
               NEMSify
             </h1>
           </div>

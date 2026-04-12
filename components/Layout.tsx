@@ -62,12 +62,14 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
 
-          <h1
-            onClick={() => handleNavigate(getHomeRoute())}
-            className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white cursor-pointer select-none truncate"
-          >
-            NEMSify
-          </h1>
+          <div className="flex items-center gap-2 md:gap-3 cursor-pointer select-none group" onClick={() => handleNavigate(getHomeRoute())}>
+            <div className="w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110 duration-300">
+              <img src="./Nemsu_Logo.png" alt="NEMSU Logo" className="w-full h-full object-contain" />
+            </div>
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white truncate">
+              NEMSify
+            </h1>
+          </div>
         </div>
 
         <div className="hidden md:flex items-center gap-8 ml-auto px-8">

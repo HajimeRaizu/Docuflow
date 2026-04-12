@@ -248,7 +248,6 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                                     <th className="px-6 py-4 whitespace-nowrap">Type</th>
                                     <th className="px-6 py-4 whitespace-nowrap">Author</th>
                                     <th className="px-6 py-4 whitespace-nowrap">Last Modified</th>
-                                    <th className="px-6 py-4 whitespace-nowrap">Status</th>
                                     <th className="px-6 py-4 whitespace-nowrap">Actions</th>
                                 </tr>
                             </thead>
@@ -293,14 +292,6 @@ export const DocumentList: React.FC<DocumentListProps> = ({ user, onNavigate, in
                                             <div className="flex items-center gap-1">
                                                 <Clock className="w-3 h-3" /> {new Date(doc.updatedAt || doc.createdAt).toLocaleDateString()}
                                             </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${doc.status === 'Final'
-                                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
-                                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                                                }`}>
-                                                {doc.status || 'Draft'}
-                                            </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             <div className="flex gap-2">
