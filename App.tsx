@@ -12,7 +12,7 @@ import { Layout } from './components/Layout';
 import { User, DocumentType, UserRole } from './types';
 import { Settings, Moon, Sun, CheckCircle, Save, X, Loader, Clock, AlertTriangle, Shield, ChevronDown } from 'lucide-react';
 import { NotificationProvider } from './components/NotificationProvider';
-import NemsuLogo from '../Nemsu_Logo.png';
+import NemsuLogo from './Nemsu_Logo.png';
 
 // ... Keep SettingsModal (omitted for brevity, assume it's there or I should include it. The user has "Settings" in the Layout. I'll include it to be safe.)
 // Actually I'll include the SettingsModal code from the previous file to ensure no regression.
