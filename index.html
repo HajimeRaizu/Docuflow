@@ -1,86 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NEMSify</title>
-    <link rel="icon" type="image/png" href="./Nemsu_Logo.png" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              nemsu: {
-                green: '#006400', // Dark Green
-                gold: '#FFD700',  // Gold
-                light: '#F3F4F6',
-              }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEMSify</title>
+  <link rel="icon" type="image/png" href="./Nemsu_Logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            nemsu: {
+              green: '#006400', // Dark Green
+              gold: '#FFD700',  // Gold
+              light: '#F3F4F6',
+            }
+          },
+          fontFamily: {
+            serif: ['"Times New Roman"', 'Times', 'serif'],
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out forwards',
+            'scale-in': 'scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'spin-slow': 'spin 3s linear infinite',
+            'zoom-in-center': 'zoomInCenter 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'restore-in': 'restoreIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'loading-bar': 'loadingBar 2s ease-in-out infinite',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
             },
-            fontFamily: {
-              serif: ['"Times New Roman"', 'Times', 'serif'],
+            scaleIn: {
+              '0%': { transform: 'scale(0.95) translateY(10px)', opacity: '0' },
+              '100%': { transform: 'scale(1) translateY(0)', opacity: '1' },
             },
-            animation: {
-              'fade-in': 'fadeIn 0.5s ease-out forwards',
-              'scale-in': 'scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'spin-slow': 'spin 3s linear infinite',
-              'zoom-in-center': 'zoomInCenter 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'restore-in': 'restoreIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'loading-bar': 'loadingBar 2s ease-in-out infinite',
+            zoomInCenter: {
+              '0%': { transform: 'scale(0.85) translateY(20px)', opacity: '0', borderRadius: '3rem' },
+              '100%': { transform: 'scale(1) translateY(0)', opacity: '1', borderRadius: '0' },
             },
-            keyframes: {
-              fadeIn: {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
-              },
-              scaleIn: {
-                '0%': { transform: 'scale(0.95) translateY(10px)', opacity: '0' },
-                '100%': { transform: 'scale(1) translateY(0)', opacity: '1' },
-              },
-              zoomInCenter: {
-                '0%': { transform: 'scale(0.85) translateY(20px)', opacity: '0', borderRadius: '3rem' },
-                '100%': { transform: 'scale(1) translateY(0)', opacity: '1', borderRadius: '0' },
-              },
-              restoreIn: {
-                '0%': { transform: 'scale(1.1)', opacity: '0' },
-                '100%': { transform: 'scale(1)', opacity: '1' },
-              },
-              loadingBar: {
-                '0%': { transform: 'scaleX(0)', opacity: '0.5' },
-                '50%': { transform: 'scaleX(0.7)', opacity: '1' },
-                '100%': { transform: 'scaleX(1)', opacity: '0' },
-              }
+            restoreIn: {
+              '0%': { transform: 'scale(1.1)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            },
+            loadingBar: {
+              '0%': { transform: 'scaleX(0)', opacity: '0.5' },
+              '50%': { transform: 'scaleX(0.7)', opacity: '1' },
+              '100%': { transform: 'scaleX(1)', opacity: '0' },
             }
           }
         }
       }
-    </script>
-    <style>
-      /* Custom scrollbar for cleaner look */
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+    }
+  </script>
+  <style>
+    /* Custom scrollbar for cleaner look */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    .typing-cursor::after {
+      content: '|';
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
       }
-      ::-webkit-scrollbar-track {
-        background: transparent; 
+
+      50% {
+        opacity: 0;
       }
-      ::-webkit-scrollbar-thumb {
-        background: #CBD5E1; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #94A3B8; 
-      }
-      .typing-cursor::after {
-        content: '|';
-        animation: blink 1s step-end infinite;
-      }
-      @keyframes blink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0; }
-      }
-    </style>
+    }
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -96,8 +109,10 @@
 }
 </script>
 </head>
-  <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
-    <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
-  </body>
+
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
+</body>
+
 </html>

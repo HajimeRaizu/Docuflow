@@ -12,6 +12,7 @@ import { Layout } from './components/Layout';
 import { User, DocumentType, UserRole } from './types';
 import { Settings, Moon, Sun, CheckCircle, Save, X, Loader, Clock, AlertTriangle, Shield, ChevronDown } from 'lucide-react';
 import { NotificationProvider } from './components/NotificationProvider';
+import NemsuLogo from '../Nemsu_Logo.png';
 
 // ... Keep SettingsModal (omitted for brevity, assume it's there or I should include it. The user has "Settings" in the Layout. I'll include it to be safe.)
 // Actually I'll include the SettingsModal code from the previous file to ensure no regression.
@@ -272,7 +273,7 @@ const App: React.FC = () => {
       {loading ? (
         <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col items-center justify-center">
           <div className="w-24 h-24 mb-6 transition-transform animate-bounce">
-            <img src="./Nemsu_Logo.png" alt="NEMSU Logo" className="w-full h-full object-contain" />
+            <img src={NemsuLogo} alt="NEMSU Logo" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-1 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden mb-4">
             <div className="w-full h-full bg-blue-600 animate-loading-bar origin-left"></div>
