@@ -13,6 +13,7 @@ import {
   Settings,
   Library
 } from 'lucide-react';
+import NemsuLogo from '../Nemsu_Logo.png';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -64,7 +65,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
 
           <div className="flex items-center gap-2 md:gap-3 cursor-pointer select-none group" onClick={() => handleNavigate(getHomeRoute())}>
             <div className="w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:scale-110 duration-300">
-              <img src="./Nemsu_Logo.png" alt="NEMSU Logo" className="w-full h-full object-contain" />
+              <img src={NemsuLogo} alt="NEMSU Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white truncate">
               NEMSify

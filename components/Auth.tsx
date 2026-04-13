@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { User, UserRole } from '../types';
 import { Eye, EyeOff, Mail, Lock, Moon, Sun, Sparkles, Shield } from 'lucide-react';
 import { supabase } from '../services/supabaseClient';
+import NemsuLogo from '../Nemsu_Logo.png';
 
 interface AuthProps {
   onLogin: (user: User) => void;
@@ -52,7 +53,7 @@ export const Auth: React.FC<AuthProps> = ({ onLogin, theme, toggleTheme }) => {
           {/* Logo Section */}
           <div className="flex items-center gap-4 mb-8 group">
             <div className="w-16 h-16 transition-transform group-hover:scale-110 duration-300">
-              <img src="./Nemsu_Logo.png" alt="NEMSU Logo" className="w-full h-full object-contain" />
+              <img src={NemsuLogo} alt="NEMSU Logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-4xl font-black tracking-tight text-gray-900 dark:text-white uppercase transition-colors group-hover:text-blue-600">
               NEMSify
