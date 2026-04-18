@@ -531,6 +531,48 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
         });
     };
 
+    const handleDeleteTemplate = (type: DocumentType, index: number) => {
+        const template = templates.find(t => t.document_type === type && t.template_index === index);
+        if (!template) return;
+
+        confirmAction({
+            title: "Remove Template",
+            message: `Are you sure you want to remove ${type} Template ${index}? This will delete the template from the system.`,
+            variant: "error",
+            confirmLabel: "Remove",
+            onConfirm: async () => {
+                try {
+                    // 1. Delete from Storage if file_url exists
+                    if (template.file_url) {
+                        try {
+                            const urlParts = template.file_url.split('/templates/');
+                            if (urlParts.length > 1 && urlParts[1]) {
+                                const filePath = decodeURIComponent(urlParts[1]);
+                                await supabase.storage.from('templates').remove([filePath]);
+                            }
+                        } catch (e) {
+                            console.warn("Could not delete template file from storage:", e);
+                        }
+                    }
+
+                    // 2. Delete from Database
+                    const { error } = await supabase
+                        .from('department_templates')
+                        .delete()
+                        .eq('id', template.id);
+
+                    if (error) throw error;
+
+                    showToast("Template removed successfully", "success");
+                    fetchData();
+                } catch (err) {
+                    console.error("Delete Template Error:", err);
+                    showToast("Failed to remove template", "error");
+                }
+            }
+        });
+    };
+
     const handleSaveSettings = async () => {
         setIsSavingOrg(true);
         try {
@@ -851,12 +893,23 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                                                                         {exists ? 'Uploaded' : 'Missing'}
                                                                     </span>
                                                                 </div>
-                                                                <button
-                                                                    onClick={() => openUploadModal('template', type, index)}
-                                                                    className="text-xs bg-white border border-gray-300 px-3 py-1.5 rounded shadow-sm hover:bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:hover:bg-gray-500"
-                                                                >
-                                                                    {exists ? 'Replace' : 'Upload'}
-                                                                </button>
+                                                                <div className="flex items-center gap-2">
+                                                                    {exists && (
+                                                                        <button
+                                                                            onClick={() => handleDeleteTemplate(type as DocumentType, index)}
+                                                                            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
+                                                                            title="Remove Template"
+                                                                        >
+                                                                            <Trash2 className="w-4 h-4" />
+                                                                        </button>
+                                                                    )}
+                                                                    <button
+                                                                        onClick={() => openUploadModal('template', type as DocumentType, index)}
+                                                                        className="text-xs bg-white border border-gray-300 px-3 py-1.5 rounded shadow-sm hover:bg-gray-50 dark:bg-gray-600 dark:border-gray-500 dark:text-white dark:hover:bg-gray-500"
+                                                                    >
+                                                                        {exists ? 'Replace' : 'Upload'}
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         );
                                                     })}
