@@ -41,12 +41,25 @@ class GeminiService {
     private readonly defaultSettings = { tone: 'Formal', length: 'Standard' };
 
 
-    private async withRetry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> {
+    private async withRetry<T>(fn: (isFallback?: boolean) => Promise<T>, retries = 3, delay = 1000): Promise<T> {
         try {
-            return await fn();
+            return await fn(false);
         } catch (error: any) {
-            if (retries > 0 && (error?.status === 429 || error?.message?.includes('429'))) {
-                console.warn(`Gemini API rate limited (429). Retrying in ${delay}ms... (${retries} attempts left)`);
+            const is503 = error?.status === 503 || error?.message?.includes('503') || error?.message?.includes('Service Unavailable');
+            const is429 = error?.status === 429 || error?.message?.includes('429');
+            const isHighDemand = error?.message?.includes('high demand') || error?.message?.includes('overloaded');
+
+            if (retries > 0 && (is429 || is503 || isHighDemand)) {
+                if (is503 || isHighDemand) {
+                    console.warn(`Gemini API unavailable or high demand. Trying fallback model 'gemini-3-flash-preview'...`);
+                    try {
+                        return await fn(true);
+                    } catch (fallbackError) {
+                        console.error("Fallback model also failed:", fallbackError);
+                    }
+                }
+
+                console.warn(`Gemini API error (Status: ${error?.status}). Retrying in ${delay}ms... (${retries} attempts left)`);
                 await new Promise(resolve => setTimeout(resolve, delay));
                 return this.withRetry(fn, retries - 1, delay * 2);
             }
@@ -347,10 +360,11 @@ class GeminiService {
         ${referenceMaterial || "No specific reference material found. Use standard templates."}
         `;
 
-        return this.withRetry(async () => {
+        return this.withRetry(async (isFallback) => {
+            const modelName = isFallback ? "gemini-3-flash-preview" : "gemini-2.5-flash";
             try {
                 const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
+                    model: modelName,
                     contents: [{
                         role: "user",
                         parts: [{ text: fullPrompt }]
@@ -372,8 +386,8 @@ class GeminiService {
                     referenceMaterial: referenceMaterial || ""
                 };
             } catch (error) {
-                console.error("AI Generation Error Detailed:", error);
-                throw new Error(`Failed to generate document: ${error instanceof Error ? error.message : 'Unknown error'}`);
+                console.error(`AI Generation Error (${modelName}):`, error);
+                throw error;
             }
         });
     }
@@ -463,7 +477,8 @@ class GeminiService {
 
 
     public async generateDatasetContext(content: string): Promise<string> {
-        return this.withRetry(async () => {
+        return this.withRetry(async (isFallback) => {
+            const modelName = isFallback ? "gemini-3-flash-preview" : "gemini-2.5-flash";
             const ai = this.getAI();
             const prompt = `
             Analyze the following document content and provide a detailed, keyword-rich description suitable for Retrieval Augmented Generation (RAG).
@@ -482,7 +497,7 @@ class GeminiService {
 
             try {
                 const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
+                    model: modelName,
                     contents: [{
                         role: "user",
                         parts: [{ text: prompt }]
@@ -491,14 +506,15 @@ class GeminiService {
                 // @ts-ignore
                 return response.text || "";
             } catch (error) {
-                console.error("Context Generation Error:", error);
-                return "Auto-generated context failed. Content snippet: " + content.substring(0, 100) + "...";
+                console.error(`Context Generation Error (${modelName}):`, error);
+                throw error;
             }
         });
     }
 
     public async generateDocumentTitle(content: string, type: DocumentType): Promise<string> {
-        return this.withRetry(async () => {
+        return this.withRetry(async (isFallback) => {
+            const modelName = isFallback ? "gemini-3-flash-preview" : "gemini-2.5-flash";
             const ai = this.getAI();
             const prompt = `
             Analyze the following document content and provide a very concise, professional title (max 6-8 words).
@@ -512,7 +528,7 @@ class GeminiService {
 
             try {
                 const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
+                    model: modelName,
                     contents: [{
                         role: "user",
                         parts: [{ text: prompt }]
@@ -521,8 +537,8 @@ class GeminiService {
                 // @ts-ignore
                 return response.text?.trim() || (response.candidates?.[0]?.content?.parts?.[0]?.text?.trim()) || "Untitled Document";
             } catch (error) {
-                console.error("Title Generation Error:", error);
-                return "Untitled Document";
+                console.error(`Title Generation Error (${modelName}):`, error);
+                throw error;
             }
         });
     }
@@ -539,7 +555,8 @@ class GeminiService {
             console.warn("Failed to fetch price list for estimation context", e);
         }
 
-        return this.withRetry(async () => {
+        return this.withRetry(async (isFallback) => {
+            const modelName = isFallback ? "gemini-3-flash-preview" : "gemini-2.5-flash";
             const ai = this.getAI();
             const prompt = `
             Analyze the following generated document and the reference material it was based on to create a budget estimate.
@@ -573,7 +590,7 @@ class GeminiService {
 
             try {
                 const response = await ai.models.generateContent({
-                    model: "gemini-2.5-flash",
+                    model: modelName,
                     contents: [{
                         role: "user",
                         parts: [{ text: prompt }]
@@ -596,8 +613,8 @@ class GeminiService {
 
                 return Array.isArray(parsed) ? parsed : [];
             } catch (error) {
-                console.error("Budget Estimation Error:", error);
-                return [];
+                console.error(`Budget Estimation Error (${modelName}):`, error);
+                throw error;
             }
         });
     }
