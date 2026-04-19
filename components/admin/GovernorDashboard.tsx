@@ -440,7 +440,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                     <Menu className="w-6 h-6" />
                 </button>
                 <div className="flex-1 flex justify-center mr-10">
-                        <h1 className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
+                    <h1 className="text-xl md:text-2xl lg:text-3xl font-serif italic text-blue-950 dark:text-white whitespace-nowrap">NEMSify</h1>
                 </div>
             </div>
 
@@ -597,7 +597,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                                     <h3 className="font-bold text-lg mb-4 flex items-center gap-2 dark:text-white">
                                         <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400" /> Templates
                                     </h3>
-                                    <p className="text-sm text-gray-500 mb-6 dark:text-gray-400">Upload up to TWO standard templates per document type (Docx/PDF).</p>
+                                    <p className="text-sm text-gray-500 mb-6 dark:text-gray-400">Upload up to TWO standard templates per document type (Docx).</p>
 
                                     <div className="space-y-4">
                                         {[DocumentType.ACTIVITY_PROPOSAL, DocumentType.OFFICIAL_LETTER, DocumentType.CONSTITUTION].map(type => (
@@ -825,7 +825,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">File (PDF, Docx, or Text)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">File (Docx)</label>
                                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700/50 transition">
                                     <input
                                         type="file"
