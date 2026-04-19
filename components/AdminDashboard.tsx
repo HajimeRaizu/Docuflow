@@ -488,7 +488,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigate }) =>
                       <p className="text-lg font-semibold text-gray-900 dark:text-white">
                         {isUploading ? 'Uploading...' : 'Click to Upload Document'}
                       </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Supported: Word</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Supported: Word only</p>
                     </div>
                   </label>
                 </div>

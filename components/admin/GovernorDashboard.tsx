@@ -825,7 +825,7 @@ export const GovernorDashboard: React.FC<GovernorDashboardProps> = ({ user, onNa
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">File (Docx)</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">File (Docx only)</label>
                                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700/50 transition">
                                     <input
                                         type="file"
