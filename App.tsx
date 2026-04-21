@@ -253,15 +253,19 @@ const App: React.FC = () => {
         content = <DocumentList user={user} onNavigate={handleNavigate} />;
         break;
       case 'archives':
-        content = (
-          <ArchiveView
-            user={user}
-            onUseReference={(doc) => handleNavigate('generate', {
-              doc: { ...doc, id: '', title: `Copy of ${doc.title}` },
-              type: doc.type
-            })}
-          />
-        );
+        if (user.user_type === UserRole.SUPER_ADMIN) {
+          content = <Dashboard user={user} onNavigate={handleNavigate} />;
+        } else {
+          content = (
+            <ArchiveView
+              user={user}
+              onUseReference={(doc) => handleNavigate('generate', {
+                doc: { ...doc, id: '', title: `Copy of ${doc.title}` },
+                type: doc.type
+              })}
+            />
+          );
+        }
         break;
       default:
         content = <Dashboard user={user} onNavigate={handleNavigate} />;

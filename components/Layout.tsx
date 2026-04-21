@@ -94,16 +94,18 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
             <LayoutIcon className="w-4 h-4" />
             <span>Documents</span>
           </button>
-          <button
-            onClick={() => handleNavigate('archives')}
-            className={`flex items-center gap-2 text-[15px] font-medium transition-colors ${currentView === 'archives'
-              ? 'text-blue-600 dark:text-blue-400'
-              : 'text-gray-500 dark:text-gray-300 hover:text-blue-600'
-              }`}
-          >
-            <Library className="w-4 h-4" />
-            <span>Archive</span>
-          </button>
+          {user.user_type !== UserRole.SUPER_ADMIN && (
+            <button
+              onClick={() => handleNavigate('archives')}
+              className={`flex items-center gap-2 text-[15px] font-medium transition-colors ${currentView === 'archives'
+                ? 'text-blue-600 dark:text-blue-400'
+                : 'text-gray-500 dark:text-gray-300 hover:text-blue-600'
+                }`}
+            >
+              <Library className="w-4 h-4" />
+              <span>Archive</span>
+            </button>
+          )}
         </div>
 
         {/* User Profile Section */}
@@ -196,13 +198,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onN
               <LayoutIcon className="w-6 h-6 text-blue-600" />
               Documents
             </button>
-            <button
-              onClick={() => handleNavigate('archives')}
-              className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700 text-lg font-medium text-gray-800 dark:text-white active:bg-blue-50"
-            >
-              <Library className="w-6 h-6 text-blue-600" />
-              Archive
-            </button>
+            {user.user_type !== UserRole.SUPER_ADMIN && (
+              <button
+                onClick={() => handleNavigate('archives')}
+                className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700 text-lg font-medium text-gray-800 dark:text-white active:bg-blue-50"
+              >
+                <Library className="w-6 h-6 text-blue-600" />
+                Archive
+              </button>
+            )}
             <button
               onClick={() => handleNavigate('settings')}
               className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 dark:bg-gray-700 text-lg font-medium text-gray-800 dark:text-white active:bg-blue-50"
