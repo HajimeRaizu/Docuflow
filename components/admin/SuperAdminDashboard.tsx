@@ -166,7 +166,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ user, 
                     status: 'active',
                     specific_role: assignRole,
                     department: assignDept,
-                    permissions: (assignRole.includes('Governor') || assignRole === 'University Official' || assignRole === 'USG President') ? {
+                    permissions: (assignRole.includes('Secretary') || assignRole.includes('Governor') || assignRole === 'University Official' || assignRole === 'USG President') ? {
                         official_letter: 'edit',
                         activity_proposal: 'edit',
                         constitution: 'edit'
