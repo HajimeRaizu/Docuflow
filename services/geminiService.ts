@@ -203,7 +203,7 @@ class GeminiService {
           - Apply this using <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr> within text runs.
         - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY"). Use bold text in a standard paragraph and MUST NOT be bulleted or numbered or lettered (<w:rPr><w:b/></w:rPr>).
         - **Numbering**: For numbered or lettered lists beneath a header (e.g., specific objectives), ALWAYS ensure the numbering or lettering resets to 1 or A for each new section/heading. Do NOT continue numbering from a previous list.
-        - **Signatories**: ${type === DocumentType.CONSTITUTION ? "DO NOT APPEND a signatories section for Constitution & By-Laws." : `You MUST append a "Signatories" section at the bottom.
+        - **Signatories**: ${type === DocumentType.CONSTITUTION ? "DO NOT APPEND a signatories section for Constitution & By-Laws. Do not include an amendments section for Constitution & By-Laws" : `You MUST append a "Signatories" section at the bottom.
           - Use the "signatories" array from the formData if provided. Each signatory has a 'name' and 'position'.
           - DO NOT USE TABLES (<w:tbl>) for signatories.
           - Format them as simple, left-aligned paragraphs (<w:p>).
