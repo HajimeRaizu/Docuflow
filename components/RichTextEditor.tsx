@@ -24,6 +24,12 @@ interface RichTextEditorProps {
   onTemplateChange?: (index: number) => void;
 }
 
+const PAPER_SIZES = {
+  A4: { w: 11906, h: 16838, label: 'A4' },
+  LEGAL: { w: 12240, h: 20160, label: 'Legal' }
+};
+
+
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   initialContent,
   title = "Document",
@@ -55,6 +61,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [manualEntries, setManualEntries] = useState<any[]>([]);
   const [isAddingManual, setIsAddingManual] = useState(false);
   const [newManualItem, setNewManualItem] = useState({ description: '', unit: '', quantity: 1, price: 0 });
+  const [paperSize, setPaperSize] = useState<'A4' | 'LEGAL'>('A4');
+
 
 
   // Load Template if available
@@ -139,20 +147,25 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
                 mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
               });
 
+              // Apply current paper size
+              const finalBlob = await applyPaperSizeToDOCX(modifiedBlob, paperSize);
+
               if (isMounted) {
-                setDocBlob(modifiedBlob);
+                setDocBlob(finalBlob);
                 lastProcessedRef.current = currentProcessId;
               }
             }
           } catch (zipError) {
             if (isMounted) {
-              setDocBlob(blobValue);
+              const finalBlob = await applyPaperSizeToDOCX(blobValue, paperSize);
+              setDocBlob(finalBlob);
               lastProcessedRef.current = currentProcessId;
             }
           }
         } else {
           if (isMounted) {
-            setDocBlob(blobValue);
+            const finalBlob = await applyPaperSizeToDOCX(blobValue, paperSize);
+            setDocBlob(finalBlob);
             lastProcessedRef.current = currentProcessId;
           }
         }
@@ -165,6 +178,70 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     loadTemplate();
     return () => { isMounted = false; };
   }, [templateUrl, initialContent]);
+
+  const applyPaperSizeToDOCX = async (blob: Blob, size: 'A4' | 'LEGAL') => {
+    try {
+      const JSZip = (await import('jszip')).default;
+      const zip = await JSZip.loadAsync(blob);
+      const documentFile = zip.file('word/document.xml');
+      if (!documentFile) return blob;
+
+      let documentXml = await documentFile.async('string');
+      const dimensions = PAPER_SIZES[size];
+      
+      // Update w:pgSz in all section properties
+      const pgSzRegex = /<w:pgSz\b[^>]*\/>/g;
+      const newPgSz = `<w:pgSz w:w="${dimensions.w}" w:h="${dimensions.h}" w:code="${size === 'A4' ? '9' : '5'}"/>`;
+      
+      if (pgSzRegex.test(documentXml)) {
+        documentXml = documentXml.replace(pgSzRegex, newPgSz);
+      } else {
+        // Fallback: insert into sectPr if missing
+        documentXml = documentXml.replace(/(<w:sectPr[^>]*>)/g, `$1${newPgSz}`);
+      }
+
+      zip.file('word/document.xml', documentXml);
+      return await zip.generateAsync({
+        type: 'blob',
+        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      });
+    } catch (err) {
+      console.error("Failed to apply paper size:", err);
+      return blob;
+    }
+  };
+
+  const handlePaperSizeChange = async (newSize: 'A4' | 'LEGAL') => {
+    if (newSize === paperSize) return;
+    
+    const superdoc = editorInstanceRef.current;
+    if (!superdoc) {
+      setPaperSize(newSize);
+      return;
+    }
+
+    try {
+      showToast(`Switching to ${PAPER_SIZES[newSize].label}...`, "info");
+      
+      // 1. Export current content to preserve edits
+      const currentBlob = await superdoc.export({ triggerDownload: false });
+      if (!currentBlob) throw new Error("Failed to export current document");
+
+      // 2. Apply new paper size
+      const resizedBlob = await applyPaperSizeToDOCX(currentBlob, newSize);
+      
+      // 3. Update state and reload editor
+      setPaperSize(newSize);
+      setDocBlob(resizedBlob);
+      setEditorKey(prev => prev + 1);
+      
+      showToast(`Paper size set to ${PAPER_SIZES[newSize].label}`, "success");
+    } catch (error) {
+      console.error("Paper size change failed:", error);
+      showToast("Failed to change paper size.", "error");
+    }
+  };
+
 
   // Extract and clean OOXML body from a DOCX blob
   const extractOOXMLBody = async (blob: Blob) => {
@@ -548,7 +625,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       });
 
-      setDocBlob(modifiedBlob);
+      // Ensure paper size is maintained
+      const finalBlob = await applyPaperSizeToDOCX(modifiedBlob, paperSize);
+
+      setDocBlob(finalBlob);
+
       setEditorKey(prev => prev + 1); // Force editor reload
       setIsPriceListOpen(false);
       showToast("Price list updated successfully!", "success");
@@ -608,22 +689,32 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             )}
           </div>
 
-          {/* Row 2 on Mobile: Download + Template */}
+          {/* Row 2 on Mobile: Download + Template + Paper Size */}
           <div className="flex w-full md:w-auto items-center justify-between md:justify-start gap-2">
             <button onClick={handleExportDOCX} className="flex-1 md:flex-none justify-center p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium border md:border-0 border-blue-100 dark:border-blue-900/30">
               <Download className="w-4 h-4" /> <span>Download</span>
             </button>
             
             {!readOnly && (documentType === DocumentType.ACTIVITY_PROPOSAL || documentType === DocumentType.OFFICIAL_LETTER || documentType === DocumentType.CONSTITUTION) && (
-              <div className="flex-1 md:flex-none">
+              <div className="flex flex-1 md:flex-none gap-2">
                 <select
                   value={templateIndex}
                   onChange={(e) => onTemplateChange && onTemplateChange(Number(e.target.value))}
-                  className="w-full md:w-auto p-1.5 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
+                  className="flex-1 md:w-auto p-1.5 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer"
                   title="Select Document Template"
                 >
                   <option value={1}>Template 1</option>
                   <option value={2}>Template 2</option>
+                </select>
+
+                <select
+                  value={paperSize}
+                  onChange={(e) => handlePaperSizeChange(e.target.value as 'A4' | 'LEGAL')}
+                  className="flex-1 md:w-auto p-1.5 px-2 border border-gray-300 dark:border-gray-600 rounded text-sm bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-indigo-500 transition cursor-pointer font-medium"
+                  title="Select Paper Size"
+                >
+                  <option value="A4">A4 Size</option>
+                  <option value="LEGAL">Legal Size</option>
                 </select>
               </div>
             )}
@@ -695,7 +786,12 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       {/* Status Bar */}
       <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-4 py-1 text-xs text-gray-500 flex justify-between">
         <span>Official Template: {templateUrl ? 'LOADED' : 'NONE'}</span>
-        <span>A4 DOCX Mode</span>
+        <span className="flex items-center gap-2">
+          <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] font-bold border border-gray-200 dark:border-gray-600">
+            {PAPER_SIZES[paperSize].label}
+          </span>
+          <span>DOCX Mode</span>
+        </span>
       </div>
 
       {/* Price List Modal */}
