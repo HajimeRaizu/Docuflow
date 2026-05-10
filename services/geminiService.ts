@@ -203,7 +203,7 @@ class GeminiService {
           - Apply this using <w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="24"/></w:rPr> within text runs.
         - **Headers**: Section headers (e.g., "OBJECTIVES", "DESCRIPTION OF THE ACTIVITY"). Use bold text in a standard paragraph and MUST NOT be bulleted or numbered or lettered (<w:rPr><w:b/></w:rPr>).
         - **Numbering**: For numbered or lettered lists beneath a header (e.g., specific objectives), ALWAYS ensure the numbering or lettering resets to 1 or A for each new section/heading. Do NOT continue numbering from a previous list.
-        - **Signatories**: ${type === DocumentType.CONSTITUTION ? "DO NOT APPEND a signatories section for Constitution & By-Laws. Do not include an amendments section for Constitution & By-Laws" : `You MUST append a "Signatories" section at the bottom.
+        - **Signatories**: ${type === DocumentType.CONSTITUTION ? "DO NOT APPEND a signatories section for Constitution & By-Laws. Do not include an amendments section for Constitution & By-Laws" : `You MUST append the signatories at the bottom. DO NOT include a "Signatories" or "SIGNATORIES" header.
           - Use the "signatories" array from the formData if provided. Each signatory has a 'name' and 'position'.
           - DO NOT USE TABLES (<w:tbl>) for signatories.
           - Format them as simple, left-aligned paragraphs (<w:p>).
@@ -416,8 +416,13 @@ class GeminiService {
             const textContent = textMatch ? textMatch.map(t => t.replace(/<[^>]*>/g, '')).join('').trim() : '';
 
             const isAllUppercase = textContent && textContent === textContent.toUpperCase() && textContent.length > 3 && textContent.length < 100;
-            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "RATIONALE", "BUDGET", "SIGNATORIES", "ARTICLE", "SECTION"].some(h => textContent.toUpperCase().includes(h));
+            const isKnownHeader = ["OBJECTIVES", "DESCRIPTION", "RATIONALE", "BUDGET", "ARTICLE", "SECTION"].some(h => textContent.toUpperCase().includes(h));
             const isHeader = isAllUppercase || isKnownHeader;
+
+            // Specifically handle and remove Signatories header
+            if (textContent.toUpperCase().includes("SIGNATORIES") && textContent.length < 25) {
+                return '';
+            }
 
             if (isHeader) {
                 // Clear the numId tracking so the next list gets new IDs (restarting at 1)
