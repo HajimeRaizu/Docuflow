@@ -749,7 +749,6 @@ export const DocumentGenerator: React.FC<DocumentGeneratorProps> = ({ user, init
                       </div>
                     </div>
                   </div>
-                  <textarea name="objectives" value={formData.objectives} placeholder="Objectives" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
                   <textarea name="detailedInstructions" value={formData.detailedInstructions} placeholder="Detailed Instructions (Optional info to guide AI generation)" onChange={handleChange} className="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 h-24" />
 
                   {/* Signatories Section for Activity Proposal */}
