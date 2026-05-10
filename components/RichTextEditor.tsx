@@ -188,11 +188,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
       let documentXml = await documentFile.async('string');
       const dimensions = PAPER_SIZES[size];
-      
+
       // Update w:pgSz in all section properties
       const pgSzRegex = /<w:pgSz\b[^>]*\/>/g;
       const newPgSz = `<w:pgSz w:w="${dimensions.w}" w:h="${dimensions.h}" w:code="${size === 'A4' ? '9' : '5'}"/>`;
-      
+
       if (pgSzRegex.test(documentXml)) {
         documentXml = documentXml.replace(pgSzRegex, newPgSz);
       } else {
@@ -213,7 +213,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   const handlePaperSizeChange = async (newSize: 'A4' | 'LEGAL') => {
     if (newSize === paperSize) return;
-    
+
     const superdoc = editorInstanceRef.current;
     if (!superdoc) {
       setPaperSize(newSize);
@@ -222,19 +222,19 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
     try {
       showToast(`Switching to ${PAPER_SIZES[newSize].label}...`, "info");
-      
+
       // 1. Export current content to preserve edits
       const currentBlob = await superdoc.export({ triggerDownload: false });
       if (!currentBlob) throw new Error("Failed to export current document");
 
       // 2. Apply new paper size
       const resizedBlob = await applyPaperSizeToDOCX(currentBlob, newSize);
-      
+
       // 3. Update state and reload editor
       setPaperSize(newSize);
       setDocBlob(resizedBlob);
       setEditorKey(prev => prev + 1);
-      
+
       showToast(`Paper size set to ${PAPER_SIZES[newSize].label}`, "success");
     } catch (error) {
       console.error("Paper size change failed:", error);
@@ -644,11 +644,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   };
 
   const { selectedFiltered, unselectedFiltered } = useMemo(() => {
-    const items = searchQuery 
-      ? priceListItems.filter(item => 
-          item.item_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.category?.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+    const items = searchQuery
+      ? priceListItems.filter(item =>
+        item.item_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
       : priceListItems;
 
     return {
@@ -671,7 +671,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       {/* Toolbar */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-2 md:p-3 flex flex-col md:flex-row items-center justify-between shadow-sm z-10 gap-3 md:gap-0">
         <div className="flex flex-col w-full md:w-auto gap-2 md:flex-row md:items-center">
-          
+
           {/* Row 1 on Mobile: Save + Show Price List */}
           <div className="flex w-full md:w-auto items-center justify-between md:justify-start gap-2">
             {!readOnly && (
@@ -694,7 +694,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             <button onClick={handleExportDOCX} className="flex-1 md:flex-none justify-center p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition flex items-center gap-2 text-sm font-medium border md:border-0 border-blue-100 dark:border-blue-900/30">
               <Download className="w-4 h-4" /> <span>Download</span>
             </button>
-            
+
             {!readOnly && (documentType === DocumentType.ACTIVITY_PROPOSAL || documentType === DocumentType.OFFICIAL_LETTER || documentType === DocumentType.CONSTITUTION) && (
               <div className="flex flex-1 md:flex-none gap-2">
                 <select
@@ -760,6 +760,14 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
               font-family: Arial, sans-serif !important;
               font-size: 12pt !important;
             }
+
+            [aria-label="Zoom - 25%"],
+            [aria-label="Zoom - 125%"],
+            [aria-label="Zoom - 150%"],
+            [aria-label="Zoom - 200%"] {
+              display: none !important;
+            }
+            
           `}
         </style>
         {isTemplateLoaded ? (
